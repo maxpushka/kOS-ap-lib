@@ -27,7 +27,7 @@ until ETA:apoapsis < 1 {
 }
 print "Start burn".
 wait 1.
-//======================================================================================
+//========================== BURN ==========================
 set stopburn to false.
 lock throttle to 1.
 until stopburn {
