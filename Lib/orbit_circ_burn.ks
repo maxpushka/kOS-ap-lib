@@ -20,6 +20,7 @@ lock steering to prograde.
 wait 5.
 stage.
 
+//======================================================================================
 until ETA:apoapsis < 1 {
 	clearscreen.
 	print "ETA:apoapsis = " + ETA:apoapsis.
@@ -27,7 +28,7 @@ until ETA:apoapsis < 1 {
 }
 print "Start burn".
 wait 1.
-//========================== BURN ==========================
+
 set stopburn to false.
 lock throttle to 1.
 until stopburn {
