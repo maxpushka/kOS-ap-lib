@@ -104,7 +104,7 @@ until ascendStage = 2 AND altitude > ship:body:ATM:height {
 }
 //===================== CIRCULARIZATION =====================
 
-lock steering to 
+//lock steering to 
 until ETA:apoapsis < 1 {
 	clearscreen.
 	set data to burndata.
