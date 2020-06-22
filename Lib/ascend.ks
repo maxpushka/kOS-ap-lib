@@ -1,8 +1,8 @@
 print "Ascend script v1.0".
 
 //==================== LAUNCH PARAMETERS ===================//
-set targetOrbit to 100000. //target orbit in meters, Apoapsis=Periapsis=targetOrbit
-set targetIncl to 0. //final orbit inclination in degrees
+set targetOrbit to 80000. //target orbit in meters, Apoapsis=Periapsis=targetOrbit
+set targetIncl to 3. //final orbit inclination in degrees
 
 set gravityTurnAlt to 250. //altitude at which vessel shall start gravity turn
 
@@ -11,14 +11,14 @@ set gravityTurnAlt to 250. //altitude at which vessel shall start gravity turn
 //PRELAUCNH
 set ship:control:pilotmainthrottle to 0.
 sas off.
-rcs off.
+rcs on.
 clearscreen.
 AG1 on. //open terminal
 lock throttle to 1.
 set pitch_ang to 0.
 set compass to AzimuthCalc(targetIncl).
-//lock steering to heading(90,90).
 lock steering to lookdirup(heading(compass,90-pitch_ang):vector,ship:facing:upvector).
+wait 1.
 
 //FLIGHT MODE PARAMETERS
 set throttleMode to 1.
@@ -55,8 +55,9 @@ local line is 1.
 until ascendStage = 2 AND altitude > ship:body:ATM:height {
 	// Run Mode Logic
 	
-	if apoapsis > TargetOrbit AND throttleMode = 1 {
+	if apoapsis > targetOrbit AND throttleMode = 1 {
 		lock throttle to 0.
+		rcs off.
 		set throttleMode to 2.
 		set ascendStage to 2.
 	}
@@ -103,11 +104,13 @@ until ascendStage = 2 AND altitude > ship:body:ATM:height {
 }
 //===================== CIRCULARIZATION =====================
 
-lock steering to prograde.
+lock steering to 
 until ETA:apoapsis < 1 {
 	clearscreen.
+	set data to burndata.
 	print "ETA:apoapsis = " + ETA:apoapsis.
-	wait 0.25.
+	when ETA:apoapsis < 10 then {rcs on.}
+	wait 0.5.
 }
 print "Start burn".
 wait 1.
@@ -124,7 +127,7 @@ until stopburn {
 		lock throttle to Max(data[5]/100, 0.01).
 	}
 	
-	lock steering to Heading(90, data[0]).
+	lock steering to Heading(AzimuthCalc(targetIncl), data[0]).
 	
 	print "Fi: " + data[0].
 	print "dA: " + data[1].
@@ -132,12 +135,13 @@ until stopburn {
 	print "Vz: " + data[3].
 	print "Vorb: " + data[4].
 	print "dVorb: " + data[5].
-	wait 0.
 }
 lock throttle to 0.
 clearscreen.
 print "Circularization complete".
 orbitData.
+
+
 
 //========================FUNCTIONS========================
 
@@ -224,10 +228,13 @@ function burndata {
 	set Vz to ship:verticalspeed. //вертикальная скорость
 	set Vorb to sqrt(ship:body:Mu/Rad). //1 косм. на текущей высоте
 	set Acentr to Vh^2/Rad. //центростремительное ускорение
+	
 	set AThr to eng[0]*Throttle/ship:mass.
+	if AThr = 0 {set AThr to 10^(-5).}
 	
 	set dVorb to Vorb-Vh.
 	set dA to g_alt-Acentr-Vz. //MAX(Min(Vz, 2), -2).
+	
 	print "Athr=" + Athr.
 	print "dA=" + dA.
 	set fi to ARCSIN(Min(Max(dA/AThr,-1), 1)).
