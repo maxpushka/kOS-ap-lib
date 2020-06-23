@@ -1,10 +1,10 @@
 print "Ascend script v1.0".
 
 //==================== LAUNCH PARAMETERS ===================//
-set targetOrbit to 80000. //target orbit in meters, Apoapsis=Periapsis=targetOrbit
-set targetIncl to 3. //final orbit inclination in degrees
+set targetOrbit to 150000. //target orbit in meters, Apoapsis=Periapsis=targetOrbit
+set targetIncl to 0. //final orbit inclination in degrees
 
-set gravityTurnAlt to 250. //altitude at which vessel shall start gravity turn
+set gravTurnAlt to 250. //altitude at which vessel shall start gravity turn
 
 //========================= ASCEND =========================//
 
@@ -21,15 +21,16 @@ lock steering to lookdirup(heading(compass,90-pitch_ang):vector,ship:facing:upve
 wait 1.
 
 //FLIGHT MODE PARAMETERS
-set throttleMode to 1.
+set throttleStage to 1.
 set ascendStage to 1.
 
 //STAGING
 local current_max to maxthrust.
 when maxthrust < current_max OR availablethrust = 0 then {
+	set prevThrottle to throttle.
 	lock throttle to 0.
 	stage.
-	lock throttle to 1.
+	lock throttle to prevThrottle.
 	set current_max to maxthrust.
 	preserve.
 }
@@ -51,41 +52,60 @@ DeltaV_Data:ADD("Thrust_Accel",throttle*availablethrust/mass).
 DeltaV_Data:ADD("Accel_Vec",throttle*ship:sensors:acc).
 
 local line is 1.
-
-until ascendStage = 2 AND altitude > ship:body:ATM:height {
+wait until altitude > gravTurnAlt.
+until ascendStage = 3 {
 	// Run Mode Logic
+	//throttleStage:      //ascendMode:
+	//1=engine burning   //1=powered ascend; engine burning, apoapsis<targetOrbit
+	//2=MECO             //2=flight on a ballistic trajectory in the atmosphere; MECO, apoapsis>=targetOrbit
+	//                   //3=flight on a ballistic trajectory outside the atmosphere; MECO, apoapsis>=targetOrbit
 	
-	if apoapsis > targetOrbit AND throttleMode = 1 {
+	if apoapsis > targetOrbit AND altitude > ship:body:ATM:height {
 		lock throttle to 0.
-		rcs off.
-		set throttleMode to 2.
-		set ascendStage to 2.
+		set ascendStage to 3.
 	}
 	
+	if apoapsis < targetOrbit AND throttleStage = 1 {
+		lock throttle to Max((targetOrbit-apoapsis)/1000, 0.001).
+	}
+	else if apoapsis > targetOrbit AND throttleStage = 1 {
+		lock throttle to 0.
+		when 1 then {rcs off.}
+		set throttleStage to 2. //MECO
+		set ascendStage to 2.
+	}
+	else if apoapsis < targetOrbit AND throttleStage = 2 {
+		set throttleStage to 1.
+		set ascendStage to 1.
+		when 1 then {rcs on.}
+		lock throttle to Max((targetOrbit-apoapsis)/1000, 0.001).
+	}	
+
 	set Pitch_Data to Pitch_Calc(Pitch_Data).
 	set pitch_ang to Pitch_Data["Pitch"].
 	set compass to AzimuthCalc(targetIncl).	
 	
 	// Variable Printout
 	set line to 1.
-	print "throttleMode = " + throttleMode + "   " at(0,line).
+	print "throttleStage = " + throttleStage + "   " at(0,line).
 	set line to line + 1.
 	print "ascendStage   = " + ascendStage + "   " at(0,line).
-	set line to line + 1.
+	set line to line + 2.
 	print "pitch_ang     = " + round(pitch_ang,2) + "   " at(0,line).
 	set line to line + 1.
-	print "compass      = " + round(compass,2) + "   " at(0,line).
+	print "compass       = " + round(compass,2) + "   " at(0,line).
 	set line to line + 1.
+	print "gravTurnAlt   = " + round(gravTurnAlt) + "   " at(0,line).
+	set line to line + 2.
 	print "altitude      = " + round(altitude) + "   " at(0,line).
-	set line to line + 1.
-	print "gravityTurnAlt    = " + round(gravityTurnAlt) + "   " at(0,line).
 	set line to line + 1.
 	print "apoapsis      = " + round(apoapsis) + "   " at(0,line).
 	set line to line + 1.
-	print "targetOrbit   = " + targetOrbit + "   " at(0,line).
+	print "target apo    = " + targetOrbit + "   " at(0,line).
 	set line to line + 1.
-	print "targetIncl   = " + targetIncl + "   " at(0,line).
-	
+	print "orbit incl    = " + round(orbit:inclination,5) + "   " at(0,line).
+	set line to line + 1.
+	print "target incl   = " + targetIncl + "   " at(0,line).
 	
 	// Delta V Calculations
 	set DeltaV_Data to DeltaV_Calc(DeltaV_Data).
@@ -100,18 +120,17 @@ until ascendStage = 2 AND altitude > ship:body:ATM:height {
 	set line to line + 1.
 	print "DeltaV_Eff    = " + round(100*DeltaV_Data["Gain"]/DeltaV_Data["Total"]) + "%   " at(0,line).
 	
-	wait 0.
+	wait 0. //wait for the next physics tick
 }
-//===================== CIRCULARIZATION =====================
 
-//lock steering to 
+//===================== CIRCULARIZATION =====================
+ 
 until ETA:apoapsis < 1 {
 	clearscreen.
-	set data to burndata.
-	print "ETA:apoapsis = " + ETA:apoapsis.
-	when ETA:apoapsis < 10 then {rcs on.}
-	wait 0.5.
+	print "ETA:apoapsis = " + round(ETA:apoapsis,2).
+	wait 0.25.
 }
+rcs on.
 print "Start burn".
 wait 1.
 set stopburn to false.
@@ -124,10 +143,14 @@ until stopburn {
 		set stopburn to true.
 	}
 	else if (data[5] < 100) {
-		lock throttle to Max(data[5]/100, 0.01).
+		lock throttle to Max(data[5]/1000, 0.01).
 	}
 	
-	lock steering to Heading(AzimuthCalc(targetIncl), data[0]).
+	set Pitch_Data to Pitch_Calc(Pitch_Data).
+	set pitch_ang to Pitch_Data["Pitch"].
+	set compass to AzimuthCalc(targetIncl).
+	
+	lock steering to Heading(0, data[0]).
 	
 	print "Fi: " + data[0].
 	print "dA: " + data[1].
@@ -229,14 +252,12 @@ function burndata {
 	set Vorb to sqrt(ship:body:Mu/Rad). //1 косм. на текущей высоте
 	set Acentr to Vh^2/Rad. //центростремительное ускорение
 	
-	set AThr to eng[0]*Throttle/ship:mass.
-	if AThr = 0 {set AThr to 10^(-5).}
+	set AThr to eng[0]*Throttle/ship:mass. //моментальное ускорение сообщаемое движками
+	if AThr = 0 {set AThr to 10^(-5).} //если двигатель выключен
 	
 	set dVorb to Vorb-Vh.
 	set dA to g_alt-Acentr-Vz. //MAX(Min(Vz, 2), -2).
 	
-	print "Athr=" + Athr.
-	print "dA=" + dA.
 	set fi to ARCSIN(Min(Max(dA/AThr,-1), 1)).
 	
 	return list(fi, dA, Vh, Vz, Vorb, dVorb).
