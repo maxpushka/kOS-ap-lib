@@ -4,8 +4,9 @@ print "Ascend script v1.0".
 set targetOrbit to 150000. //target orbit in meters, Apoapsis=Periapsis=targetOrbit
 set targetIncl to 0. //final orbit inclination in degrees
 
-set gravTurnAlt to 250. //altitude at which vessel shall start gravity turn
-
+//gravity turn start when ship's altitute == gravTurnAlt and/or velocity == gravTurnV
+set gravTurnAlt to 250. //[meters] altitude at which vessel shall start gravity turn
+set gravTurnV to 150. //[m/s] velocity at which vessel shall start gravity turn
 //========================= ASCEND =========================//
 
 //PRELAUCNH
@@ -52,7 +53,7 @@ DeltaV_Data:ADD("Thrust_Accel",throttle*availablethrust/mass).
 DeltaV_Data:ADD("Accel_Vec",throttle*ship:sensors:acc).
 
 local line is 1.
-wait until altitude > gravTurnAlt.
+wait until (altitude > gravTurnAlt OR ship:velocity > gravTurnV).
 until ascendStage = 3 {
 	// Run Mode Logic
 	//throttleStage:      //ascendMode:
