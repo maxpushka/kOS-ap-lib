@@ -52,8 +52,9 @@ DeltaV_Data:ADD("Time",time:seconds).
 DeltaV_Data:ADD("Thrust_Accel",throttle*availablethrust/mass).
 DeltaV_Data:ADD("Accel_Vec",throttle*ship:sensors:acc).
 
+wait until (altitude > gravTurnAlt). // OR ship:velocity > gravTurnV).
+
 local line is 1.
-wait until (altitude > gravTurnAlt OR ship:velocity > gravTurnV).
 until ascendStage = 3 {
 	// Run Mode Logic
 	//throttleStage:      //ascendMode:
@@ -81,7 +82,7 @@ until ascendStage = 3 {
 		when 1 then {rcs on.}
 		lock throttle to Max((targetOrbit-apoapsis)/1000, 0.001).
 	}	
-
+  
 	set Pitch_Data to Pitch_Calc(Pitch_Data).
 	set pitch_ang to Pitch_Data["Pitch"].
 	set compass to AzimuthCalc(targetIncl).	
@@ -121,7 +122,7 @@ until ascendStage = 3 {
 	set line to line + 1.
 	print "DeltaV_Eff    = " + round(100*DeltaV_Data["Gain"]/DeltaV_Data["Total"]) + "%   " at(0,line).
 	
-	wait 0. //wait for the next physics tick
+	wait 0.001. //wait for the next physics tick
 }
 
 //===================== CIRCULARIZATION =====================
@@ -146,10 +147,6 @@ until stopburn {
 	else if (data[5] < 100) {
 		lock throttle to Max(data[5]/1000, 0.01).
 	}
-	
-	set Pitch_Data to Pitch_Calc(Pitch_Data).
-	set pitch_ang to Pitch_Data["Pitch"].
-	set compass to AzimuthCalc(targetIncl).
 	
 	lock steering to Heading(0, data[0]).
 	
