@@ -2,7 +2,7 @@ print "Ascend script v1.0".
 
 //==================== LAUNCH PARAMETERS ===================//
 set targetOrbit to 100000. //target orbit in meters, Apoapsis=Periapsis=targetOrbit
-set targetIncl to 3. //final orbit inclination in degrees
+set targetIncl to 90. //final orbit inclination in degrees
 
 //gravity turn start when ship's altitute == gravTurnAlt and/or velocity == gravTurnV
 set gravTurnAlt to 250. //[meters] altitude at which vessel shall start gravity turn
@@ -80,7 +80,6 @@ until ascendStage = 3 {
 	else if apoapsis < targetOrbit AND throttleStage = 2 {
 		set throttleStage to 1.
 		set ascendStage to 1.
-		when 1 then {rcs on.}
 		lock throttle to Max((targetOrbit-apoapsis)/100, 0.005).
 	}	
   
@@ -127,13 +126,15 @@ until ascendStage = 3 {
 }
 
 //===================== CIRCULARIZATION =====================
- 
-lock steering to prograde.
+
+sas on.
+unlock steering.
 until ETA:apoapsis < 1 {
 	clearscreen.
 	print "ETA:apoapsis = " + round(ETA:apoapsis,1).
 	wait 0.25.
 }
+sas off.
 rcs on.
 wait 1.
 
@@ -152,15 +153,15 @@ until stopburn {
 		set stopburn to true.
 	}
 	else if (data[0]:mag < 50) {
-		lock throttle to Max(data[0]:mag/1000, 0.01).
+		lock throttle to Max(data[0]:mag/100, 0.01).
 	}
 	
-	if (past_dVincl > data[9]) AND (abs(data[8]) < 0.085) {
+	if (past_dVincl > data[9]) AND (abs(data[8]) < 0.085) { //fine tuning starts when deltaInclination comes to 0.085 degrees
 		print "1.".
 		lock steering to data[0].
 		set past_dVincl to data[9].
 		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dI", 1.0, TRUE, 0.2, TRUE, TRUE).
-		set v2 to VECDRAW(V(0,0,0), Heading(90,data[1]):vector*data[7], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
+		set v2 to VECDRAW(V(0,0,0), Heading(90-targetIncl,data[1]):vector*data[7], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
 		set v3 to VECDRAW(V(0,0,0), data[0], RGB(0,0,255), "final", 1.0, TRUE, 0.2, TRUE, TRUE).
 	}
 	else if (past_dVincl < data[9]) AND (abs(data[8]) < 0.085) {
@@ -168,14 +169,14 @@ until stopburn {
 		lock steering to data[0]-2*data[2].
 		set past_dVincl to data[9].
 		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dI", 1.0, TRUE, 0.2, TRUE, TRUE).
-		set v2 to VECDRAW(V(0,0,0), Heading(90,data[1]):vector*data[7], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
+		set v2 to VECDRAW(V(0,0,0), Heading(90-targetIncl,data[1]):vector*data[7], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
 		set v3 to VECDRAW(V(0,0,0), data[0]-2*data[2], RGB(0,0,255), "final", 1.0, TRUE, 0.2, TRUE, TRUE).
 	}
 	else {
 		print "3".
 		lock steering to data[0].
 		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dI", 1.0, TRUE, 0.2, TRUE, TRUE).
-		set v2 to VECDRAW(V(0,0,0), Heading(90,data[1]):vector*data[7], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
+		set v2 to VECDRAW(V(0,0,0), Heading(90-targetIncl,data[1]):vector*data[7], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
 		set v3 to VECDRAW(V(0,0,0), data[0], RGB(0,0,255), "final", 1.0, TRUE, 0.2, TRUE, TRUE).
 
 	}
@@ -188,6 +189,9 @@ until stopburn {
 	print "dVorb  =" + data[7].
 	print "dI     =" + data[8].
 	print "dVincl =" + data[9].
+	
+	wait 0.001.
+	
 	set v1:show to false.
 	set v2:show to false.
 	set v3:show to false.
@@ -294,11 +298,13 @@ function burndata {
 	set fi to ARCSIN(Min(Max(dA/AThr,-1), 1)).
 	
 	local dI is targetIncl-orbit:inclination.
-	local dVincl is 2*Vorb*sin(abs(dI/2)).
-	if dI > 0 {set inclVec to v(0,dVincl,0).}
-	else {set inclVec to v(0,-dVincl,0).}
+	local dVincl is 2*Vorb*sin(abs(dI/2)). //delta V required to change orbit inclination
+	local normalVec is vcrs(ship:velocity:orbit,-body:position). //normal vector
+	local norm is normalVec/normalVec:mag. //normal unit vector
+	if dI > 0 {set inclVec to dVincl*norm.}
+	else {set inclVec to -dVincl*norm.}
 	
-	set vec to Heading(90, fi):vector*dVorb + inclVec.
+	set vec to Heading(90-targetIncl, fi):vector*dVorb + inclVec.
 	
 	return list(vec, fi, inclVec, dA, Vh, Vz, Vorb, dVorb, dI, dVincl).
 }
