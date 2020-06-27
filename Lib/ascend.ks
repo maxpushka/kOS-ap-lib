@@ -2,7 +2,7 @@ print "Ascend script v1.0".
 
 //==================== LAUNCH PARAMETERS ===================//
 set targetOrbit to 100000. //target orbit in meters, Apoapsis=Periapsis=targetOrbit
-set targetIncl to 90. //final orbit inclination in degrees
+set targetIncl to 0.0. //final orbit inclination in degrees
 
 //gravity turn start when ship's altitute == gravTurnAlt and/or velocity == gravTurnV
 set gravTurnAlt to 250. //[meters] altitude at which vessel shall start gravity turn
@@ -58,7 +58,7 @@ wait until (altitude > gravTurnAlt). // OR ship:velocity > gravTurnV).
 local line is 1.
 until ascendStage = 3 {
 	// Run Mode Logic
-	//throttleStage:      //ascendMode:
+	//throttleStage:      //ascendStage:
 	//1=engine burning   //1=powered ascend; engine burning, apoapsis<targetOrbit
 	//2=MECO             //2=flight on a ballistic trajectory in the atmosphere; MECO, apoapsis>=targetOrbit
 	//                   //3=flight on a ballistic trajectory outside the atmosphere; MECO, apoapsis>=targetOrbit
@@ -68,19 +68,18 @@ until ascendStage = 3 {
 		set ascendStage to 3.
 	}
 	
-	if apoapsis < targetOrbit AND throttleStage = 1 {
+	if apoapsis < targetOrbit AND throttleStage = 1 { //while ascendStage=1
 		lock throttle to Max((targetOrbit-apoapsis)/1000, 0.005).
 	}
-	else if apoapsis > targetOrbit AND throttleStage = 1 {
+	else if apoapsis > targetOrbit AND throttleStage = 1 { //turning to ascendStage=2
 		lock throttle to 0.
 		when 1 then {rcs off.}
 		set throttleStage to 2. //MECO
 		set ascendStage to 2.
 	}
-	else if apoapsis < targetOrbit AND throttleStage = 2 {
+	else if apoapsis < targetOrbit AND throttleStage = 2 { //apoapsis fine tuning due to drag loss
 		set throttleStage to 1.
-		set ascendStage to 1.
-		lock throttle to Max((targetOrbit-apoapsis)/100, 0.005).
+		lock throttle to Max((targetOrbit-apoapsis)/1000, 0.001).
 	}	
   
 	set Pitch_Data to Pitch_Calc(Pitch_Data).
@@ -153,39 +152,28 @@ until stopburn {
 		set stopburn to true.
 	}
 	else if (data[0]:mag < 50) {
-		lock throttle to Max(data[0]:mag/100, 0.01).
+		lock throttle to Max(data[0]:mag/1000, 0.005).
 	}
 	
-	if (past_dVincl > data[9]) AND (abs(data[8]) < 0.085) { //fine tuning starts when deltaInclination comes to 0.085 degrees
-		print "1.".
-		lock steering to data[0].
-		set past_dVincl to data[9].
-		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dI", 1.0, TRUE, 0.2, TRUE, TRUE).
-		set v2 to VECDRAW(V(0,0,0), Heading(90-targetIncl,data[1]):vector*data[7], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
-		set v3 to VECDRAW(V(0,0,0), data[0], RGB(0,0,255), "final", 1.0, TRUE, 0.2, TRUE, TRUE).
-	}
-	else if (past_dVincl < data[9]) AND (abs(data[8]) < 0.085) {
-		print "2". 
+	if (past_dVincl < data[9]) AND (abs(data[8]) < 0.085) { 
 		lock steering to data[0]-2*data[2].
-		set past_dVincl to data[9].
 		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dI", 1.0, TRUE, 0.2, TRUE, TRUE).
-		set v2 to VECDRAW(V(0,0,0), Heading(90-targetIncl,data[1]):vector*data[7], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
-		set v3 to VECDRAW(V(0,0,0), data[0]-2*data[2], RGB(0,0,255), "final", 1.0, TRUE, 0.2, TRUE, TRUE).
+		set v2 to VECDRAW(V(0,0,0), data[0]-data[2], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
+		set v3 to VECDRAW(V(0,0,0), data[0]-2*data[2], RGB(255,255,255), "final", 1.0, TRUE, 0.2, TRUE, TRUE).
 	}
 	else {
-		print "3".
 		lock steering to data[0].
 		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dI", 1.0, TRUE, 0.2, TRUE, TRUE).
-		set v2 to VECDRAW(V(0,0,0), Heading(90-targetIncl,data[1]):vector*data[7], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
-		set v3 to VECDRAW(V(0,0,0), data[0], RGB(0,0,255), "final", 1.0, TRUE, 0.2, TRUE, TRUE).
-
+		set v2 to VECDRAW(V(0,0,0), data[0]-data[2], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
+		set v3 to VECDRAW(V(0,0,0), data[0], RGB(255,255,255), "final", 1.0, TRUE, 0.2, TRUE, TRUE).
 	}
+	set past_dVincl to data[9].
 	
-	//print "Fi     =" + data[1].
-	//print "dA     =" + data[3].
-	//print "Vh     =" + data[4].
-	//print "Vz     =" + data[5].
-	//print "Vorb   =" + data[6].
+	print "Fi     =" + data[1].
+	print "dA     =" + data[3].
+	print "Vh     =" + data[4].
+	print "Vz     =" + data[5].
+	print "Vorb   =" + data[6].
 	print "dVorb  =" + data[7].
 	print "dI     =" + data[8].
 	print "dVincl =" + data[9].
