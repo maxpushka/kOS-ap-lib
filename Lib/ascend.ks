@@ -1,8 +1,8 @@
 print "Ascend script v1.0".
 
 //==================== LAUNCH PARAMETERS ===================//
-set targetOrbit to 150000. //target orbit in meters, Apoapsis=Periapsis=targetOrbit
-set targetIncl to 0. //final orbit inclination in degrees
+set targetOrbit to 100000. //target orbit in meters, Apoapsis=Periapsis=targetOrbit
+set targetIncl to 3. //final orbit inclination in degrees
 
 //gravity turn start when ship's altitute == gravTurnAlt and/or velocity == gravTurnV
 set gravTurnAlt to 250. //[meters] altitude at which vessel shall start gravity turn
@@ -10,6 +10,7 @@ set gravTurnV to 150. //[m/s] velocity at which vessel shall start gravity turn
 //========================= ASCEND =========================//
 
 //PRELAUCNH
+SET SHIP:CONTROL:NEUTRALIZE TO TRUE.
 set ship:control:pilotmainthrottle to 0.
 sas off.
 rcs on.
@@ -68,7 +69,7 @@ until ascendStage = 3 {
 	}
 	
 	if apoapsis < targetOrbit AND throttleStage = 1 {
-		lock throttle to Max((targetOrbit-apoapsis)/1000, 0.001).
+		lock throttle to Max((targetOrbit-apoapsis)/1000, 0.005).
 	}
 	else if apoapsis > targetOrbit AND throttleStage = 1 {
 		lock throttle to 0.
@@ -80,7 +81,7 @@ until ascendStage = 3 {
 		set throttleStage to 1.
 		set ascendStage to 1.
 		when 1 then {rcs on.}
-		lock throttle to Max((targetOrbit-apoapsis)/1000, 0.001).
+		lock throttle to Max((targetOrbit-apoapsis)/100, 0.005).
 	}	
   
 	set Pitch_Data to Pitch_Calc(Pitch_Data).
@@ -127,37 +128,73 @@ until ascendStage = 3 {
 
 //===================== CIRCULARIZATION =====================
  
+lock steering to prograde.
 until ETA:apoapsis < 1 {
 	clearscreen.
-	print "ETA:apoapsis = " + round(ETA:apoapsis,2).
+	print "ETA:apoapsis = " + round(ETA:apoapsis,1).
 	wait 0.25.
 }
 rcs on.
-print "Start burn".
 wait 1.
+
 set stopburn to false.
+set dIp to targetIncl-orbit:inclination.
+set past_dVincl to 0.
 lock throttle to 1.
 until stopburn {
 	clearscreen.
 	set data to burndata.
+	lock steering to data[0].
+	//return list(vec, fi, inclVec, dA, Vh, Vz, Vorb, dVorb, dI, dVincl).
+	//            0  , 1 , 2      , 3 , 4 , 5 , 6   , 7    , 8 , 9
 	
-	if (data[5]<0) {
+	if (data[7]<0) {
 		set stopburn to true.
 	}
-	else if (data[5] < 100) {
-		lock throttle to Max(data[5]/1000, 0.01).
+	else if (data[0]:mag < 50) {
+		lock throttle to Max(data[0]:mag/1000, 0.01).
 	}
 	
-	lock steering to Heading(0, data[0]).
+	if (past_dVincl > data[9]) AND (abs(data[8]) < 0.085) {
+		print "1.".
+		lock steering to data[0].
+		set past_dVincl to data[9].
+		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dI", 1.0, TRUE, 0.2, TRUE, TRUE).
+		set v2 to VECDRAW(V(0,0,0), Heading(90,data[1]):vector*data[7], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
+		set v3 to VECDRAW(V(0,0,0), data[0], RGB(0,0,255), "final", 1.0, TRUE, 0.2, TRUE, TRUE).
+	}
+	else if (past_dVincl < data[9]) AND (abs(data[8]) < 0.085) {
+		print "2". 
+		lock steering to data[0]-2*data[2].
+		set past_dVincl to data[9].
+		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dI", 1.0, TRUE, 0.2, TRUE, TRUE).
+		set v2 to VECDRAW(V(0,0,0), Heading(90,data[1]):vector*data[7], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
+		set v3 to VECDRAW(V(0,0,0), data[0]-2*data[2], RGB(0,0,255), "final", 1.0, TRUE, 0.2, TRUE, TRUE).
+	}
+	else {
+		print "3".
+		lock steering to data[0].
+		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dI", 1.0, TRUE, 0.2, TRUE, TRUE).
+		set v2 to VECDRAW(V(0,0,0), Heading(90,data[1]):vector*data[7], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
+		set v3 to VECDRAW(V(0,0,0), data[0], RGB(0,0,255), "final", 1.0, TRUE, 0.2, TRUE, TRUE).
+
+	}
 	
-	print "Fi: " + data[0].
-	print "dA: " + data[1].
-	print "Vh: " + data[2].
-	print "Vz: " + data[3].
-	print "Vorb: " + data[4].
-	print "dVorb: " + data[5].
+	//print "Fi     =" + data[1].
+	//print "dA     =" + data[3].
+	//print "Vh     =" + data[4].
+	//print "Vz     =" + data[5].
+	//print "Vorb   =" + data[6].
+	print "dVorb  =" + data[7].
+	print "dI     =" + data[8].
+	print "dVincl =" + data[9].
+	set v1:show to false.
+	set v2:show to false.
+	set v3:show to false.
 }
+
 lock throttle to 0.
+sas on.
 clearscreen.
 print "Circularization complete".
 orbitData.
@@ -252,13 +289,18 @@ function burndata {
 	
 	set AThr to eng[0]*Throttle/ship:mass. //моментальное ускорение сообщаемое движками
 	if AThr = 0 {set AThr to 10^(-5).} //если двигатель выключен
-	
 	set dVorb to Vorb-Vh.
-	set dA to g_alt-Acentr-Vz. //MAX(Min(Vz, 2), -2).
-	
+	set dA to g_alt-Acentr-Vz.
 	set fi to ARCSIN(Min(Max(dA/AThr,-1), 1)).
 	
-	return list(fi, dA, Vh, Vz, Vorb, dVorb).
+	local dI is targetIncl-orbit:inclination.
+	local dVincl is 2*Vorb*sin(abs(dI/2)).
+	if dI > 0 {set inclVec to v(0,dVincl,0).}
+	else {set inclVec to v(0,-dVincl,0).}
+	
+	set vec to Heading(90, fi):vector*dVorb + inclVec.
+	
+	return list(vec, fi, inclVec, dA, Vh, Vz, Vorb, dVorb, dI, dVincl).
 }
 	
 function englist {
