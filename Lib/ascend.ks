@@ -152,16 +152,18 @@ until stopburn {
 		set stopburn to true.
 	}
 	else if (data[0]:mag < 50) {
-		lock throttle to Max(data[0]:mag/1000, 0.005).
+		lock throttle to Max(data[0]:mag/1000, 0.001).
 	}
 	
-	if (past_dVincl < data[9]) AND (abs(data[8]) < 0.085) { 
+	if (past_dVincl < data[9]) AND (abs(data[8]) < 0.085) {
+		print "2".
 		lock steering to data[0]-2*data[2].
 		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dI", 1.0, TRUE, 0.2, TRUE, TRUE).
 		set v2 to VECDRAW(V(0,0,0), data[0]-data[2], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
 		set v3 to VECDRAW(V(0,0,0), data[0]-2*data[2], RGB(255,255,255), "final", 1.0, TRUE, 0.2, TRUE, TRUE).
 	}
 	else {
+		print "1".
 		lock steering to data[0].
 		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dI", 1.0, TRUE, 0.2, TRUE, TRUE).
 		set v2 to VECDRAW(V(0,0,0), data[0]-data[2], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
@@ -169,14 +171,18 @@ until stopburn {
 	}
 	set past_dVincl to data[9].
 	
-	print "Fi     =" + data[1].
-	print "dA     =" + data[3].
-	print "Vh     =" + data[4].
-	print "Vz     =" + data[5].
-	print "Vorb   =" + data[6].
-	print "dVorb  =" + data[7].
-	print "dI     =" + data[8].
-	print "dVincl =" + data[9].
+	// set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dI", 1.0, TRUE, 0.2, TRUE, TRUE).
+	// set v2 to VECDRAW(V(0,0,0), data[0]-data[2], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
+	// set v3 to VECDRAW(V(0,0,0), data[0], RGB(255,255,255), "final", 1.0, TRUE, 0.2, TRUE, TRUE).
+	
+	print "Fi     = " + data[1].
+	print "dA     = " + data[3].
+	print "Vh     = " + data[4].
+	print "Vz     = " + data[5].
+	print "Vorb   = " + data[6].
+	print "dVorb  = " + data[7].
+	print "dI     = " + data[8].
+	print "dVincl = " + data[9].
 	
 	wait 0.001.
 	
