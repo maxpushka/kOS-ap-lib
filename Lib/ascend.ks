@@ -1,8 +1,8 @@
 print "Ascend script v1.0".
 
 //==================== LAUNCH PARAMETERS ===================//
-set targetOrbit to 100000. //target orbit in meters, Apoapsis=Periapsis=targetOrbit
-set targetIncl to 0.0. //final orbit inclination in degrees
+set targetOrbit to 80000. //target orbit in meters, Apoapsis=Periapsis=targetOrbit
+set targetIncl to 90. //final orbit inclination in degrees
 
 //gravity turn start when ship's altitute == gravTurnAlt and/or velocity == gravTurnV
 set gravTurnAlt to 250. //[meters] altitude at which vessel shall start gravity turn
@@ -124,7 +124,7 @@ until ascendStage = 3 {
 	wait 0.001. //wait for the next physics tick
 }
 
-//===================== CIRCULARIZATION =====================
+//==================== CIRCULARIZATION =====================//
 
 sas on.
 unlock steering.
@@ -138,44 +138,35 @@ rcs on.
 wait 1.
 
 set stopburn to false.
-set dIp to targetIncl-orbit:inclination.
-set past_dVincl to 0.
+//set past_dVincl to 0.
+if targetIncl = 0 {set k to 0.}
+else {set k to 1.}
+
 lock throttle to 1.
 until stopburn {
 	clearscreen.
 	set data to burndata.
-	lock steering to data[0].
-	//return list(vec, fi, inclVec, dA, Vh, Vz, Vorb, dVorb, dI, dVincl).
-	//            0  , 1 , 2      , 3 , 4 , 5 , 6   , 7    , 8 , 9
+	//burndata
+	//return list(pitchVec, inclVec, fi, dA, Vh, Vz, Vorb, dVorb, dI, dVincl).
+	//            0       , 1      , 2 , 3 , 4 , 5 , 6   , 7    , 8 , 9
 	
+	set vec to data[0]+k*data[1]. //pitchVec + inclVec = steerVec
+	lock steering to vec.
 	if (data[7]<0) {
+		lock throttle to 0.
 		set stopburn to true.
+		sas on.
 	}
-	else if (data[0]:mag < 50) {
-		lock throttle to Max(data[0]:mag/1000, 0.001).
+	else if (vec:mag < 50) {
+		lock throttle to Max(vec:mag/1000, 0.005).
 	}
+	//set past_dVincl to data[9].
 	
-	if (past_dVincl < data[9]) AND (abs(data[8]) < 0.085) {
-		print "2".
-		lock steering to data[0]-2*data[2].
-		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dI", 1.0, TRUE, 0.2, TRUE, TRUE).
-		set v2 to VECDRAW(V(0,0,0), data[0]-data[2], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
-		set v3 to VECDRAW(V(0,0,0), data[0]-2*data[2], RGB(255,255,255), "final", 1.0, TRUE, 0.2, TRUE, TRUE).
-	}
-	else {
-		print "1".
-		lock steering to data[0].
-		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dI", 1.0, TRUE, 0.2, TRUE, TRUE).
-		set v2 to VECDRAW(V(0,0,0), data[0]-data[2], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
-		set v3 to VECDRAW(V(0,0,0), data[0], RGB(255,255,255), "final", 1.0, TRUE, 0.2, TRUE, TRUE).
-	}
-	set past_dVincl to data[9].
+	set v1 to VECDRAW(V(0,0,0), k*data[1], RGB(255,0,0), "dVincl", 1.0, TRUE, 0.2, TRUE, TRUE).
+	set v2 to VECDRAW(V(0,0,0), vec-k*data[1], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
+	set v3 to VECDRAW(V(0,0,0), vec, RGB(255,255,255), "dV", 1.0, TRUE, 0.2, TRUE, TRUE).
 	
-	// set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dI", 1.0, TRUE, 0.2, TRUE, TRUE).
-	// set v2 to VECDRAW(V(0,0,0), data[0]-data[2], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
-	// set v3 to VECDRAW(V(0,0,0), data[0], RGB(255,255,255), "final", 1.0, TRUE, 0.2, TRUE, TRUE).
-	
-	print "Fi     = " + data[1].
+	print "Fi     = " + data[2].
 	print "dA     = " + data[3].
 	print "Vh     = " + data[4].
 	print "Vz     = " + data[5].
@@ -190,16 +181,11 @@ until stopburn {
 	set v2:show to false.
 	set v3:show to false.
 }
-
-lock throttle to 0.
-sas on.
 clearscreen.
 print "Circularization complete".
 orbitData.
 
-
-
-//========================FUNCTIONS========================
+//======================= FUNCTIONS ========================//
 
 function DeltaV_Calc {
 	parameter DeltaV_Data.
@@ -298,9 +284,9 @@ function burndata {
 	if dI > 0 {set inclVec to dVincl*norm.}
 	else {set inclVec to -dVincl*norm.}
 	
-	set vec to Heading(90-targetIncl, fi):vector*dVorb + inclVec.
+	set pitchVec to Heading(90-targetIncl, fi):vector*dVorb.
 	
-	return list(vec, fi, inclVec, dA, Vh, Vz, Vorb, dVorb, dI, dVincl).
+	return list(pitchVec, inclVec, fi, dA, Vh, Vz, Vorb, dVorb, dI, dVincl).
 }
 	
 function englist {
