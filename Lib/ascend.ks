@@ -2,7 +2,7 @@ print "Ascend script v1.0".
 
 //==================== LAUNCH PARAMETERS ===================//
 set targetOrbit to 80000. //target orbit in meters, Apoapsis=Periapsis=targetOrbit
-set targetIncl to 90. //final orbit inclination in degrees
+set targetIncl to 0. //final orbit inclination in degrees
 
 //gravity turn start when ship's altitute == gravTurnAlt and/or velocity == gravTurnV
 set gravTurnAlt to 250. //[meters] altitude at which vessel shall start gravity turn
@@ -13,7 +13,6 @@ set gravTurnV to 150. //[m/s] velocity at which vessel shall start gravity turn
 SET SHIP:CONTROL:NEUTRALIZE TO TRUE.
 set ship:control:pilotmainthrottle to 0.
 sas off.
-rcs on.
 clearscreen.
 AG1 on. //open terminal
 lock throttle to 1.
@@ -53,6 +52,7 @@ DeltaV_Data:ADD("Time",time:seconds).
 DeltaV_Data:ADD("Thrust_Accel",throttle*availablethrust/mass).
 DeltaV_Data:ADD("Accel_Vec",throttle*ship:sensors:acc).
 
+rcs on.
 wait until (altitude > gravTurnAlt). // OR ship:velocity > gravTurnV).
 
 local line is 1.
@@ -60,7 +60,7 @@ until ascendStage = 3 {
 	// Run Mode Logic
 	//throttleStage:      //ascendStage:
 	//1=engine burning   //1=powered ascend; engine burning, apoapsis<targetOrbit
-	//2=MECO             //2=flight on a ballistic trajectory in the atmosphere; MECO, apoapsis>=targetOrbit
+	//0=MECO             //2=flight on a ballistic trajectory in the atmosphere; MECO, apoapsis>=targetOrbit
 	//                   //3=flight on a ballistic trajectory outside the atmosphere; MECO, apoapsis>=targetOrbit
 	
 	if apoapsis > targetOrbit AND altitude > ship:body:ATM:height {
@@ -74,10 +74,10 @@ until ascendStage = 3 {
 	else if apoapsis > targetOrbit AND throttleStage = 1 { //turning to ascendStage=2
 		lock throttle to 0.
 		when 1 then {rcs off.}
-		set throttleStage to 2. //MECO
+		set throttleStage to 0. //MECO
 		set ascendStage to 2.
 	}
-	else if apoapsis < targetOrbit AND throttleStage = 2 { //apoapsis fine tuning due to drag loss
+	else if apoapsis < targetOrbit AND throttleStage = 0 { //apoapsis fine tuning due to drag loss
 		set throttleStage to 1.
 		lock throttle to Max((targetOrbit-apoapsis)/1000, 0.001).
 	}	
@@ -138,42 +138,39 @@ rcs on.
 wait 1.
 
 set stopburn to false.
-//set past_dVincl to 0.
-if targetIncl = 0 {set k to 0.}
-else {set k to 1.}
-
 lock throttle to 1.
 until stopburn {
 	clearscreen.
 	set data to burndata.
 	//burndata
-	//return list(pitchVec, inclVec, fi, dA, Vh, Vz, Vorb, dVorb, dI, dVincl).
-	//            0       , 1      , 2 , 3 , 4 , 5 , 6   , 7    , 8 , 9
+	//return list(vec, pitchVec, inclVec, fi, dI, dA, Vh, Vz, Vorb, dVorb, dVincl, dVtotal).
+	//            0  , 1       , 2      , 3 , 4 , 5 , 6 , 7 , 8   , 9,   , 10    , 11
 	
-	set vec to data[0]+k*data[1]. //pitchVec + inclVec = steerVec
-	lock steering to vec.
-	if (data[7]<0) {
+	lock steering to data[0].
+	if (data[9]<0) { //dVorb < 0
 		lock throttle to 0.
 		set stopburn to true.
 		sas on.
 	}
-	else if (vec:mag < 50) {
-		lock throttle to Max(vec:mag/1000, 0.005).
+	else if (data[0]:mag < 50) {
+		lock throttle to MAX(data[0]:mag/1000, 0.005).
 	}
-	//set past_dVincl to data[9].
 	
-	set v1 to VECDRAW(V(0,0,0), k*data[1], RGB(255,0,0), "dVincl", 1.0, TRUE, 0.2, TRUE, TRUE).
-	set v2 to VECDRAW(V(0,0,0), vec-k*data[1], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
-	set v3 to VECDRAW(V(0,0,0), vec, RGB(255,255,255), "dV", 1.0, TRUE, 0.2, TRUE, TRUE).
+	set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dVincl", 1.0, TRUE, 0.2, TRUE, TRUE).
+	set v2 to VECDRAW(V(0,0,0), data[1], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
+	set v3 to VECDRAW(V(0,0,0), data[0], RGB(255,255,255), "dV", 1.0, TRUE, 0.2, TRUE, TRUE).
 	
-	print "Fi     = " + data[2].
-	print "dA     = " + data[3].
-	print "Vh     = " + data[4].
-	print "Vz     = " + data[5].
-	print "Vorb   = " + data[6].
-	print "dVorb  = " + data[7].
-	print "dI     = " + data[8].
-	print "dVincl = " + data[9].
+	print "Fi      = " + data[3].
+	print "dI      = " + data[4].
+	print "dA      = " + data[5].
+	print "".
+	print "Vh      = " + data[6].
+	print "Vz      = " + data[7].
+	print "".
+	print "Vorb    = " + data[8].
+	print "dVorb   = " + data[9].
+	print "dVincl  = " + data[10].
+	print "dVtotal = " + data[11].
 	
 	wait 0.001.
 	
@@ -277,16 +274,30 @@ function burndata {
 	set dA to g_alt-Acentr-Vz.
 	set fi to ARCSIN(Min(Max(dA/AThr,-1), 1)).
 	
-	local dI is targetIncl-orbit:inclination.
-	local dVincl is 2*Vorb*sin(abs(dI/2)). //delta V required to change orbit inclination
-	local normalVec is vcrs(ship:velocity:orbit,-body:position). //normal vector
-	local norm is normalVec/normalVec:mag. //normal unit vector
-	if dI > 0 {set inclVec to dVincl*norm.}
-	else {set inclVec to -dVincl*norm.}
+	set dI to targetIncl-orbit:inclination.
+	set dVincl to incl. //delta V required to change orbit inclination
+	set normalVec to vcrs(ship:velocity:orbit,-body:position). //normal vector
+	set norm to normalVec/normalVec:mag. //normal unit vector
 	
+	set dVtotal to dVorb + dVincl.
+	
+	set inclVec to dVincl*norm.
 	set pitchVec to Heading(90-targetIncl, fi):vector*dVorb.
+	set vec to pitchVec + inclVec.
 	
-	return list(pitchVec, inclVec, fi, dA, Vh, Vz, Vorb, dVorb, dI, dVincl).
+	return list(vec, pitchVec, inclVec, fi, dI, dA, Vh, Vz, Vorb, dVorb, dVincl, dVtotal).
+}
+
+function incl {
+	set dI to targetIncl-orbit:inclination.
+	set ecc to ship:orbit:eccentricity.
+	set w to ship:orbit:argumentofperiapsis.
+	set f to ship:orbit:trueanomaly.
+	set n to 1/ship:orbit:period.
+	set a to ship:orbit:semimajoraxis.
+	
+	set dVincl to (2*sin(dI/2)*sqrt(1-ecc^2)*cos(w+f)*n*a)/(1+ecc*cos(f)).
+	return dVincl.
 }
 	
 function englist {
