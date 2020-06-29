@@ -55,7 +55,6 @@ DeltaV_Data:ADD("Accel_Vec",throttle*ship:sensors:acc).
 rcs on.
 wait until (altitude > gravTurnAlt). // OR ship:velocity > gravTurnV).
 
-local line is 1.
 until ascendStage = 3 {
 	// Run Mode Logic
 	//throttleStage:      //ascendStage:
@@ -87,25 +86,25 @@ until ascendStage = 3 {
 	set compass to AzimuthCalc(targetIncl).	
 	
 	// Variable Printout
-	set line to 1.
+	local line is 1.
 	print "throttleStage = " + throttleStage + "   " at(0,line).
-	set line to line + 1.
+	local line is line + 1.
 	print "ascendStage   = " + ascendStage + "   " at(0,line).
-	set line to line + 2.
+	local line is line + 2.
 	print "pitch_ang     = " + round(pitch_ang,2) + "   " at(0,line).
-	set line to line + 1.
+	local line is line + 1.
 	print "compass       = " + round(compass,2) + "   " at(0,line).
-	set line to line + 1.
+	local line is line + 1.
 	print "gravTurnAlt   = " + round(gravTurnAlt) + "   " at(0,line).
-	set line to line + 2.
+	local line is line + 2.
 	print "altitude      = " + round(altitude) + "   " at(0,line).
-	set line to line + 1.
+	local line is line + 1.
 	print "apoapsis      = " + round(apoapsis) + "   " at(0,line).
-	set line to line + 1.
+	local line is line + 1.
 	print "target apo    = " + targetOrbit + "   " at(0,line).
-	set line to line + 1.
+	local line is line + 1.
 	print "orbit incl    = " + round(orbit:inclination,5) + "   " at(0,line).
-	set line to line + 1.
+	local line is line + 1.
 	print "target incl   = " + targetIncl + "   " at(0,line).
 	
 	// Delta V Calculations
@@ -160,17 +159,24 @@ until stopburn {
 	set v2 to VECDRAW(V(0,0,0), data[1], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
 	set v3 to VECDRAW(V(0,0,0), data[0], RGB(255,255,255), "dV", 1.0, TRUE, 0.2, TRUE, TRUE).
 	
-	print "Fi      = " + data[3].
-	print "dI      = " + data[4].
-	print "dA      = " + data[5].
-	print "".
-	print "Vh      = " + data[6].
-	print "Vz      = " + data[7].
-	print "".
-	print "Vorb    = " + data[8].
-	print "dVorb   = " + data[9].
-	print "dVincl  = " + data[10].
-	print "dVtotal = " + data[11].
+	local line is 1.
+	print "Fi      = " + data[3] + "   " at(0,line).
+	local line is line + 1.
+	print "dI      = " + data[4] + "   " at(0,line).
+	local line is line + 1.
+	print "dA      = " + data[5] + "   " at(0,line).
+	local line is line + 2.
+	print "Vh      = " + data[6] + "   " at(0,line).
+	local line is line + 1.
+	print "Vz      = " + data[7] + "   " at(0,line).
+	local line is line + 2.
+	print "Vorb    = " + data[8] + "   " at(0,line).
+	local line is line + 1.
+	print "dVorb   = " + data[9] + "   " at(0,line).
+	local line is line + 1.
+	print "dVincl  = " + data[10] + "   " at(0,line).
+	local line is line + 1.
+	print "dVtotal = " + data[11] + "   " at(0,line).
 	
 	wait 0.001.
 	
