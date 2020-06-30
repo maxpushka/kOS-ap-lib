@@ -138,7 +138,7 @@ until ascendStage = 3 {
 //==================== CIRCULARIZATION =====================//
 
 sas on.
-unlock steering.
+kuniverse:timewarp:warpto(time:seconds + ETA:apoapsis-5).
 until ETA:apoapsis < 1 {
 	clearscreen.
 	print "ETA:apoapsis = " + round(ETA:apoapsis,1).
