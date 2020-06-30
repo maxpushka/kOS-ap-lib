@@ -2,7 +2,7 @@ print "Ascend script v1.0".
 
 //==================== LAUNCH PARAMETERS ===================//
 set targetOrbit to 80000. //target orbit in meters, Apoapsis=Periapsis=targetOrbit
-set targetIncl to 0. //final orbit inclination in degrees
+set targetIncl to 1.5. //final orbit inclination in degrees
 
 //gravity turn start when ship's altitute == gravTurnAlt and/or velocity == gravTurnV
 set gravTurnAlt to 250. //[meters] altitude at which vessel shall start gravity turn
@@ -53,32 +53,44 @@ DeltaV_Data:ADD("Thrust_Accel",throttle*availablethrust/mass).
 DeltaV_Data:ADD("Accel_Vec",throttle*ship:sensors:acc).
 
 rcs on.
-wait until (altitude > gravTurnAlt). // OR ship:velocity > gravTurnV).
+until (altitude > gravTurnAlt) OR (ship:verticalspeed > gravTurnV) {
+	local line is 1.
+	print "gravTurnAlt = " + gravTurnAlt + "   " at(0,line).
+	local line is line + 1.
+	print "altitude    = " + round(altitude) + "   " at (0,line).
+	local line is line + 2.
+	print "gravTurnV   = " + gravTurnV + "   " at (0,line).
+	local line is line + 1.
+	print "verticalV   = " + round(ship:verticalspeed, 1) + "   " at (0,line).
+}
+clearscreen.
 
 until ascendStage = 3 {
 	// Run Mode Logic
 	//throttleStage:      //ascendStage:
-	//1=engine burning   //1=powered ascend; engine burning, apoapsis<targetOrbit
-	//0=MECO             //2=flight on a ballistic trajectory in the atmosphere; MECO, apoapsis>=targetOrbit
-	//                   //3=flight on a ballistic trajectory outside the atmosphere; MECO, apoapsis>=targetOrbit
+	//1=engine burning    //1=powered ascend; engine burning, apoapsis<targetOrbit
+	//2=apo corection     //2=flight on a ballistic trajectory in the atmosphere; apo corection, apoapsis>=targetOrbit
+	//3=MECO              //3=flight on a ballistic trajectory outside the atmosphere; MECO, apoapsis>=targetOrbit
+	
+	//it's important to lock throttle beth [0; 1] as it's value is used in DeltaV_Calc function calculations
 	
 	if apoapsis > targetOrbit AND altitude > ship:body:ATM:height {
 		lock throttle to 0.
 		set ascendStage to 3.
+		set throttleStage to 3.
 	}
 	
 	if apoapsis < targetOrbit AND throttleStage = 1 { //while ascendStage=1
-		lock throttle to Max((targetOrbit-apoapsis)/1000, 0.005).
+		lock throttle to MIN(MAX((targetOrbit-apoapsis)/100, 0.01), 1).
 	}
-	else if apoapsis > targetOrbit AND throttleStage = 1 { //turning to ascendStage=2
+	else if apoapsis > targetOrbit AND (throttleStage = 1 OR throttleStage = 2) { //switching to ascendStage=2
 		lock throttle to 0.
 		when 1 then {rcs off.}
-		set throttleStage to 0. //MECO
+		set throttleStage to 2. //apo corection
 		set ascendStage to 2.
 	}
-	else if apoapsis < targetOrbit AND throttleStage = 0 { //apoapsis fine tuning due to drag loss
-		set throttleStage to 1.
-		lock throttle to Max((targetOrbit-apoapsis)/1000, 0.001).
+	else if apoapsis < targetOrbit AND throttleStage = 2 { //apoapsis corection due to drag loss
+		lock throttle to MIN(MAX((targetOrbit-apoapsis)/100, 0.01), 1).
 	}	
   
 	set Pitch_Data to Pitch_Calc(Pitch_Data).
@@ -89,13 +101,13 @@ until ascendStage = 3 {
 	local line is 1.
 	print "throttleStage = " + throttleStage + "   " at(0,line).
 	local line is line + 1.
+	print "throttle      = " + round(throttle*100, 2) + " %   " at(0,line).
+	local line is line + 1.
 	print "ascendStage   = " + ascendStage + "   " at(0,line).
 	local line is line + 2.
 	print "pitch_ang     = " + round(pitch_ang,2) + "   " at(0,line).
 	local line is line + 1.
 	print "compass       = " + round(compass,2) + "   " at(0,line).
-	local line is line + 1.
-	print "gravTurnAlt   = " + round(gravTurnAlt) + "   " at(0,line).
 	local line is line + 2.
 	print "altitude      = " + round(altitude) + "   " at(0,line).
 	local line is line + 1.
@@ -111,7 +123,7 @@ until ascendStage = 3 {
 	set DeltaV_Data to DeltaV_Calc(DeltaV_Data).
 	
 	// Delta V Printout
-	set line to line + 3.
+	set line to line + 2.
 	print "DeltaV_total  = " + round(DeltaV_Data["Total"]) + "   " at(0,line).
 	set line to line + 1.
 	print "DeltaV_gain   = " + round(DeltaV_Data["Gain"]) + "   " at(0,line).
@@ -148,6 +160,8 @@ until stopburn {
 	lock steering to data[0].
 	if (data[9]<0) { //dVorb < 0
 		lock throttle to 0.
+		unlock throttle.
+		unlock steering.
 		set stopburn to true.
 		sas on.
 	}
