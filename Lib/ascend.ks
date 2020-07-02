@@ -1,40 +1,55 @@
 print "Ascend script v1.0".
 
 //==================== LAUNCH PARAMETERS ===================//
-set targetOrbit to 80000. //target orbit in meters, Apoapsis=Periapsis=targetOrbit
-set targetIncl to 1.5. //final orbit inclination in degrees
+set targetOrbit to 50000. //target orbit in meters, Apoapsis=Periapsis=targetOrbit
+set targetIncl to 40. //final orbit inclination in degrees
+set lan to false. //longitude of ascending node. if false then lan is ignored
 
-//gravity turn start when ship's altitute == gravTurnAlt and/or velocity == gravTurnV
 set gravTurnAlt to 250. //[meters] altitude at which vessel shall start gravity turn
 set gravTurnV to 150. //[m/s] velocity at which vessel shall start gravity turn
-//========================= ASCEND =========================//
+//gravity turn start when ship's altitute == gravTurnAlt and/or velocity == gravTurnV
+set corrBurn to true.
 
-//PRELAUCNH
+//======================== PRELAUNCH =======================//
+
+clearscreen.
+AG1 on. //open terminal
 SET SHIP:CONTROL:NEUTRALIZE TO TRUE.
 set ship:control:pilotmainthrottle to 0.
 sas off.
-clearscreen.
-AG1 on. //open terminal
-lock throttle to 1.
+
+if not(lan = false) {
+	local lan is lan+88.4.
+	if lan > 360 {local lan is lan-360.}
+	else if lan < 0 {local lan is lan+360.}
+
+	if ship:orbit:lan > lan {set t to 360-ship:orbit:lan+lan-3.}
+	else {set t to lan-ship:orbit:lan-3.}
+	
+	kuniverse:timewarp:warpto(time:seconds + t*60).
+	until ((ship:orbit:lan > lan-3) and (ship:orbit:lan < lan)) {
+		clearscreen.
+		PRINT "lan = " + lan.
+		print "current lan = " + ship:orbit:lan.
+		wait 1.
+	}
+}
+
+if not(ship:body:atm:exists) {
+	local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2. //ускорение свободного падения на текущей высоте
+	local f is ship:mass * g_alt.
+	local thr is (ship:mass^2*g_alt)/englist()[0].
+	lock throttle to thr.
+}
+else {lock throttle to 1.}
+
 set pitch_ang to 0.
 set compass to AzimuthCalc(targetIncl).
 lock steering to lookdirup(heading(compass,90-pitch_ang):vector,ship:facing:upvector).
-wait 1.
 
 //FLIGHT MODE PARAMETERS
 set throttleStage to 1.
 set ascendStage to 1.
-
-//STAGING
-local current_max to maxthrust.
-when maxthrust < current_max OR availablethrust = 0 then {
-	set prevThrottle to throttle.
-	lock throttle to 0.
-	stage.
-	lock throttle to prevThrottle.
-	set current_max to maxthrust.
-	preserve.
-}
 
 //PITCH_CALC PARAMETERS
 set Pitch_Data to lexicon().
@@ -52,6 +67,22 @@ DeltaV_Data:ADD("Time",time:seconds).
 DeltaV_Data:ADD("Thrust_Accel",throttle*availablethrust/mass).
 DeltaV_Data:ADD("Accel_Vec",throttle*ship:sensors:acc).
 
+wait 2.
+
+//========================= ASCEND =========================//
+
+//STAGING
+local current_max to maxthrust.
+when maxthrust < current_max OR availablethrust = 0 then {
+	set prevThrottle to throttle.
+	lock throttle to 0.
+	stage.
+	lock throttle to prevThrottle.
+	set current_max to maxthrust.
+	preserve.
+}
+
+clearscreen.	
 rcs on.
 until (altitude > gravTurnAlt) OR (ship:verticalspeed > gravTurnV) {
 	local line is 1.
@@ -80,8 +111,11 @@ until ascendStage = 3 {
 		set throttleStage to 3.
 	}
 	
-	if apoapsis < targetOrbit AND throttleStage = 1 { //while ascendStage=1
-		lock throttle to MIN(MAX((targetOrbit-apoapsis)/100, 0.01), 1).
+	if apoapsis < targetOrbit AND throttleStage = 1 AND ship:body:atm:exists { //while ascendStage=1 and body has atmosphere
+		lock throttle to MIN(MAX((targetOrbit-apoapsis)/1000, 0.005), 1).
+	}
+	else if apoapsis < targetOrbit AND throttleStage = 1 AND NOT(ship:body:atm:exists) { //while ascendStage=1 and body has no atmosphere
+		lock throttle to MIN(MAX((targetOrbit-apoapsis)/1000, 0.001), 1).
 	}
 	else if apoapsis > targetOrbit AND (throttleStage = 1 OR throttleStage = 2) { //switching to ascendStage=2
 		lock throttle to 0.
@@ -137,8 +171,7 @@ until ascendStage = 3 {
 
 //==================== CIRCULARIZATION =====================//
 
-sas on.
-kuniverse:timewarp:warpto(time:seconds + ETA:apoapsis-5).
+kuniverse:timewarp:warpto(time:seconds + ETA:apoapsis - 5).
 until ETA:apoapsis < 1 {
 	clearscreen.
 	print "ETA:apoapsis = " + round(ETA:apoapsis,1).
@@ -149,7 +182,7 @@ rcs on.
 wait 1.
 
 set stopburn to false.
-lock throttle to 1.
+lock throttle to 0.1.
 until stopburn {
 	clearscreen.
 	set data to burndata.
@@ -201,6 +234,12 @@ until stopburn {
 clearscreen.
 print "Circularization complete".
 orbitData.
+
+//==================== CORRECTING BURN ====================//
+
+if corrBurn = true {
+	set a to 42.
+}
 
 //======================= FUNCTIONS ========================//
 
@@ -258,24 +297,37 @@ function Pitch_Calc {
 }
 
 function AzimuthCalc {
-//https://www.orbiterwiki.org/wiki/Launch_Azimuth
-
+	//https://www.orbiterwiki.org/wiki/Launch_Azimuth
 	parameter targetIncl.
-	local beta_ang is arcsin(MAX(-1, MIN(1, cos(targetIncl)/cos(ship:latitude)))).
-	if beta_ang < 0 {
-		set beta_ang to 180-beta_ang.
+	
+	// find orbital velocity for a circular orbit at the current altitude.
+	local V_orb is max(ship:velocity:orbit:mag + 1,sqrt( body:mu / ( ship:altitude + body:radius))).
+	
+	// Use the current orbital velocity
+	//local V_orb is ship:velocity:orbit:mag.
+	
+	// project desired orbit onto surface heading
+	local az_orb is arcsin ( max(-1,min(1,cos(targetIncl) / cos(ship:latitude)))).
+	if (targetIncl < 0) {
+		set az_orb to 180 - az_orb.
 	}
 	
-	local R is ship:body:radius + targetOrbit.
-	local Vorb is sqrt(ship:body:Mu/R). //1 косм. скорость на текущей высоте
+	// create desired orbit velocity vector
+	local V_star is heading(az_orb, 0)*v(0, 0, V_orb).
+
+	// find horizontal component of current orbital velocity vector
+	local V_ship_h is ship:velocity:orbit - vdot(ship:velocity:orbit, up:vector:normalized)*up:vector:normalized.
 	
-	local Veqrot is (2*constant:pi*ship:body:radius)/(ship:body:rotationperiod).
+	// calculate difference between desired orbital vector and current (this is the direction we go)
+	local V_corr is V_star - V_ship_h.
 	
-	local Vxrot is Vorb*sin(beta_ang)-Veqrot*cos(ship:latitude).
-	local Vyrot is Vorb*cos(beta_ang).
+	// project the velocity correction vector onto north and east directions
+	local vel_n is vdot(V_corr, ship:north:vector).
+	local vel_e is vdot(V_corr, heading(90,0):vector).
 	
-	local beta_rot_ang is (arctan2(Vxrot,Vyrot)).
-	return beta_rot_ang.
+	// calculate compass heading
+	local az_corr is arctan2(vel_e, vel_n).
+	return az_corr.
 }
 
 function burndata {
@@ -299,13 +351,13 @@ function burndata {
 	set normalVec to vcrs(ship:velocity:orbit,-body:position). //normal vector
 	set norm to normalVec/normalVec:mag. //normal unit vector
 	
-	set dVtotal to dVorb + dVincl.
+	set dVtotal to dVorb + abs(dVincl).
 	
 	set inclVec to dVincl*norm.
 	set pitchVec to Heading(90-targetIncl, fi):vector*dVorb.
 	set vec to pitchVec + inclVec.
 	
-	return list(vec, pitchVec, inclVec, fi, dI, dA, Vh, Vz, Vorb, dVorb, dVincl, dVtotal).
+	return list(vec, pitchVec, inclVec, fi, dI, dA, Vh, Vz, Vorb, dVorb, abs(dVincl), dVtotal).
 }
 
 function incl {
@@ -340,8 +392,8 @@ function englist {
 		set eng_isp to eng_isp + eng:isp.
 	}
 	
-	if (ActiveEng:length=0) {return list(0,0,false).}
-	else {return list(eng_thrust, eng_isp/ActiveEng:length, true).}
+	if (ActiveEng:length=0) {return list(0,0).}
+	else {return list(eng_thrust, eng_isp/ActiveEng:length).}
 }
 
 function orbitData {
@@ -352,5 +404,6 @@ function orbitData {
 	print "Periapsis: " + ORBIT:PERIAPSIS.
 	print "Eccentricity: " + ORBIT:ECCENTRICITY.
 	print "Inclination: " + ORBIT:INCLINATION.
+	print "Logitude of ascending node: " + ORBIT:LAN.
 	print "================".
 }
