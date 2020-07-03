@@ -43,7 +43,7 @@ sas off.
 if not(ship:body:atm:exists) {
 	local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2. //ускорение свободного падения на текущей высоте
 	local f is ship:mass * g_alt.
-	local thr is (ship:mass^2*g_alt)/englist()[0].
+	local thr is (ship:mass^2*g_alt)/EngThrustIsp()[0].
 	lock throttle to thr.
 }
 else {lock throttle to 1.}
@@ -72,7 +72,7 @@ DeltaV_Data:ADD("Time",time:seconds).
 DeltaV_Data:ADD("Thrust_Accel",throttle*availablethrust/mass).
 DeltaV_Data:ADD("Accel_Vec",throttle*ship:sensors:acc).
 
-wait 2.
+wait 1.
 
 //========================= ASCEND =========================//
 
@@ -121,7 +121,7 @@ until ascendStage = 3 {
 		lock throttle to MIN(MAX((targetOrbit-apoapsis)/1000, 0.005), 1).
 	}
 	else if apoapsis < targetOrbit AND throttleStage = 1 AND NOT(ship:body:atm:exists) { //while ascendStage=1 and body has no atmosphere
-		lock throttle to MIN(MAX((ship:mass^2*g_alt)/englist()[0], 0.001), 1).
+		lock throttle to MIN(MAX((ship:mass^2*g_alt)/EngThrustIsp()[0], 0.001), 1).
 	}
 	else if apoapsis > targetOrbit AND (throttleStage = 1 OR throttleStage = 2) { //switching to ascendStage=2
 		lock throttle to 0.
@@ -254,29 +254,29 @@ if (corrBurn = true) AND ( abs(targetIncl-ship:orbit:inclination) > inclToler ) 
 	sas off.
 	rcs on.
 	set stopburn to false.
-	lock steering to InclData(targetIncl)[0].
+	lock steering to InclData(targetIncl).
 	wait 5.
 	until stopburn {
 	
-		local data is InclData(targetIncl).
-		lock steering to data[0].
+		local inclVec is InclData(targetIncl).
+		lock steering to inclVec.
 		
-		if data[1] < 10^(-5) {
+		if inclVec:mag < 10^(-5) {
 			lock throttle to 0.
 			set stopburn to true.
 			sas on.
 			rcs off.
 		}
-		else if data[1] < 50 AND data[1] > 0.25 {
-			lock throttle to MIN(MAX(data[1]/10, 0.05), 1).
+		else if inclVec:mag < 50 AND inclVec:mag > 0.25 {
+			lock throttle to MIN(MAX(inclVec:mag/10, 0.05), 1).
 		}
-		else if data[1] < 0.1 AND data[1] > 0.05 {
-			lock throttle to MIN(MAX(data[1]/100, 0.01), 1).
+		else if inclVec:mag < 0.1 AND inclVec:mag > 0.05 {
+			lock throttle to MIN(MAX(inclVec:mag/100, 0.01), 1).
 		}
-		else if data[1] < 0.05 {
-			lock throttle to MIN(MAX(data[1]/1000, 0.001), 1).
+		else if inclVec:mag < 0.05 {
+			lock throttle to MIN(MAX(inclVec:mag/1000, 0.0001), 1).
 		}
-		print "dVincl = " + data[1] at (0,1).
+		print "dVincl = " + inclVec:mag at (0,1).
 	}
 	
 	wait 1.
@@ -374,8 +374,8 @@ function AzimuthCalc {
 }
 
 function BurnData {
-	set eng to englist.
-	set incl to InclData(targetIncl). //return list(inclVec, dVincl).
+	set eng to EngThrustIsp.
+	set inclVec to InclData(targetIncl). //return list(inclVec, dVincl).
 	
 	set Rad to ship:body:radius + ship:altitude.
 	set g_alt to body:Mu/Rad^2. //ускорение свободного падения на текущей высоте
@@ -390,11 +390,11 @@ function BurnData {
 	set dA to g_alt-Acentr-Vz.
 	set fi to ARCSIN(Min(Max(dA/AThr,-1), 1)).
 	
-	set dVtotal to dVorb + abs(incl[1]).
+	set dVtotal to dVorb + abs(inclVec:mag).
 	set pitchVec to Heading(90-targetIncl, fi):vector*dVorb.
-	set vec to pitchVec + incl[0].
+	set vec to pitchVec + inclVec.
 	
-	return list(vec, pitchVec, incl[0], fi, dI, dA, Vh, Vz, Vorb, dVorb, abs(incl[1]), dVtotal).
+	return list(vec, pitchVec, inclVec, fi, dI, dA, Vh, Vz, Vorb, dVorb, inclVec:mag, dVtotal).
 }
 
 function InclData {
@@ -410,14 +410,13 @@ function InclData {
 	//delta V required to change orbit inclination
 	set dVincl to (2*sin(dI/2)*sqrt(1-ecc^2)*cos(w+f)*n*a)/(1+ecc*cos(f)).
 	
-	set normalVec to vcrs(ship:velocity:orbit,-body:position). //normal vector
-	set norm to normalVec/normalVec:mag. //normal unit vector
-	set inclVec to dVincl*norm.
+	set normalVec to vcrs(ship:velocity:orbit,-body:position):NORMALIZED. //normal unit vector
+	set inclVec to dVincl*normalVec.
 	
-	return list(inclVec, abs(dVincl)).
+	return inclVec.
 }
 	
-function englist {
+function EngThrustIsp {
 	list engines in allEngines.
 	
 	set ActiveEng to list().
@@ -449,6 +448,6 @@ function orbitData {
 	print "Periapsis: " + round(ORBIT:PERIAPSIS, 1).
 	print "Eccentricity: " + ORBIT:ECCENTRICITY.
 	print "Inclination: " + round(ORBIT:INCLINATION, 5).
-	print "Logitude of ascending node: " + round(ORBIT:LAN, 2).
+	print "Longitude of ascending node: " + round(ORBIT:LAN, 2).
 	print "================".
 }
