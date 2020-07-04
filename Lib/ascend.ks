@@ -1,12 +1,10 @@
-print "Ascend script v1.0".
+//Ascend script v1.0
+//by maxpushka
 
 //==================== LAUNCH PARAMETERS ===================//
-set targetOrbit to 80000. //target orbit in meters, Apoapsis=Periapsis=targetOrbit
-set targetIncl to 90. //final orbit inclination in degrees
-//set lan to 5. //longitude of ascending node. if false then lan is ignored
-
-set inclToler to 0.5. //inclination tolerance
-set corrBurn to true. //if true, correction maneuver will take place after circularization burn
+//REQUIRED ACCELEROMETER ONBOARD! CHECK FOR ITS PRESENCE
+set targetOrbit to 80000. //[meters] Apoapsis=Periapsis=targetOrbit
+set targetIncl to 90. //[degrees] final orbit inclination
 
 set gravTurnAlt to 250. //[meters] altitude at which vessel shall start gravity turn
 set gravTurnV to 150. //[m/s] velocity at which vessel shall start gravity turn
@@ -19,26 +17,6 @@ AG1 on. //open terminal
 SET SHIP:CONTROL:NEUTRALIZE TO TRUE.
 set ship:control:pilotmainthrottle to 0.
 sas off.
-
-// if not(lan = false) {
-	// set k to 3.
-	// local lan is lan+88.4.
-	// set lant to 0.
-	// if lan-k > 360 {set lant to lan-360-k.}
-	// else if lan-k < 0 {set lant to lan+360-k.}
-
-	// if ship:orbit:lan > lant {set t to 360-ship:orbit:lan+lant.}
-	// else {set t to lant-ship:orbit:lan.}
-	
-	// kuniverse:timewarp:warpto(time:seconds + t*60).
-	// until (ship:orbit:lan > lant) and (ship:orbit:lan < lan) {
-		// clearscreen.
-		// PRINT "lan = " + lan.
-		// print "current lan = " + ship:orbit:lan.
-		// wait 1.
-	// }
-	// clearscreen.
-// }
 
 if not(ship:body:atm:exists) {
 	local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2. //ускорение свободного падения на текущей высоте
@@ -240,49 +218,6 @@ until stopburn {
 clearscreen.
 print "Circularization complete".
 orbitData().
-wait 5.
-
-//============== INCLINATION CORRECTION BURN ===============//
-
-if (corrBurn = true) AND ( abs(targetIncl-ship:orbit:inclination) > inclToler ) {
-	until (abs(ship:latitude) < 0.5) {
-		print "burn at lat = 0" at(0,1).
-		print "current lat = " + round(ship:latitude, 3) at(0,2).
-	}
-	clearscreen.
-	
-	sas off.
-	rcs on.
-	set stopburn to false.
-	lock steering to InclData(targetIncl).
-	wait 5.
-	until stopburn {
-	
-		local inclVec is InclData(targetIncl).
-		lock steering to inclVec.
-		
-		if inclVec:mag < 10^(-5) {
-			lock throttle to 0.
-			set stopburn to true.
-			sas on.
-			rcs off.
-		}
-		else if inclVec:mag < 50 AND inclVec:mag > 0.25 {
-			lock throttle to MIN(MAX(inclVec:mag/10, 0.05), 1).
-		}
-		else if inclVec:mag < 0.1 AND inclVec:mag > 0.05 {
-			lock throttle to MIN(MAX(inclVec:mag/100, 0.01), 1).
-		}
-		else if inclVec:mag < 0.05 {
-			lock throttle to MIN(MAX(inclVec:mag/1000, 0.0001), 1).
-		}
-		print "dVincl = " + inclVec:mag at (0,1).
-	}
-	
-	wait 1.
-	clearscreen.
-	orbitData().
-}
 
 //======================= FUNCTIONS ========================//
 
@@ -404,7 +339,7 @@ function InclData {
 	set ecc to ship:orbit:eccentricity.
 	set w to ship:orbit:argumentofperiapsis.
 	set f to ship:orbit:trueanomaly.
-	set n to 1/ship:orbit:period.
+	set n to (2*constant:pi)/ship:orbit:period. // (1/ship:orbit:period).
 	set a to ship:orbit:semimajoraxis.
 	
 	//delta V required to change orbit inclination
