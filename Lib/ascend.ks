@@ -4,7 +4,7 @@
 //==================== LAUNCH PARAMETERS ===================//
 //REQUIRED ACCELEROMETER ONBOARD! CHECK FOR ITS PRESENCE
 set targetOrbit to 80000. //[meters] Apoapsis=Periapsis=targetOrbit
-set targetIncl to 90. //[degrees] final orbit inclination
+set targetIncl to 40. //[degrees] final orbit inclination
 
 set gravTurnAlt to 250. //[meters] altitude at which vessel shall start gravity turn
 set gravTurnV to 150. //[m/s] velocity at which vessel shall start gravity turn
@@ -20,7 +20,6 @@ sas off.
 
 if not(ship:body:atm:exists) {
 	local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2. //ускорение свободного падения на текущей высоте
-	local f is ship:mass * g_alt.
 	local thr is (ship:mass^2*g_alt)/EngThrustIsp()[0].
 	lock throttle to thr.
 }
@@ -40,7 +39,8 @@ Pitch_Data:ADD("Time",time:seconds).
 Pitch_Data:ADD("Pitch",0).
 Pitch_Data:ADD("Pitch_Final",85).
 Pitch_Data:ADD("Vz",verticalspeed).
-Pitch_Data:ADD("Alt_Final",0.7*ship:body:atm:height).
+if body:atm:exists {Pitch_Data:ADD("Alt_Final",0.7*ship:body:atm:height).}
+else {Pitch_Data:ADD("Alt_Final",0.25*targetOrbit).}
 
 //DeltaV_Calc PARAMETERS
 set DeltaV_Data to lexicon().
@@ -99,6 +99,7 @@ until ascendStage = 3 {
 		lock throttle to MIN(MAX((targetOrbit-apoapsis)/1000, 0.005), 1).
 	}
 	else if apoapsis < targetOrbit AND throttleStage = 1 AND NOT(ship:body:atm:exists) { //while ascendStage=1 and body has no atmosphere
+		local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2.
 		lock throttle to MIN(MAX((ship:mass^2*g_alt)/EngThrustIsp()[0], 0.001), 1).
 	}
 	else if apoapsis > targetOrbit AND (throttleStage = 1 OR throttleStage = 2) { //switching to ascendStage=2
