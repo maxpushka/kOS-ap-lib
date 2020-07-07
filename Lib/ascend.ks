@@ -3,12 +3,15 @@
 
 //==================== LAUNCH PARAMETERS ===================//
 //REQUIRED ACCELEROMETER ONBOARD! CHECK FOR ITS PRESENCE
-set targetOrbit to 80000. //[meters] Apoapsis=Periapsis=targetOrbit
-set targetIncl to 40. //[degrees] final orbit inclination
+set targetOrbit to 100000. //[meters] Apoapsis=Periapsis=targetOrbit
+set targetIncl to 90. //[degrees] final orbit inclination
 
 set gravTurnAlt to 250. //[meters] altitude at which vessel shall start gravity turn
 set gravTurnV to 150. //[m/s] velocity at which vessel shall start gravity turn
 //gravity turn start when ship's altitute == gravTurnAlt OR ground velocity == gravTurnV
+//on bodies without atmosphere these parameters have no effect.
+
+set accLimit to 3. //[g] acceleration limiter. may be set to false
 
 //======================== PRELAUNCH =======================//
 
@@ -18,14 +21,8 @@ SET SHIP:CONTROL:NEUTRALIZE TO TRUE.
 set ship:control:pilotmainthrottle to 0.
 sas off.
 
-if not(ship:body:atm:exists) {
-	local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2. //ускорение свободного падения на текущей высоте
-	local thr is (ship:mass^2*g_alt)/EngThrustIsp()[0].
-	lock throttle to thr.
-}
-else {lock throttle to 1.}
-
-set pitch_ang to 0.
+//STEERING SETTING
+if body:atm:exists {set pitch_ang to 0.} else {set pitch_ang to 60.} //starting pitch angle
 set compass to AzimuthCalc(targetIncl).
 lock steering to lookdirup(heading(compass,90-pitch_ang):vector,ship:facing:upvector).
 
@@ -36,11 +33,22 @@ set ascendStage to 1.
 //PITCH_CALC PARAMETERS
 set Pitch_Data to lexicon().
 Pitch_Data:ADD("Time",time:seconds).
-Pitch_Data:ADD("Pitch",0).
 Pitch_Data:ADD("Pitch_Final",85).
 Pitch_Data:ADD("Vz",verticalspeed).
-if body:atm:exists {Pitch_Data:ADD("Alt_Final",0.7*ship:body:atm:height).}
-else {Pitch_Data:ADD("Alt_Final",0.25*targetOrbit).}
+if body:atm:exists {
+	Pitch_Data:ADD("Alt_Final",0.7*ship:body:atm:height).
+	Pitch_Data:ADD("Pitch",pitch_ang). //starting pitch angle
+	
+	lock throttle to 1.
+}
+else {
+	Pitch_Data:ADD("Alt_Final",0.1*targetOrbit).
+	Pitch_Data:ADD("Pitch",pitch_ang). //starting pitch angle
+	
+	local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2. //ускорение свободного падения на текущей высоте
+	if accLimit=false {lock throttle to (ship:mass^2*g_alt)/EngThrustIsp()[0].}
+	else {lock throttle to MIN( (ship:mass^2*g_alt*(accLimit/2))/EngThrustIsp()[0], 1).}
+}
 
 //DeltaV_Calc PARAMETERS
 set DeltaV_Data to lexicon().
@@ -67,24 +75,27 @@ when maxthrust < current_max OR availablethrust = 0 then {
 
 //PRE GRAVITY TURN LOGIC	
 rcs on.
-until (altitude > gravTurnAlt) OR (ship:verticalspeed > gravTurnV) {
-	local line is 1.
-	print "gravTurnAlt = " + gravTurnAlt + "   " at(0,line).
-	local line is line + 1.
-	print "altitude    = " + round(altitude) + "   " at(0,line).
-	local line is line + 2.
-	print "gravTurnV   = " + gravTurnV + "   " at(0,line).
-	local line is line + 1.
-	print "verticalV   = " + round(ship:verticalspeed, 1) + "   " at(0,line).
+if body:atm:exists {
+	until (altitude > gravTurnAlt) OR (ship:verticalspeed > gravTurnV) {
+		local line is 1.
+		print "gravTurnAlt = " + gravTurnAlt + "   " at(0,line).
+		local line is line + 1.
+		print "altitude    = " + round(altitude) + "   " at(0,line).
+		local line is line + 2.
+		print "gravTurnV   = " + gravTurnV + "   " at(0,line).
+		local line is line + 1.
+		print "verticalV   = " + round(ship:verticalspeed, 1) + "   " at(0,line).
+	}
 }
 clearscreen.
 
 //GRAVITY TURN LOGIC
+set throttleStageList to list("ascend", "apo correction").
 until ascendStage = 3 {
 	// Run Mode Logic
 	//throttleStage:      //ascendStage:
 	//1=engine burning    //1=powered ascend; engine burning, apoapsis<targetOrbit
-	//2=apo corection     //2=flight on a ballistic trajectory in the atmosphere; apo corection, apoapsis>=targetOrbit
+	//2=apo correction    //2=flight on a ballistic trajectory in the atmosphere; apo corection, apoapsis>=targetOrbit
 	//3=MECO              //3=flight on a ballistic trajectory outside the atmosphere; MECO, apoapsis>=targetOrbit
 	
 	//it's important to lock throttle beth [0; 1] as it's value is used in DeltaV_Calc function calculations
@@ -93,22 +104,26 @@ until ascendStage = 3 {
 		lock throttle to 0.
 		set ascendStage to 3.
 		set throttleStage to 3.
+		clearscreen.
 	}
 	
-	if apoapsis < targetOrbit AND throttleStage = 1 AND ship:body:atm:exists { //while ascendStage=1 and body has atmosphere
-		lock throttle to MIN(MAX((targetOrbit-apoapsis)/1000, 0.005), 1).
-	}
-	else if apoapsis < targetOrbit AND throttleStage = 1 AND NOT(ship:body:atm:exists) { //while ascendStage=1 and body has no atmosphere
-		local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2.
-		lock throttle to MIN(MAX((ship:mass^2*g_alt)/EngThrustIsp()[0], 0.001), 1).
+	if apoapsis < targetOrbit AND throttleStage = 1{ //while ascendStage=1
+		if ship:body:atm:exists { //body has atmosphere
+			lock throttle to MIN(MAX((targetOrbit-apoapsis)/1000, 0.005), 1).
+		}
+		else { //body has no atmosphere
+			local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2.
+			lock throttle to MIN(MAX( (ship:mass^2*g_alt*(accLimit/2))/EngThrustIsp()[0], 0.001 ), 1). //(ship:mass^2*g_alt) //(targetOrbit-apoapsis)/EngThrustIsp()[0]/100
+		}
 	}
 	else if apoapsis > targetOrbit AND (throttleStage = 1 OR throttleStage = 2) { //switching to ascendStage=2
 		lock throttle to 0.
 		when 1 then {rcs off.}
-		set throttleStage to 2. //apo corection
+		set throttleStage to 2.
 		set ascendStage to 2.
+		clearscreen.
 	}
-	else if apoapsis < targetOrbit AND throttleStage = 2 { //apoapsis corection due to drag loss
+	else if apoapsis < targetOrbit AND throttleStage = 2 { //while ascendStage=2 (apoapsis corection due to drag loss)
 		lock throttle to MIN(MAX((targetOrbit-apoapsis)/100, 0.01), 1).
 	}	
   
@@ -118,13 +133,13 @@ until ascendStage = 3 {
 	
 	// Variable Printout
 	local line is 1.
-	print "throttleStage = " + throttleStage + "   " at(0,line).
+	print "throttleStage = " + throttleStageList[throttleStage-1] + "   " at(0,line).
 	local line is line + 1.
 	print "throttle      = " + round(throttle*100, 2) + " %   " at(0,line).
 	local line is line + 1.
-	print "ascendStage   = " + ascendStage + "   " at(0,line).
+	print "ascend stage  = " + ascendStage + "   " at(0,line).
 	local line is line + 2.
-	print "pitch_ang     = " + round(pitch_ang,2) + "   " at(0,line).
+	print "pitch angle   = " + round(pitch_ang,2) + "   " at(0,line).
 	local line is line + 1.
 	print "compass       = " + round(compass,2) + "   " at(0,line).
 	local line is line + 2.
@@ -253,11 +268,11 @@ function Pitch_Calc {
 	local v_speed2 to verticalspeed.
 	local t_2 to time:seconds.
 	local dt to max(0.0001,t_2 - t_1).
-	local v_accel to max(0.001,(v_speed2 - v_speed2)/dt).
+	local v_accel to max(0.001,(v_speed2 - v_speed1)/dt).
 	local alt_final is Pitch_Data["Alt_Final"].
 	local alt_diff is alt_final - altitude.
 	
-	local a to .5*v_accel.
+	local a to 0.5*v_accel.
 	local b to verticalspeed.
 	local c to -alt_diff.
 	
