@@ -4,14 +4,14 @@
 //==================== LAUNCH PARAMETERS ===================//
 //REQUIRED ACCELEROMETER ONBOARD! CHECK FOR ITS PRESENCE
 set targetOrbit to 100000. //[meters] Apoapsis=Periapsis=targetOrbit
-set targetIncl to 90. //[degrees] final orbit inclination
+set targetIncl to 0. //[degrees] final orbit inclination
 
 set gravTurnAlt to 250. //[meters] altitude at which vessel shall start gravity turn
 set gravTurnV to 150. //[m/s] velocity at which vessel shall start gravity turn
 //gravity turn start when ship's altitute == gravTurnAlt OR ground velocity == gravTurnV
 //on bodies without atmosphere these parameters have no effect.
 
-set accLimit to 3. //[g] acceleration limiter. may be set to false
+set accLimit to false. //[g] acceleration limiter. may be set to false
 
 //======================== PRELAUNCH =======================//
 
@@ -109,11 +109,22 @@ until ascendStage = 3 {
 	
 	if apoapsis < targetOrbit AND throttleStage = 1{ //while ascendStage=1
 		if ship:body:atm:exists { //body has atmosphere
-			lock throttle to MIN(MAX((targetOrbit-apoapsis)/1000, 0.005), 1).
+			if accLimit=false {
+				lock throttle to MIN(MAX((targetOrbit-apoapsis)/1000, 0.005), 1).
+			}
+			else {
+				local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2.
+				lock throttle to MIN(MAX( (ship:mass^2*g_alt*(accLimit/2))/EngThrustIsp()[0], 0.001 ), 1).
+			}
 		}
 		else { //body has no atmosphere
-			local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2.
-			lock throttle to MIN(MAX( (ship:mass^2*g_alt*(accLimit/2))/EngThrustIsp()[0], 0.001 ), 1). //(ship:mass^2*g_alt) //(targetOrbit-apoapsis)/EngThrustIsp()[0]/100
+			if accLimit=false {
+				lock throttle to (ship:mass^2*g_alt)/EngThrustIsp()[0].
+			}
+			else {
+				local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2.
+				lock throttle to MIN(MAX( (ship:mass^2*g_alt*(accLimit/2))/EngThrustIsp()[0], 0.001 ), 1). //(ship:mass^2*g_alt) //(targetOrbit-apoapsis)/EngThrustIsp()[0]/100
+			}
 		}
 	}
 	else if apoapsis > targetOrbit AND (throttleStage = 1 OR throttleStage = 2) { //switching to ascendStage=2
