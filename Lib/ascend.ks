@@ -3,11 +3,12 @@
 
 //==================== LAUNCH PARAMETERS ===================//
 //REQUIRED ACCELEROMETER ONBOARD! CHECK FOR ITS PRESENCE
-set targetOrbit to 100000. //[meters] Apoapsis=Periapsis=targetOrbit
+set targetOrbit to 80000. //[meters] Apoapsis=Periapsis=targetOrbit
 set targetIncl to 0. //[degrees] final orbit inclination
+set finalPitch to 60.
 
-set gravTurnAlt to 250. //[meters] altitude at which vessel shall start gravity turn
-set gravTurnV to 150. //[m/s] velocity at which vessel shall start gravity turn
+set gravTurnAlt to 15000. //[meters] altitude at which vessel shall start gravity turn
+set gravTurnV to 1500. //[m/s] velocity at which vessel shall start gravity turn
 //gravity turn start when ship's altitute == gravTurnAlt OR ground velocity == gravTurnV
 //on bodies without atmosphere these parameters have no effect.
 
@@ -26,7 +27,7 @@ clearscreen.
 AG1 on. //open terminal
 SET SHIP:CONTROL:NEUTRALIZE TO TRUE. //block user control inputs
 set ship:control:pilotmainthrottle to 0. //block user throttle inputs
-sas off.
+sas on.
 
 //STEERING SETTING
 if body:atm:exists {set pitch_ang to 0.} else {set pitch_ang to 60.} //starting pitch angle
@@ -47,7 +48,7 @@ Tpoints:add("EndPoint",101).
 set Pitch_Data to lexicon().
 Pitch_Data:ADD("Time",time:seconds).
 Pitch_Data:ADD("Time_to_Alt",0).
-Pitch_Data:ADD("Pitch_Final",85).
+Pitch_Data:ADD("Pitch_Final",finalPitch).
 if body:atm:exists {
 	Pitch_Data:ADD("Alt_Final",ship:body:atm:height).
 	Pitch_Data:ADD("Pitch",pitch_ang). //starting pitch angle
@@ -97,10 +98,13 @@ if body:atm:exists {
 		local line is line + 2.
 		print "gravTurnV   = " + gravTurnV + "   " at(0,line).
 		local line is line + 1.
-		print "verticalV   = " + round(ship:verticalspeed, 1) + "   " at(0,line).
+		print "Velocity    = " + round(ship:verticalspeed, 1) + "   " at(0,line).
+		local line is line + 1.
+		print "Mach Number = " + MachNumber() + "   " at(0,line).
 	}
 }
 clearscreen.
+sas off.
 
 //GRAVITY TURN LOGIC
 until ascendStage = 3 {
@@ -141,11 +145,12 @@ until ascendStage = 3 {
 	}
 	else if apoapsis > targetOrbit AND (throttleStage = 1 OR throttleStage = 2) { //switching to ascendStage=2
 		lock throttle to 0.
-		when 1 then {rcs off.}
+		rcs off.
 		set throttleStage to 2.
 		set ascendStage to 2.
 	}
 	else if apoapsis < targetOrbit AND throttleStage = 2 { //while ascendStage=2 (apoapsis corection due to drag loss)
+		rcs on.
 		lock throttle to MIN(MAX((targetOrbit-apoapsis)/100, 0.01), 1).
 	}	
   
