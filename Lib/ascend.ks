@@ -15,9 +15,14 @@ set accLimit to false. //[g] acceleration limiter. may be set to false
 
 //======================== PRELAUNCH =======================//
 
+//IMPORTS
+runoncepath("0:/kOS_ap_lib/Lib/lib_phys/VerticalAccelCalc.ks").
+runoncepath("0:/kOS_ap_lib/Lib/lib_phys/MachNumber.ks").
+
+//CLEARING WORKSPACE
 clearscreen.
-AG1 on. //open terminal
-SET SHIP:CONTROL:NEUTRALIZE TO TRUE.
+AG4 on. //open terminal
+SET SHIP:CONTROL:NEUTRALIZE TO TRUE. //block user control
 set ship:control:pilotmainthrottle to 0.
 sas off.
 
@@ -33,10 +38,10 @@ set ascendStage to 1.
 //PITCH_CALC PARAMETERS
 set Pitch_Data to lexicon().
 Pitch_Data:ADD("Time",time:seconds).
-Pitch_Data:ADD("Pitch_Final",85).
-Pitch_Data:ADD("Vz",verticalspeed).
+Pitch_Data:ADD("Time_to_Alt",0).
+Pitch_Data:ADD("Pitch_Final",0).
 if body:atm:exists {
-	Pitch_Data:ADD("Alt_Final",0.7*ship:body:atm:height).
+	Pitch_Data:ADD("Alt_Final",ship:body:atm:height).
 	Pitch_Data:ADD("Pitch",pitch_ang). //starting pitch angle
 	
 	lock throttle to 1.
@@ -90,7 +95,6 @@ if body:atm:exists {
 clearscreen.
 
 //GRAVITY TURN LOGIC
-set throttleStageList to list("ascend", "apo correction").
 until ascendStage = 3 {
 	// Run Mode Logic
 	//throttleStage:      //ascendStage:
@@ -144,7 +148,7 @@ until ascendStage = 3 {
 	
 	// Variable Printout
 	local line is 1.
-	print "throttleStage = " + throttleStageList[throttleStage-1] + "   " at(0,line).
+	print "throttleStage = " + throttleStage + "   " at(0,line).
 	local line is line + 1.
 	print "throttle      = " + round(throttle*100, 2) + " %   " at(0,line).
 	local line is line + 1.
@@ -274,16 +278,13 @@ function DeltaV_Calc {
 
 function Pitch_Calc {
 	parameter Pitch_Data.
-	local v_speed1 to Pitch_Data["Vz"].
 	local t_1 to Pitch_Data["Time"].
-	local v_speed2 to verticalspeed.
 	local t_2 to time:seconds.
 	local dt to max(0.0001,t_2 - t_1).
-	local v_accel to max(0.001,(v_speed2 - v_speed1)/dt).
 	local alt_final is Pitch_Data["Alt_Final"].
 	local alt_diff is alt_final - altitude.
 	
-	local a to 0.5*v_accel.
+	local a to 0.5*VerticalAccelCalc().
 	local b to verticalspeed.
 	local c to -alt_diff.
 	
@@ -296,7 +297,7 @@ function Pitch_Calc {
 	
 	set Pitch_Data["Pitch"] to pitch_des.
 	set Pitch_Data["Time"] to t_2.
-	set Pitch_Data["Vz"] to v_speed2.
+	set Pitch_Data["Time_to_Alt"] to time_to_alt.
 	
 	return Pitch_Data.
 }
