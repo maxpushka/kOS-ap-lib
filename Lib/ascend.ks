@@ -18,7 +18,7 @@ set accLimit to false. //[g] acceleration limiter. may be set to false
 //IMPORTS
 runoncepath("0:/kOS_ap_lib/Lib/lib_phys/VerticalAccelCalc.ks").
 runoncepath("0:/kOS_ap_lib/Lib/lib_phys/MachNumber.ks").
-runoncepath("0:/kOS_ap_lib/Lib/lib_math/BisectionSolver.ks").
+runoncepath("0:/kOS_ap_lib/Lib/lib_math/BisectionSolver1.ks").
 runoncepath("0:/kOS_ap_lib/Lib/lib_math/Derivator.ks").
 
 //CLEARING WORKSPACE
@@ -39,6 +39,7 @@ set ascendStage to 1.
 
 //PITCH_CALC PARAMETERS
 set v_jerk_func to makeDerivator_N(0,20).
+
 set Tpoints to lexicon().
 Tpoints:add("StartPoint",100).
 Tpoints:add("EndPoint",101).
@@ -298,9 +299,14 @@ function Pitch_Calc {
 	set p to solver:call().
 	set Tpoints["StartPoint"] to p[0][0].	
 	set Tpoints["EndPoint"] to p[1][0].	
-	
 	local time_to_alt to p[2][0].
-	print time_to_alt at(0,20).
+	
+	// set solver to BisectionSolver(t_func@, Tpoints["StartPoint"], Tpoints["EndPoint"]).
+	// set Tpoints["StartPoint"] to solver[0].	
+	// set Tpoints["EndPoint"] to solver[1].
+	// local time_to_alt to solver[2].
+	
+	print "Burn time left = " + time_to_alt at(0,21).
 	
 	set Pitch_Data["Time"] to t_2.
 	set Pitch_Data["Time_to_Alt"] to time_to_alt.
