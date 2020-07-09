@@ -1,4 +1,4 @@
-function machNumber {
+function MachNumber {
     local idx is ship:body:atm:adbidx. //adiabatic index
     if not body:atm:exists or body:atm:altitudepressure(altitude) = 0 {
         return 0.
