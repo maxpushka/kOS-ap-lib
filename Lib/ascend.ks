@@ -3,16 +3,22 @@
 
 //==================== LAUNCH PARAMETERS ===================//
 //REQUIRED ACCELEROMETER ONBOARD! CHECK FOR ITS PRESENCE
-set targetOrbit to 80000. //[meters] Apoapsis=Periapsis=targetOrbit
+set targetOrbit to 150000. //[meters] Apoapsis=Periapsis=targetOrbit
 set targetIncl to 0. //[degrees] final orbit inclination
-set finalPitch to 60.
+set finalPitch to 70.
 
-set gravTurnAlt to 15000. //[meters] altitude at which vessel shall start gravity turn
+set gravTurnAlt to 10000. //[meters] altitude at which vessel shall start gravity turn
 set gravTurnV to 1500. //[m/s] velocity at which vessel shall start gravity turn
 //gravity turn start when ship's altitute == gravTurnAlt OR ground velocity == gravTurnV
 //on bodies without atmosphere these parameters have no effect.
 
 set accLimit to false. //[g] acceleration limiter. may be set to false
+set pre_stage to 0.5.
+set past_stage to 1.
+set deployAntennas to false.
+set deploySolar to false.
+set jettisonFairing to false.
+set autoWarp to true.
 
 //======================== PRELAUNCH =======================//
 
@@ -81,12 +87,31 @@ local current_max to maxthrust.
 when maxthrust < current_max OR availablethrust = 0 then {
 	set prevThrottle to throttle.
 	lock throttle to 0.
+	if not(pre_stage = false) {wait pre_stage.}
 	stage.
+	if not(past_stage = false) {wait past_stage.}
 	lock throttle to prevThrottle.
 	set current_max to maxthrust.
 	preserve.
 }
 
+//AUTO DEPLOY
+if deployAntennas = true {
+	when (MachNumber() > 1.1) AND (ship:q*constant:ATMtokPa < 3000) then {
+		print "".
+	}
+}
+if deploySolar = true {
+	when (MachNumber() > 1.1) AND (ship:q*constant:ATMtokPa < 3000) then {
+		PANELS ON.
+	}
+}
+if jettisonFairing = true {
+	when (MachNumber() > 1.1) AND (ship:q*constant:ATMtokPa < 3000) then {
+		print "".
+	}
+}
+	
 //PRE GRAVITY TURN LOGIC	
 rcs on.
 if body:atm:exists {
@@ -201,7 +226,7 @@ until ascendStage = 3 {
 //==================== CIRCULARIZATION =====================//
 
 clearscreen.
-kuniverse:timewarp:warpto(time:seconds + ETA:apoapsis - 5).
+if autoWarp = true {kuniverse:timewarp:warpto(time:seconds + ETA:apoapsis - 5).}
 until ETA:apoapsis < 1 {
 	print "ETA:apoapsis = " + round(ETA:apoapsis,1) at (0,1).
 	wait 0.5.
@@ -311,7 +336,7 @@ function Pitch_Calc {
 	// set Tpoints["EndPoint"] to solver[1].
 	// local time_to_alt to solver[2].
 	
-	print "Burn time left = " + time_to_alt at(0,21).
+	print "Leave to atmo in " + round(time_to_alt,2) + " sec" at(0,21).
 	
 	set Pitch_Data["Time"] to t_2.
 	set Pitch_Data["Time_to_Alt"] to time_to_alt.
