@@ -3,21 +3,23 @@
 
 //==================== LAUNCH PARAMETERS ===================//
 //REQUIRED ACCELEROMETER ONBOARD! CHECK FOR ITS PRESENCE
-set targetOrbit to 150000. //[meters] Apoapsis=Periapsis=targetOrbit
-set targetIncl to 0. //[degrees] final orbit inclination
-set finalPitch to 70.
+set targetOrbit to 80000. //[meters] Apoapsis=Periapsis=targetOrbit
+set targetIncl to 6. //[degrees] final orbit inclination
+set finalPitch to 85.
 
-set gravTurnAlt to 10000. //[meters] altitude at which vessel shall start gravity turn
-set gravTurnV to 1500. //[m/s] velocity at which vessel shall start gravity turn
+set gravTurnAlt to 250. //[meters] altitude at which vessel shall start gravity turn
+set gravTurnV to 150. //[m/s] velocity at which vessel shall start gravity turn
 //gravity turn start when ship's altitute == gravTurnAlt OR ground velocity == gravTurnV
 //on bodies without atmosphere these parameters have no effect.
 
-set accLimit to false. //[g] acceleration limiter. may be set to false
-set pre_stage to 0.5.
-set past_stage to 1.
-set deployAntennas to false.
-set deploySolar to false.
-set jettisonFairing to false.
+set accLimit to false. //[g] limit acceleration. may be set to false
+
+set pre_stage to 0.5. //pre staging delay
+set post_stage to 1. //post staging delay
+
+set deployAntennas to true. //auto-deploy antennas
+set deploySolar to true. //auto-deploy solar pannels
+set jettisonFairing to true. //auto-stage fairing when Q < 4 kPa
 set autoWarp to true.
 
 //======================== PRELAUNCH =======================//
@@ -48,8 +50,8 @@ set ascendStage to 1.
 set v_jerk_func to makeDerivator_N(0,20).
 
 set Tpoints to lexicon().
-Tpoints:add("StartPoint",100).
-Tpoints:add("EndPoint",101).
+Tpoints:add("StartPoint",110).
+Tpoints:add("EndPoint",115).
 
 set Pitch_Data to lexicon().
 Pitch_Data:ADD("Time",time:seconds).
@@ -78,38 +80,62 @@ DeltaV_Data:ADD("Time",time:seconds).
 DeltaV_Data:ADD("Thrust_Accel",throttle*availablethrust/mass).
 DeltaV_Data:ADD("Accel_Vec",throttle*ship:sensors:acc).
 
+//AUTO DEPLOY
+
+local deploy_bool is false.
+if jettisonFairing = true {
+	when (altitude > 50000) AND (ship:q*constant:ATMtokPa < 4000) then {
+		set deploy_bool to true.
+		list parts in fairing.
+		for f in fairing {
+			set tmp to ""+f.
+			print tmp.
+			if tmp:MATCHESPATTERN("Fairing") {
+				f:getmodule("ModuleProceduralFairing"):doaction("сбросить", true).
+			}
+		}
+	}
+}
+
+if deployAntennas = true {
+	when deploy_bool then {
+		if addons:available("RT") {
+			list parts in antennas.
+			for ant in antennas {
+				set tmp to ""+ant.
+				print tmp.
+				if tmp:MATCHESPATTERN("Antenna") OR tmp:MATCHESPATTERN("Dish") {
+					ant:getmodule("ModuleRTAntenna"):doaction("activate", true).
+				}
+			}
+		}
+	}
+}
+
+if deploySolar = true {
+	when deploy_bool then {
+		PANELS ON.
+	}
+}
+
 wait 1.
 
 //========================= ASCEND =========================//
 
-//STAGING
+stage. //LIFTOFF
+wait 3.
+
+//STAGING LOGIC
 local current_max to maxthrust.
 when maxthrust < current_max OR availablethrust = 0 then {
 	set prevThrottle to throttle.
 	lock throttle to 0.
 	if not(pre_stage = false) {wait pre_stage.}
 	stage.
-	if not(past_stage = false) {wait past_stage.}
+	if not(post_stage = false) {wait post_stage.}
 	lock throttle to prevThrottle.
 	set current_max to maxthrust.
 	preserve.
-}
-
-//AUTO DEPLOY
-if deployAntennas = true {
-	when (MachNumber() > 1.1) AND (ship:q*constant:ATMtokPa < 3000) then {
-		print "".
-	}
-}
-if deploySolar = true {
-	when (MachNumber() > 1.1) AND (ship:q*constant:ATMtokPa < 3000) then {
-		PANELS ON.
-	}
-}
-if jettisonFairing = true {
-	when (MachNumber() > 1.1) AND (ship:q*constant:ATMtokPa < 3000) then {
-		print "".
-	}
 }
 	
 //PRE GRAVITY TURN LOGIC	
