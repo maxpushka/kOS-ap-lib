@@ -3,6 +3,9 @@
 function InclChange {
 	parameter targetIncl. //[degrees] target orbit inclination
 	parameter tolerance. //[degrees] maximum deviation from target inclination.
+	if targetIncl*tolerance < 0 {return false.} //check if both parameters > 0
+	
+	runoncepath("0:/kOS_ap_lib/Lib/lib_phys/EngThrustIsp.ks").
 	
 	sas off.
 	rcs on.
@@ -55,30 +58,6 @@ function InclChange {
 }
 
 //==================== UTILITY FUNCTIONS ====================//
-
-function EngThrustIsp {
-	list engines in allEngines.
-	
-	set ActiveEng to list().
-	ActiveEng:clear.
-	
-	set eng_isp to 0.
-	set eng_thrust to 0.
-	
-	for eng in allEngines {
-		if eng:ignition and (not eng:flameout) {
-			ActiveEng:add(eng).
-		}
-	}
-	
-	for eng in ActiveEng {
-		set eng_thrust to eng_thrust + eng:availablethrust.
-		set eng_isp to eng_isp + eng:isp.
-	}
-	
-	if (ActiveEng:length=0) {return list(0,0).}
-	else {return list(eng_thrust, eng_isp/ActiveEng:length).}
-}
 
 function InclData {
 	parameter targetIncl.
