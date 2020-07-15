@@ -159,19 +159,18 @@ when maxthrust < current_max OR availablethrust = 0 then {
 	
 //PRE GRAVITY TURN LOGIC
 rcs on.
-if body:atm:exists {
-	until (altitude > gravTurnAlt) OR (ship:verticalspeed > gravTurnV) {
-		local line is 1.
-		print "gravTurnAlt = " + gravTurnAlt + "   " at(0,line).
-		local line is line + 1.
-		print "altitude    = " + round(altitude) + "   " at(0,line).
-		local line is line + 2.
-		print "gravTurnV   = " + gravTurnV + "   " at(0,line).
-		local line is line + 1.
-		print "Velocity    = " + round(ship:verticalspeed, 1) + "   " at(0,line).
-		local line is line + 1.
-		print "Mach Number = " + MachNumber() + "   " at(0,line).
-	}
+
+until (altitude > gravTurnAlt) OR (ship:verticalspeed > gravTurnV) {
+	local line is 1.
+	print "gravTurnAlt = " + gravTurnAlt + "   " at(0,line).
+	local line is line + 1.
+	print "altitude    = " + round(altitude) + "   " at(0,line).
+	local line is line + 2.
+	print "gravTurnV   = " + gravTurnV + "   " at(0,line).
+	local line is line + 1.
+	print "Velocity    = " + round(ship:verticalspeed, 1) + "   " at(0,line).
+	local line is line + 1.
+	if body:atm:exists {print "Mach Number = " + MachNumber() + "   " at(0,line).}
 }
 clearscreen.
 sas off.
