@@ -12,7 +12,7 @@ set gravTurnV to 150. //[m/s] velocity at which vessel shall start gravity turn
 //gravity turn start when ship's altitute == gravTurnAlt OR ground velocity == gravTurnV
 //on bodies without atmosphere these parameters have no effect.
 
-set accLimit to 3.5. //[g] limit acceleration. may be set to false
+set accLimit to 2.8. //[g] limit acceleration. may be set to false
 
 set pre_stage to 0.5. //[s] pre staging delay
 set post_stage to 0.1. //[s] post staging delay
@@ -23,6 +23,10 @@ set deployAntennas to true. //auto-deploy antennas
 set deploySolar to true. //auto-deploy solar pannels
 
 set autoWarp to true. //auto warp to apoapsis burn
+
+//==================== PARAMETERS CHECK ====================//
+
+//
 
 //======================== PRELAUNCH =======================//
 
@@ -35,7 +39,6 @@ runoncepath("0:/kOS_ap_lib/Lib/lib_math/Derivator.ks").
 
 //CLEARING WORKSPACE
 clearscreen.
-AG1 on. //open terminal
 SET SHIP:CONTROL:NEUTRALIZE TO TRUE. //block user control inputs
 set ship:control:pilotmainthrottle to 0. //block user throttle inputs
 sas on.
@@ -49,7 +52,6 @@ lock steering to lookdirup(heading(compass,90-pitch_ang):vector,ship:facing:upve
 set throttleStage to 1. //more details under gravity turn logic
 set ascendStage to 1.
 
-set g_alt_const to set g_alt to body:Mu/ship:body:radius + ship:altitude^2.
 if accLimit = false {set accLimit to 10.}
 
 //PITCH_CALC PARAMETERS
@@ -63,17 +65,14 @@ set Pitch_Data to lexicon().
 Pitch_Data:ADD("Time",time:seconds).
 Pitch_Data:ADD("Time_to_Alt",0).
 Pitch_Data:ADD("Pitch_Final",finalPitch).
+Pitch_Data:ADD("Pitch",pitch_ang). //starting pitch angle
 if body:atm:exists {
 	Pitch_Data:ADD("Alt_Final",ship:body:atm:height).
-	Pitch_Data:ADD("Pitch",pitch_ang). //starting pitch angle
-	
 	lock throttle to 1.
 }
 else {
 	Pitch_Data:ADD("Alt_Final",0.1*targetOrbit).
-	Pitch_Data:ADD("Pitch",pitch_ang). //starting pitch angle
-	
-	lock throttle to MAX(MIN(1,ship:mass*accLimit/EngThrustIsp()[0]),0.01).
+	ThrottleController().
 }
 
 //DeltaV_Calc PARAMETERS
@@ -128,9 +127,6 @@ wait 1.
 
 //========================= ASCEND =========================//
 
-stage. //LIFTOFF
-wait 2.
-
 //STAGING LOGIC
 local current_max to maxthrust.
 when maxthrust < current_max OR availablethrust = 0 then {
@@ -144,7 +140,8 @@ when maxthrust < current_max OR availablethrust = 0 then {
 	preserve.
 }
 	
-//PRE GRAVITY TURN LOGIC	
+//PRE GRAVITY TURN LOGIC
+wait 2.
 rcs on.
 if body:atm:exists {
 	until (altitude > gravTurnAlt) OR (ship:verticalspeed > gravTurnV) {
@@ -175,14 +172,14 @@ until ascendStage = 3 {
 	
 	if apoapsis > targetOrbit AND altitude > ship:body:ATM:height {
 		lock throttle to 0.
+		rcs off.
 		set ascendStage to 3.
 		set throttleStage to 3.
 		clearscreen.
 	}
 	
 	if apoapsis < targetOrbit AND throttleStage = 1{ //while ascendStage=1
-		lock throttle to MIN(MAX( (ship:mass^2*accLimit)/EngThrustIsp()[0], 0.001 ), 1).
-		//lock throttle to MIN(MAX((targetOrbit-apoapsis)/1000, 0.005), 1)
+		ThrottleController().
 	}
 	else if apoapsis > targetOrbit AND (throttleStage = 1 OR throttleStage = 2) { //switching to ascendStage=2
 		lock throttle to 0.
@@ -253,7 +250,7 @@ wait 1.
 
 clearscreen.
 set stopburn to false.
-lock throttle to 1.
+ThrottleController().
 until stopburn {
 	set data to BurnData().
 	//BurnData()
@@ -268,6 +265,7 @@ until stopburn {
 		unlock steering.
 		set stopburn to true.
 	}
+	else if (data[0]:mag > 50) {ThrottleController().}
 	else if (data[0]:mag < 50) {
 		lock throttle to MIN(MAX(data[0]:mag/1000, 0.005), 1).
 	}
@@ -461,6 +459,12 @@ function InclData {
 	set inclVec to dVincl*normalVec.
 	
 	return inclVec.
+}
+
+function ThrottleController {
+	set AThr to EngThrustIsp().
+	set g_alt to body:Mu/(ship:body:radius + ship:altitude)^2.
+	lock throttle to MIN(MAX( (g_alt*ship:mass*(accLimit-1))/AThr[0], 0.001 ), 1).
 }
 
 function orbitData {

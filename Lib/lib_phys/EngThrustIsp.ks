@@ -17,6 +17,6 @@ function EngThrustIsp {
 		set eng_isp to eng_isp + eng:isp.
 	}
 	
-	if (ActiveEng:length=0) {return list(0,0).}
+	if (ActiveEng:length=0) {return list(10^(-15),10^(-15)).}
 	else {return list(eng_thrust, eng_isp/ActiveEng:length).}
 }
