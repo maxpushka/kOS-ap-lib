@@ -4,7 +4,7 @@
 //==================== LAUNCH PARAMETERS ===================//
 //REQUIRED ACCELEROMETER ONBOARD! CHECK FOR ITS PRESENCE
 set targetOrbit to 150000. //[meters] Apoapsis=Periapsis=targetOrbit
-set targetIncl to 6. //[degrees] final orbit inclination
+set targetIncl to 0. //[degrees] final orbit inclination
 set finalPitch to 85. //[degrees]
 
 set gravTurnAlt to 250. //[meters] altitude at which vessel shall start gravity turn
@@ -12,10 +12,10 @@ set gravTurnV to 150. //[m/s] velocity at which vessel shall start gravity turn
 //gravity turn start when ship's altitute == gravTurnAlt OR ground velocity == gravTurnV
 //on bodies without atmosphere these parameters have no effect.
 
-set accLimit to 2.8. //[g] limit acceleration. may be set to false
+set accLimit to 5. //[g] limit acceleration. may be set to false
 
 set pre_stage to 0.5. //[s] pre staging delay
-set post_stage to 0.1. //[s] post staging delay
+set post_stage to 0.5. //[s] post staging delay
 
 set jettisonFairing to true. //auto-stage fairing when reached jettisonAlt and Q < 4 kPa
 set jettisonAlt to 50000.//[m] alt at which fairing shall be jettisoned
@@ -26,7 +26,28 @@ set autoWarp to true. //auto warp to apoapsis burn
 
 //==================== PARAMETERS CHECK ====================//
 
-//
+if (targetOrbit:typename <> "Scalar") OR (targetIncl:typename <> "Scalar") OR 
+(finalPitch:typename <> "Scalar") OR (gravTurnAlt:typename <> "Scalar") OR 
+(gravTurnV:typename <> "Scalar") OR (jettisonAlt:typename <> "Scalar") OR 
+NOT((pre_stage:typename = "Scalar") OR (pre_stage:typename = "Boolean")) OR 
+NOT((post_stage:typename = "Scalar") OR (pre_stage:typename = "Boolean")) OR  
+NOT(accLimit:typename = "Scalar" OR accLimit:typename = "Boolean") OR 
+NOT(jettisonFairing:typename = "Boolean") OR NOT(deployAntennas:typename = "Boolean") OR 
+NOT(deploySolar:typename = "Boolean") OR NOT(autoWarp:typename = "Boolean") {
+	print "Error: check inputs".
+	print 1/0.
+}
+else if (targetOrbit < 0) OR (targetIncl < 0) OR (finalPitch < 0) OR 
+(gravTurnAlt < 0) OR (gravTurnV < 0) OR (jettisonAlt < 0) OR 
+((pre_stage:typename = "Scalar") AND (pre_stage < 0)) OR 
+((post_stage:typename = "Scalar") AND (post_stage < 0)) OR
+((accLimit:typename = "Scalar") AND (accLimit < 0)) {
+	print "Error: check inputs".
+	print 1/0.
+}
+else {
+	print "Parameters check is passed successfuly.".
+}
 
 //======================== PRELAUNCH =======================//
 
@@ -49,10 +70,7 @@ set compass to AzimuthCalc(targetIncl).
 lock steering to lookdirup(heading(compass,90-pitch_ang):vector,ship:facing:upvector).
 
 //FLIGHT MODE PARAMETERS
-set throttleStage to 1. //more details under gravity turn logic
-set ascendStage to 1.
-
-if accLimit = false {set accLimit to 10.}
+if accLimit = false {set accLimit to 40.}
 
 //PITCH_CALC PARAMETERS
 set v_jerk_func to makeDerivator_N(0,20).
@@ -72,7 +90,7 @@ if body:atm:exists {
 }
 else {
 	Pitch_Data:ADD("Alt_Final",0.1*targetOrbit).
-	ThrottleController().
+	lock throttle to ThrottleController().
 }
 
 //DeltaV_Calc PARAMETERS
@@ -123,12 +141,10 @@ if deploySolar = true {
 	}
 }
 
-wait 1.
-
 //========================= ASCEND =========================//
 
 //STAGING LOGIC
-local current_max to maxthrust.
+local current_max is maxthrust.
 when maxthrust < current_max OR availablethrust = 0 then {
 	set prevThrottle to throttle.
 	lock throttle to 0.
@@ -137,11 +153,11 @@ when maxthrust < current_max OR availablethrust = 0 then {
 	if not(post_stage = false) {wait post_stage.}
 	lock throttle to prevThrottle.
 	set current_max to maxthrust.
+	wait 1.
 	preserve.
 }
 	
 //PRE GRAVITY TURN LOGIC
-wait 2.
 rcs on.
 if body:atm:exists {
 	until (altitude > gravTurnAlt) OR (ship:verticalspeed > gravTurnV) {
@@ -161,12 +177,13 @@ clearscreen.
 sas off.
 
 //GRAVITY TURN LOGIC
+set ascendStage to 1.
 until ascendStage = 3 {
 	// Run Mode Logic
-	//throttleStage:      //ascendStage:
-	//1=engine burning    //1=powered ascend; engine burning, apoapsis<targetOrbit
-	//2=apo correction    //2=flight on a ballistic trajectory in the atmosphere; apo corection, apoapsis>=targetOrbit
-	//3=MECO              //3=flight on a ballistic trajectory outside the atmosphere; MECO, apoapsis>=targetOrbit
+	//ascendStage:
+	//1=powered ascend; engine burning, apoapsis<targetOrbit
+	//2=flight on a ballistic trajectory in the atmosphere; apo corection, apoapsis>=targetOrbit
+	//3=flight on a ballistic trajectory outside the atmosphere; MECO, apoapsis>=targetOrbit
 	
 	//it's important to lock throttle beth [0; 1] as it's value is used in DeltaV_Calc function calculations
 	
@@ -174,64 +191,38 @@ until ascendStage = 3 {
 		lock throttle to 0.
 		rcs off.
 		set ascendStage to 3.
-		set throttleStage to 3.
 		clearscreen.
 	}
 	
-	if apoapsis < targetOrbit AND throttleStage = 1{ //while ascendStage=1
-		ThrottleController().
+	if (apoapsis/targetOrbit < 0.9) { //while ascendStage=1
+		lock throttle to ThrottleController().
 	}
-	else if apoapsis > targetOrbit AND (throttleStage = 1 OR throttleStage = 2) { //switching to ascendStage=2
-		lock throttle to 0.
-		rcs off.
-		set throttleStage to 2.
-		set ascendStage to 2.
+	else { //while ascendStage=2
+		lock throttle to MIN(MAX((targetOrbit-apoapsis)/1000, 0), 1).
 	}
-	else if apoapsis < targetOrbit AND throttleStage = 2 { //while ascendStage=2 (apoapsis corection due to drag loss)
-		rcs on.
-		lock throttle to MIN(MAX((targetOrbit-apoapsis)/100, 0.01), 1).
-	}	
   
-	set Pitch_Data to Pitch_Calc(Pitch_Data).
-	set pitch_ang to Pitch_Data["Pitch"].
-	set compass to AzimuthCalc(targetIncl).	
+	//set Pitch_Data to Pitch_Calc(Pitch_Data).
+	set pitch_ang to Pitch_Calc(Pitch_Data)["Pitch"].
+	set compass to AzimuthCalc(targetIncl).
+	set DeltaV_Data to DeltaV_Calc(DeltaV_Data).	
 	
 	// Variable Printout
-	local line is 1.
-	print "ascend stage  = " + ascendStage + "   " at(0,line).
-	local line is line + 1.
-	print "throttleStage = " + throttleStage + "   " at(0,line).
-	local line is line + 1.
-	print "throttle      = " + round(throttle*100, 2) + " %   " at(0,line).
-	local line is line + 1.
-	print "Mach Number   = " + MachNumber() + "   " at(0, line).
-	local line is line + 2.
-	print "pitch angle   = " + round(pitch_ang,2) + "   " at(0,line).
-	local line is line + 1.
-	print "compass       = " + round(compass,2) + "   " at(0,line).
-	local line is line + 1.
-	print "altitude      = " + round(altitude,1) + "   " at(0,line).
-	local line is line + 1.
-	print "apoapsis      = " + round(apoapsis,1) + "   " at(0,line).
-	local line is line + 1.
-	print "target apo    = " + targetOrbit + "   " at(0,line).
-	local line is line + 2.
-	print "orbit incl    = " + round(orbit:inclination,5) + "   " at(0,line).
-	local line is line + 1.
-	print "target incl   = " + targetIncl + "   " at(0,line).
-	
-	// Delta V Calculations
-	set DeltaV_Data to DeltaV_Calc(DeltaV_Data).
+	//print "ascend stage  = " + ascendStage + "   " at(0,0).
+	print "throttle      = " + round(throttle*100, 2) + " %   " at(0,1).
+	print "Mach Number   = " + MachNumber() + "   " at(0, 2).
+	print "pitch angle   = " + round(pitch_ang,2) + "   " at(0,4).
+	print "compass       = " + round(compass,2) + "   " at(0,5).
+	print "altitude      = " + round(altitude,1) + "   " at(0,6).
+	print "apoapsis      = " + round(apoapsis,1) + "   " at(0,7).
+	print "target apo    = " + targetOrbit + "   " at(0,8).
+	print "orbit incl    = " + round(orbit:inclination,5) + "   " at(0,10).
+	print "target incl   = " + targetIncl + "   " at(0,11).
 	
 	// Delta V Printout
-	local line is line + 2.
-	print "DeltaV_total  = " + round(DeltaV_Data["Total"]) + "   " at(0,line).
-	local line is line + 1.
-	print "DeltaV_gain   = " + round(DeltaV_Data["Gain"]) + "   " at(0,line).
-	local line is line + 1.
-	print "DeltaV_Losses = " + round(DeltaV_Data["Total"] - DeltaV_Data["Gain"]) + "   " at(0,line).
-	local line is line + 1.
-	print "DeltaV_Eff    = " + round(100*DeltaV_Data["Gain"]/DeltaV_Data["Total"]) + "%   " at(0,line).
+	print "DeltaV_total  = " + round(DeltaV_Data["Total"]) + "   " at(0,13).
+	print "DeltaV_gain   = " + round(DeltaV_Data["Gain"]) + "   " at(0,14).
+	print "DeltaV_Losses = " + round(DeltaV_Data["Total"] - DeltaV_Data["Gain"]) + "   " at(0,15).
+	print "DeltaV_Eff    = " + round(100*DeltaV_Data["Gain"]/DeltaV_Data["Total"]) + "%   " at(0,16).
 	
 	wait 0. //wait for the next physics tick
 }
@@ -250,7 +241,7 @@ wait 1.
 
 clearscreen.
 set stopburn to false.
-ThrottleController().
+lock throttle to ThrottleController().
 until stopburn {
 	set data to BurnData().
 	//BurnData()
@@ -265,8 +256,10 @@ until stopburn {
 		unlock steering.
 		set stopburn to true.
 	}
-	else if (data[0]:mag > 50) {ThrottleController().}
-	else if (data[0]:mag < 50) {
+	else if (data[0]:mag > 30) {
+		lock throttle to ThrottleController().
+	}
+	else if (data[0]:mag < 30) {
 		lock throttle to MIN(MAX(data[0]:mag/1000, 0.005), 1).
 	}
 	
@@ -292,18 +285,19 @@ until stopburn {
 	print "dVincl  = " + data[10] + "   " at(0,line).
 	local line is line + 1.
 	print "dVtotal = " + data[11] + "   " at(0,line).
-	
-	wait 0.001.
-	
-	// set v1:show to false.
-	// set v2:show to false.
-	// set v3:show to false.
 }
+
 clearscreen.
 print "Circularization complete".
 orbitData().
 
 //======================= FUNCTIONS ========================//
+
+function ThrottleController {
+	local AThr is EngThrustIsp().
+	local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2.
+	return MIN(MAX( (g_alt*mass*(accLimit-1))/AThr[0], 0.001 ), 1).
+}
 
 function DeltaV_Calc {
 	parameter DeltaV_Data.
@@ -350,7 +344,7 @@ function Pitch_Calc {
 	// set Tpoints["EndPoint"] to solver[1].
 	// local time_to_alt to solver[2].
 	
-	print "Leaving atmo in " + round(time_to_alt,2) + " sec" at(0,21).
+	print "Leaving atmo in " + round(time_to_alt,1) + " sec" at(0,21).
 	
 	set Pitch_Data["Time"] to t_2.
 	set Pitch_Data["Time_to_Alt"] to time_to_alt.
@@ -459,12 +453,6 @@ function InclData {
 	set inclVec to dVincl*normalVec.
 	
 	return inclVec.
-}
-
-function ThrottleController {
-	set AThr to EngThrustIsp().
-	set g_alt to body:Mu/(ship:body:radius + ship:altitude)^2.
-	lock throttle to MIN(MAX( (g_alt*ship:mass*(accLimit-1))/AThr[0], 0.001 ), 1).
 }
 
 function orbitData {
