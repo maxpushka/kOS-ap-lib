@@ -205,6 +205,8 @@ until ascendStage = 3 {
 	set compass to AzimuthCalc(targetIncl).
 	set DeltaV_Data to DeltaV_Calc(DeltaV_Data).	
 	
+        wait 0.01. //wait for the next physics tick
+
 	// Variable Printout
 	//print "ascend stage  = " + ascendStage + "   " at(0,0).
 	print "throttle      = " + round(throttle*100, 2) + " %   " at(0,1).
@@ -222,8 +224,6 @@ until ascendStage = 3 {
 	print "DeltaV_gain   = " + round(DeltaV_Data["Gain"]) + "   " at(0,14).
 	print "DeltaV_Losses = " + round(DeltaV_Data["Total"] - DeltaV_Data["Gain"]) + "   " at(0,15).
 	print "DeltaV_Eff    = " + round(100*DeltaV_Data["Gain"]/DeltaV_Data["Total"]) + "%   " at(0,16).
-	
-	wait 0. //wait for the next physics tick
 }
 
 //==================== CIRCULARIZATION =====================//
