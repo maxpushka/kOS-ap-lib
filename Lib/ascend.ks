@@ -1,10 +1,10 @@
 //Ascend script v1.0
 //by maxpushka
-function ascend {
+function Ascend {
 	//==================== LAUNCH PARAMETERS ===================//
 	//REQUIRED ACCELEROMETER ONBOARD! CHECK FOR ITS PRESENCE
-	set targetOrbit to 100000. //[m] Apoapsis=Periapsis=targetOrbit
-	set targetIncl to 0. //[deg] final orbit inclination
+	set targetOrbit to 72000. //[m] Apoapsis=Periapsis=targetOrbit
+	set targetIncl to 90. //[deg] final orbit inclination
 	set finalPitch to 85. //[deg]
 
 	set gravTurnAlt to 100. //[m] radar altitude at which vessel shall start gravity turn
@@ -12,7 +12,7 @@ function ascend {
 	//gravity turn start when ship's altitute == gravTurnAlt OR ground velocity == gravTurnV
 	//on bodies without atmosphere these parameters have no effect.
 
-	set accLimit to 5.5. //[g] limit acceleration. may be set to false
+	set accLimit to false. //[g] limit acceleration. may be set to false
 
 	set pre_stage to 0.5. //[s] pre staging delay
 	set post_stage to 1. //[s] post staging delay
@@ -55,7 +55,7 @@ function ascend {
 	runoncepath("0:/kOS_ap_lib/Lib/lib_phys/VerticalAccelCalc.ks").
 	runoncepath("0:/kOS_ap_lib/Lib/lib_phys/MachNumber.ks").
 	runoncepath("0:/kOS_ap_lib/Lib/lib_phys/EngThrustIsp.ks").
-	runoncepath("0:/kOS_ap_lib/Lib/lib_math/BisectionSolver1.ks").
+	runoncepath("0:/kOS_ap_lib/Lib/lib_math/BisectionSolver.ks").
 	runoncepath("0:/kOS_ap_lib/Lib/lib_math/Derivator.ks").
 
 	//CLEARING WORKSPACE
@@ -108,6 +108,7 @@ function ascend {
 					f:getmodule("ModuleProceduralFairing"):doaction("сбросить", true).
 				}
 			}
+			wait 1.
 			set deploy_bool to true.
 		}
 	}
@@ -206,11 +207,11 @@ function ascend {
 		if (apoapsis/targetOrbit < 0.9) { //while ascend stage = 1
 			local AThr is EngThrustIsp().
 			local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2.
-			lock throttle to MIN(MAX( (g_alt^2*mass*(accLimit-1))/AThr[0], 0.001 ), 1).
+			lock throttle to MIN(MAX( (g_alt^2*mass*(accLimit-1))/AThr[0], 0.01 ), 1).
 		}
 		else if (apoapsis/targetOrbit > 0.9) AND (apoapsis < targetOrbit) { //while ascend stage = 2
 			when 1 then {set ascendStage to 2.}
-			lock throttle to MIN(MAX((targetOrbit-apoapsis)/1000, 0.001), 1).
+			lock throttle to MIN(MAX((targetOrbit-apoapsis)/1000, 0.005), 1).
 		}
 		else {lock throttle to 0.}
 	  
@@ -242,7 +243,7 @@ function ascend {
 		set line to line + 1.
 		print "target apo    = " + targetOrbit + "   " at(0,line).
 		set line to line + 2.
-		print "orbit incl    = " + round(orbit:inclination,5) + "   " at(0,line).
+		print "orbit incl  = " + round(orbit:inclination,5) + "   " at(0,line).
 		set line to line + 1.
 		print "target incl   = " + targetIncl + "   " at(0,line).
 		// Delta V Printout
@@ -275,16 +276,23 @@ function ascend {
 	
 	clearscreen.
 	lock throttle to 1.
-	set data to BurnData().
-	until (data[9]<0) { //dVorb < 0
+	set stopburn to false.
+	until stopburn { //dVorb < 0
 		set data to BurnData().
 		//BurnData()
-		//return list(vec, pitchVec, inclVec, fi, dI, dA, Vh, Vz, Vorb, dVorb, dVincl, dVtotal).
+		//return list(vect, pitchVec, inclVec, fi, dI, dA, Vh, Vz, Vorb, dVorb, dVincl, dVtotal).
 		//            0  , 1       , 2      , 3 , 4 , 5 , 6 , 7 , 8   , 9,   , 10    , 11
 		
 		lock steering to data[0].
+		if (data[9]<0) { //dVorb < 0
+			lock throttle to 0.
+			unlock throttle.
+			unlock steering.
+			set stopburn to true.
+			sas on.
+		}
 		if (data[0]:mag < 50) {
-			lock throttle to MIN(MAX(data[0]:mag/1000, 0.005), 1).
+			lock throttle to MIN(MAX(data[0]:mag/1000, 0.001), 1).
 		}
 		
 		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dVincl", 1.0, TRUE, 0.2, TRUE, TRUE).
@@ -311,12 +319,14 @@ function ascend {
 		print "dVincl  = " + data[10] + "   " at(0,line).
 		local line is line + 1.
 		print "dVtotal = " + data[11] + "   " at(0,line).
+		
+		wait 0. //wait for the next physics tick
 	}
-	lock throttle to 0.
-	sas on.
-	unlock throttle.
-	unlock steering.
-
+	
+	set v1:show to false.
+	set v2:show to false.
+	set v3:show to false.
+	
 	clearscreen.
 	print "Circularization complete".
 	orbitData().
@@ -369,7 +379,7 @@ function ascend {
 		// local time_to_alt to solver[2].
 		
 		if body:atm:exists {
-			print "Leaving atmo in " + round(time_to_alt,1) + " sec" at(0,21).
+			print "Leaving atmo in " + round(time_to_alt,1) + " sec " + "   " at(0,19).
 		}
 		
 		set Pitch_Data["Time"] to t_2.
@@ -451,7 +461,13 @@ function ascend {
 		local AThr is eng[0]*Throttle/ship:mass. //моментальное ускорение сообщаемое движками
 		local dVorb is Vorb-Vh.
 		local dA is g_alt-Acentr-Vz.
-		local fi is ARCSIN(Min(Max(dA/AThr,-1), 1)).
+		
+		local frac is dA/AThr.
+		if abs(frac) > 1 {
+			if frac < 0 {set frac to frac + floor(abs(frac)).}
+			else {set frac to frac - floor(frac).}
+		}
+		local fi is ARCSIN(Min(Max(frac,-1), 1)).
 		
 		local dVtotal is dVorb + abs(inclVec:mag).
 		set pitchVec to Heading(90-targetIncl, fi):vector*dVorb.
@@ -485,8 +501,10 @@ function ascend {
 		print "================".
 		print "Apoapsis: " + round(ORBIT:APOAPSIS, 1).
 		print "Periapsis: " + round(ORBIT:PERIAPSIS, 1).
+		print "Apo - Per : " + round(ORBIT:APOAPSIS - ORBIT:PERIAPSIS, 1).
 		print "Eccentricity: " + ORBIT:ECCENTRICITY.
 		print "Inclination: " + round(ORBIT:INCLINATION, 5).
+		print "Target incl - incl : " + round(targetIncl - ORBIT:INCLINATION, 5).
 		print "Longitude of ascending node: " + round(ORBIT:LAN, 2).
 		print "================".
 	}

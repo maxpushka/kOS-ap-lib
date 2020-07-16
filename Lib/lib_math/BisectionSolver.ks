@@ -1,54 +1,75 @@
 function BisectionSolver {
-	parameter ScoreFunction, StartPoint, EndPoint, Nmax is 1.
-	
-	set table to list().
-	if StartPoint > EndPoint {
-		local tmp is EndPoint.
-		set EndPoint to StartPoint.
-		set StartPoint to tmp.
-	}
-	set MidPoint to (StartPoint + EndPoint)/2.
-	
-	set Score1 to ScoreFunction:call(StartPoint).
-	set Score2 to ScoreFunction:call(EndPoint).
-	set Score3 to ScoreFunction:call(MidPoint).
-	
-	local n is 1.
-	until n > Nmax {	
-		if Score1*Score2 < 0 { //sign(StartPoint) != sign(EndPoint)
-			//reduce range
-			set MidPoint to (StartPoint + EndPoint)/2.
-			set Score3 to ScoreFunction:call(MidPoint).
-			if Score3 = 0 {break.}
-			
-			if Score1*Score3 > 0 { //sign(StartPoint) == sign(MidPoint)
-				set StartPoint to MidPoint.
-				set Score1 to Score3.
-			}
-			else { //sign(EndPoint) == sign(MidPoint)
-				set EndPoint to MidPoint.
-				set Score2 to Score3.
-			}
-		}
-		else { //sign(StartPoint) == sign(EndPoint)
-			//expand range
-			if Score1 > 0 { 
-				set StartPoint to EndPoint.
-				set Score1 to Score2.
-				
-				set EndPoint to StartPoint + 1.5*StartPoint.
-				set Score2 to ScoreFunction:call(EndPoint).
-			}
-			else {
-				set EndPoint to StartPoint.
-				set Score2 to Score1.
-				
-				set StartPoint to EndPoint + 1.5*EndPoint.
-				set Score1 to ScoreFunction:call(StartPoint).
-			}
-		}
-		set n to n+1.
-	}
-	
-	return list(StartPoint, EndPoint, MidPoint).
+  parameter ScoreFunction, TestPoint1, TestPoint2.
+  //
+  local TestPoints is LIST().
+  local Score1 is ScoreFunction:call(TestPoint1).
+  local Score2 is ScoreFunction:call(TestPoint2).
+  local TestPoint3 is (TestPoint1 + TestPoint2)/2.
+  local Score3 is ScoreFunction:call(TestPoint3).
+
+  TestPoints:ADD(LIST(TestPoint1,Score1)).
+  TestPoints:ADD(LIST(TestPoint2,Score2)).
+  TestPoints:ADD(LIST(TestPoint3,Score3)).
+
+  local expanded is true.
+  until expanded {
+    if TestPoints[0][1]*TestPoints[1][1] < 0 {
+      set expanded to true.
+      set TestPoints[2][0] to (TestPoints[0][0] + TestPoints[1][0])/2.
+      set TestPoints[2][1] to ScoreFunction:call(TestPoints[2][0]).
+    } else {
+      if abs(TestPoints[0][1]) < abs(TestPoints[1][1]) {
+        local tmp to TestPoints[0][0] - TestPoints[1][0].
+        set TestPoints[1][0] to TestPoints[0][0].
+        set TestPoints[1][1] to TestPoints[0][1].
+        set TestPoints[0][0] to TestPoints[0][0] + 1.5*tmp.
+        set TestPoints[0][1] to ScoreFunction:call(TestPoints[0][0]).
+      } else {
+        local tmp to TestPoints[1][0] - TestPoints[0][0].
+        set TestPoints[0][0] to TestPoints[1][0].
+        set TestPoints[0][1] to TestPoints[1][1].
+        set TestPoints[1][0] to TestPoints[1][0] + 1.5*tmp.
+        set TestPoints[1][1] to ScoreFunction:call(TestPoints[1][0]).
+      }
+    }
+  }
+
+  return {
+    // Re-test points
+    set TestPoints[0][1] to ScoreFunction:call(TestPoints[0][0]).
+    set TestPoints[1][1] to ScoreFunction:call(TestPoints[1][0]).
+    set TestPoints[2][1] to ScoreFunction:call(TestPoints[2][0]).
+
+    if TestPoints[0][1]*TestPoints[1][1] < 0 {
+      if TestPoints[2][1]*TestPoints[0][1] > 0 {
+        set TestPoints[0][0] to TestPoints[2][0].
+      } else {
+        set TestPoints[1][0] to TestPoints[2][0].
+      }
+
+      set TestPoints[2][0] to (TestPoints[0][0] + TestPoints[1][0])/2.
+      set TestPoints[2][1] to ScoreFunction:call(TestPoints[2][0]).
+
+    } else {
+      // Expand the search area
+      if abs(TestPoints[0][1]) < abs(TestPoints[1][1]) {
+        local tmp to TestPoints[0][0] - TestPoints[1][0].
+        set TestPoints[1][0] to TestPoints[0][0].
+        set TestPoints[1][1] to TestPoints[0][1].
+        set TestPoints[0][0] to TestPoints[0][0] + 1.5*tmp.
+        set TestPoints[0][1] to ScoreFunction:call(TestPoints[0][0]).
+      } else {
+        local tmp to TestPoints[1][0] - TestPoints[0][0].
+        set TestPoints[0][0] to TestPoints[1][0].
+        set TestPoints[0][1] to TestPoints[1][1].
+        set TestPoints[1][0] to TestPoints[1][0] + 1.5*tmp.
+        set TestPoints[1][1] to ScoreFunction:call(TestPoints[1][0]).
+      }
+
+      set TestPoints[2][0] to (TestPoints[0][0] + TestPoints[1][0])/2.
+      set TestPoints[2][1] to ScoreFunction:call(TestPoints[2][0]).
+    }
+
+    return TestPoints.
+  }.
 }
