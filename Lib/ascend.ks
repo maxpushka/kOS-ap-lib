@@ -3,19 +3,19 @@
 
 //==================== LAUNCH PARAMETERS ===================//
 //REQUIRED ACCELEROMETER ONBOARD! CHECK FOR ITS PRESENCE
-set targetOrbit to 150000. //[meters] Apoapsis=Periapsis=targetOrbit
-set targetIncl to 0. //[degrees] final orbit inclination
-set finalPitch to 85. //[degrees]
+set targetOrbit to 100000. //[m] Apoapsis=Periapsis=targetOrbit
+set targetIncl to 0. //[deg] final orbit inclination
+set finalPitch to 85. //[deg]
 
-set gravTurnAlt to 250. //[meters] altitude at which vessel shall start gravity turn
+set gravTurnAlt to 100. //[m] radar altitude at which vessel shall start gravity turn
 set gravTurnV to 150. //[m/s] velocity at which vessel shall start gravity turn
 //gravity turn start when ship's altitute == gravTurnAlt OR ground velocity == gravTurnV
 //on bodies without atmosphere these parameters have no effect.
 
-set accLimit to 5. //[g] limit acceleration. may be set to false
+set accLimit to 5.5. //[g] limit acceleration. may be set to false
 
 set pre_stage to 0.5. //[s] pre staging delay
-set post_stage to 0.5. //[s] post staging delay
+set post_stage to 1. //[s] post staging delay
 
 set jettisonFairing to true. //auto-stage fairing when reached jettisonAlt and Q < 4 kPa
 set jettisonAlt to 50000.//[m] alt at which fairing shall be jettisoned
@@ -62,15 +62,12 @@ runoncepath("0:/kOS_ap_lib/Lib/lib_math/Derivator.ks").
 clearscreen.
 SET SHIP:CONTROL:NEUTRALIZE TO TRUE. //block user control inputs
 set ship:control:pilotmainthrottle to 0. //block user throttle inputs
-sas on.
 
-//STEERING SETTING
-if body:atm:exists {set pitch_ang to 0.} else {set pitch_ang to 60.} //starting pitch angle
-set compass to AzimuthCalc(targetIncl).
-lock steering to lookdirup(heading(compass,90-pitch_ang):vector,ship:facing:upvector).
-
-//FLIGHT MODE PARAMETERS
-if accLimit = false {set accLimit to 40.}
+//STARTING PARAMETERS
+if accLimit = false {set accLimit to 50.} //max 
+else if (accLimit <> false) AND NOT(body:atm:exists) {
+	set accLimit to accLimit^2.
+}
 
 //PITCH_CALC PARAMETERS
 set v_jerk_func to makeDerivator_N(0,20).
@@ -83,14 +80,13 @@ set Pitch_Data to lexicon().
 Pitch_Data:ADD("Time",time:seconds).
 Pitch_Data:ADD("Time_to_Alt",0).
 Pitch_Data:ADD("Pitch_Final",finalPitch).
-Pitch_Data:ADD("Pitch",pitch_ang). //starting pitch angle
 if body:atm:exists {
+	Pitch_Data:ADD("Pitch",0). //starting pitch angle
 	Pitch_Data:ADD("Alt_Final",ship:body:atm:height).
-	lock throttle to 1.
 }
 else {
+	Pitch_Data:ADD("Pitch",60). //starting pitch angle
 	Pitch_Data:ADD("Alt_Final",0.1*targetOrbit).
-	lock throttle to ThrottleController().
 }
 
 //DeltaV_Calc PARAMETERS
@@ -121,28 +117,47 @@ else {
 	}
 }
 
-if deployAntennas = true {
+if (deployAntennas = true) {
 	when deploy_bool then {
-		if addons:available("RT") {
-			list parts in antennas.
-			for ant in antennas {
-				set tmp to ""+ant.
-				if tmp:MATCHESPATTERN("Antenna") OR tmp:MATCHESPATTERN("Dish") {
+		list parts in antennas.
+		for ant in antennas {
+			set tmp to ""+ant.
+			if tmp:MATCHESPATTERN("Antenna") OR tmp:MATCHESPATTERN("Dish") {
+				if ant:HASMODULE("ModuleRTAntenna") { //for RemoteTech 2 mod
 					ant:getmodule("ModuleRTAntenna"):doaction("activate", true).
+					ant:getmodule("ModuleRTAntenna"):setfield("target", "Mission Control").
+				}
+				else if ant:HASMODULE("ModuleDeployableAntenna") {
+					ant:getmodule("ModuleDeployableAntenna"):doaction("раскрыть антенну", true).
 				}
 			}
 		}
 	}
 }
 
-if deploySolar = true {
-	when deploy_bool then {
-		PANELS ON.
-	}
+if (deploySolar = true) {
+	when deploy_bool then {PANELS ON.}
 }
+
+wait 1.
 
 //========================= ASCEND =========================//
 
+//LIFTOFF
+if (availablethrust = 0) {stage.}
+if body:atm:exists {
+	sas on.
+	lock throttle to 1.
+}
+else {
+	sas off.
+	local AThr is EngThrustIsp().
+	local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2.
+	lock throttle to MIN(MAX( (g_alt^2*mass*(accLimit-1))/AThr[0], 0.001 ), 1).
+}
+rcs on.
+wait 1.
+	
 //STAGING LOGIC
 local current_max is maxthrust.
 when maxthrust < current_max OR availablethrust = 0 then {
@@ -153,18 +168,17 @@ when maxthrust < current_max OR availablethrust = 0 then {
 	if not(post_stage = false) {wait post_stage.}
 	lock throttle to prevThrottle.
 	set current_max to maxthrust.
-	wait 1.
 	preserve.
 }
 	
 //PRE GRAVITY TURN LOGIC
-rcs on.
-
-until (altitude > gravTurnAlt) OR (ship:verticalspeed > gravTurnV) {
+until (alt:radar > gravTurnAlt) OR (ship:verticalspeed > gravTurnV) {
+	lock steering to lookdirup(heading(90,90):vector,ship:facing:upvector).
+	
 	local line is 1.
 	print "gravTurnAlt = " + gravTurnAlt + "   " at(0,line).
 	local line is line + 1.
-	print "altitude    = " + round(altitude) + "   " at(0,line).
+	print "altitude    = " + round(alt:radar) + "   " at(0,line).
 	local line is line + 2.
 	print "gravTurnV   = " + gravTurnV + "   " at(0,line).
 	local line is line + 1.
@@ -174,61 +188,76 @@ until (altitude > gravTurnAlt) OR (ship:verticalspeed > gravTurnV) {
 }
 clearscreen.
 sas off.
+GEAR OFF.
 
 //GRAVITY TURN LOGIC
-set ascendStage to 1.
-until ascendStage = 3 {
-	// Run Mode Logic
-	//ascendStage:
+set pitch_ang to Pitch_Calc(Pitch_Data)["Pitch"].
+set compass to AzimuthCalc(targetIncl).
+lock steering to lookdirup(heading(compass,90-pitch_ang):vector,ship:facing:upvector).
+until (apoapsis >= targetOrbit AND altitude > ship:body:ATM:height) {
+	//Ascend stages:
 	//1=powered ascend; engine burning, apoapsis<targetOrbit
 	//2=flight on a ballistic trajectory in the atmosphere; apo corection, apoapsis>=targetOrbit
 	//3=flight on a ballistic trajectory outside the atmosphere; MECO, apoapsis>=targetOrbit
 	
-	//it's important to lock throttle beth [0; 1] as it's value is used in DeltaV_Calc function calculations
+	//it's important to lock throttle in range [0; 1] as it's value is used in DeltaV_Calc()
 	
-	if apoapsis > targetOrbit AND altitude > ship:body:ATM:height {
-		lock throttle to 0.
-		rcs off.
-		set ascendStage to 3.
-		clearscreen.
+	if (apoapsis/targetOrbit < 0.9) { //while ascend stage = 1
+		local AThr is EngThrustIsp().
+		local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2.
+		lock throttle to MIN(MAX( (g_alt^2*mass*(accLimit-1))/AThr[0], 0.001 ), 1).
 	}
-	
-	if (apoapsis/targetOrbit < 0.9) { //while ascendStage=1
-		lock throttle to ThrottleController().
-	}
-	else { //while ascendStage=2
-		lock throttle to MIN(MAX((targetOrbit-apoapsis)/1000, 0), 1).
+	else { //while ascend stage = 2
+		lock throttle to MIN(MAX((targetOrbit-apoapsis)/100, 0), 1).
 	}
   
 	//set Pitch_Data to Pitch_Calc(Pitch_Data).
 	set pitch_ang to Pitch_Calc(Pitch_Data)["Pitch"].
 	set compass to AzimuthCalc(targetIncl).
-	set DeltaV_Data to DeltaV_Calc(DeltaV_Data).	
-	
-        wait 0.01. //wait for the next physics tick
+	set DeltaV_Data to DeltaV_Calc(DeltaV_Data).
 
 	// Variable Printout
-	//print "ascend stage  = " + ascendStage + "   " at(0,0).
-	print "throttle      = " + round(throttle*100, 2) + " %   " at(0,1).
-	print "Mach Number   = " + MachNumber() + "   " at(0, 2).
-	print "pitch angle   = " + round(pitch_ang,2) + "   " at(0,4).
-	print "compass       = " + round(compass,2) + "   " at(0,5).
-	print "altitude      = " + round(altitude,1) + "   " at(0,6).
-	print "apoapsis      = " + round(apoapsis,1) + "   " at(0,7).
-	print "target apo    = " + targetOrbit + "   " at(0,8).
-	print "orbit incl    = " + round(orbit:inclination,5) + "   " at(0,10).
-	print "target incl   = " + targetIncl + "   " at(0,11).
+	local line is 1.
+	print "throttle      = " + round(throttle*100, 2) + " %   " at(0,line).
+	local line is line + 1.
+	if body:atm:exists {
+		print "Mach Number   = " + MachNumber() + "   " at(0,line).
+		set line to line + 2.
+	}
+	else {set line to line + 1.}
 	
+	print "pitch angle   = " + round(pitch_ang,2) + "   " at(0,line).
+	set line to line + 1.
+	print "compass       = " + round(compass,2) + "   " at(0,line).
+	set line to line + 1.
+	print "altitude      = " + round(altitude,1) + "   " at(0,line).
+	set line to line + 1.
+	print "apoapsis      = " + round(apoapsis,1) + "   " at(0,line).
+	set line to line + 1.
+	print "target apo    = " + targetOrbit + "   " at(0,line).
+	set line to line + 2.
+	print "orbit incl    = " + round(orbit:inclination,5) + "   " at(0,line).
+	set line to line + 1.
+	print "target incl   = " + targetIncl + "   " at(0,line).
 	// Delta V Printout
-	print "DeltaV_total  = " + round(DeltaV_Data["Total"]) + "   " at(0,13).
-	print "DeltaV_gain   = " + round(DeltaV_Data["Gain"]) + "   " at(0,14).
-	print "DeltaV_Losses = " + round(DeltaV_Data["Total"] - DeltaV_Data["Gain"]) + "   " at(0,15).
-	print "DeltaV_Eff    = " + round(100*DeltaV_Data["Gain"]/DeltaV_Data["Total"]) + "%   " at(0,16).
+	set line to line + 2.
+	print "DeltaV_total  = " + round(DeltaV_Data["Total"]) + "   " at(0,line).
+	set line to line + 1.
+	print "DeltaV_gain   = " + round(DeltaV_Data["Gain"]) + "   " at(0,line).
+	set line to line + 1.
+	print "DeltaV_Losses = " + round(DeltaV_Data["Total"] - DeltaV_Data["Gain"]) + "   " at(0,line).
+	set line to line + 1.
+	print "DeltaV_Eff    = " + round(100*DeltaV_Data["Gain"]/DeltaV_Data["Total"]) + "%   " at(0,line).
+	
+	wait 0.01. //wait for the next physics tick
 }
+lock throttle to 0.
+rcs off.
+clearscreen.
+wait 1.
 
 //==================== CIRCULARIZATION =====================//
 
-clearscreen.
 if autoWarp = true {kuniverse:timewarp:warpto(time:seconds + ETA:apoapsis - 5).}
 until ETA:apoapsis < 1 {
 	print "ETA:apoapsis = " + round(ETA:apoapsis,1) at (0,1).
@@ -238,25 +267,23 @@ sas off.
 rcs on.
 wait 1.
 
+local AThr is EngThrustIsp().
+local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2.
+lock throttle to MIN(MAX( (g_alt*mass*(accLimit-1))/AThr[0], 0.001 ), 1).
+
+set data to BurnData().
 clearscreen.
-set stopburn to false.
-lock throttle to ThrottleController().
-until stopburn {
+until (data[9]<0) { //dVorb < 0
 	set data to BurnData().
 	//BurnData()
 	//return list(vec, pitchVec, inclVec, fi, dI, dA, Vh, Vz, Vorb, dVorb, dVincl, dVtotal).
 	//            0  , 1       , 2      , 3 , 4 , 5 , 6 , 7 , 8   , 9,   , 10    , 11
 	
 	lock steering to data[0].
-	if (data[9]<0) { //dVorb < 0
-		lock throttle to 0.
-		sas on.
-		unlock throttle.
-		unlock steering.
-		set stopburn to true.
-	}
-	else if (data[0]:mag > 30) {
-		lock throttle to ThrottleController().
+	if (data[0]:mag > 30) {
+		local AThr is EngThrustIsp().
+		local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2.
+		lock throttle to MIN(MAX( (g_alt*mass*(accLimit-1))/AThr[0], 0.001 ), 1).
 	}
 	else if (data[0]:mag < 30) {
 		lock throttle to MIN(MAX(data[0]:mag/1000, 0.005), 1).
@@ -264,7 +291,7 @@ until stopburn {
 	
 	set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dVincl", 1.0, TRUE, 0.2, TRUE, TRUE).
 	set v2 to VECDRAW(V(0,0,0), data[1], RGB(0,255,0), "dVorb", 1.0, TRUE, 0.2, TRUE, TRUE).
-	set v3 to VECDRAW(V(0,0,0), data[0], RGB(255,255,255), "dV", 1.0, TRUE, 0.2, TRUE, TRUE).
+	set v3 to VECDRAW(V(0,0,0), data[0], RGB(255,255,255), "dVtotal", 1.0, TRUE, 0.2, TRUE, TRUE).
 	
 	local line is 1.
 	print "Fi      = " + data[3] + "   " at(0,line).
@@ -285,18 +312,16 @@ until stopburn {
 	local line is line + 1.
 	print "dVtotal = " + data[11] + "   " at(0,line).
 }
+lock throttle to 0.
+sas on.
+unlock throttle.
+unlock steering.
 
 clearscreen.
 print "Circularization complete".
 orbitData().
 
 //======================= FUNCTIONS ========================//
-
-function ThrottleController {
-	local AThr is EngThrustIsp().
-	local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2.
-	return MIN(MAX( (g_alt*mass*(accLimit-1))/AThr[0], 0.001 ), 1).
-}
 
 function DeltaV_Calc {
 	parameter DeltaV_Data.
@@ -343,7 +368,9 @@ function Pitch_Calc {
 	// set Tpoints["EndPoint"] to solver[1].
 	// local time_to_alt to solver[2].
 	
-	print "Leaving atmo in " + round(time_to_alt,1) + " sec" at(0,21).
+	if body:atm:exists {
+		print "Leaving atmo in " + round(time_to_alt,1) + " sec" at(0,21).
+	}
 	
 	set Pitch_Data["Time"] to t_2.
 	set Pitch_Data["Time_to_Alt"] to time_to_alt.
@@ -411,28 +438,28 @@ function AzimuthCalc {
 }
 
 function BurnData {
-	set eng to EngThrustIsp().
-	set inclVec to InclData(targetIncl). //return list(inclVec, dVincl).
+	local eng is EngThrustIsp().
+	local inclVec is InclData(targetIncl). //return list(inclVec, dVincl).
 	
-	set Rad to ship:body:radius + ship:altitude.
-	set g_alt to body:Mu/Rad^2. //ускорение свободного падения на текущей высоте
-	set Vh to VXCL(ship:up:vector, ship:velocity:orbit):mag. //горизонтальная скорость
-	set Vz to ship:verticalspeed. //вертикальная скорость
-	set Vorb to sqrt(ship:body:Mu/Rad). //1 косм. на текущей высоте
-	set Acentr to Vh^2/Rad. //центростремительное ускорение
+	local Rad is ship:body:radius + ship:altitude.
+	local g_alt is body:Mu/Rad^2. //ускорение свободного падения на текущей высоте
+	local Vh is VXCL(ship:up:vector, ship:velocity:orbit):mag. //горизонтальная скорость
+	local Vz is ship:verticalspeed. //вертикальная скорость
+	local Vorb is sqrt(ship:body:Mu/Rad). //1 косм. на текущей высоте
+	local Acentr is Vh^2/Rad. //центростремительное ускорение
 	
-	set AThr to eng[0]*Throttle/ship:mass. //моментальное ускорение сообщаемое движками
+	local AThr is eng[0]*Throttle/ship:mass. //моментальное ускорение сообщаемое движками
 	if AThr = 0 {set AThr to 10^(-5).} //если двигатель выключен
-	set dVorb to Vorb-Vh.
-	set dA to g_alt-Acentr-Vz.
-	set fi to ARCSIN(Min(Max(dA/AThr,-1), 1)).
+	local dVorb is Vorb-Vh.
+	local dA is g_alt-Acentr-Vz.
+	local fi is ARCSIN(Min(Max(dA/AThr,-1), 1)).
 	
-	set dVtotal to dVorb + abs(inclVec:mag).
+	local dVtotal is dVorb + abs(inclVec:mag).
 	if (periapsis > 0) AND (abs(fi) = 90) {set pitchVec to Heading(90-targetIncl, 0):vector*dVorb.}
 	else {set pitchVec to Heading(90-targetIncl, fi):vector*dVorb.}
-	set vec to pitchVec + inclVec.
+	local vect is pitchVec + inclVec.
 	
-	return list(vec, pitchVec, inclVec, fi, dI, dA, Vh, Vz, Vorb, dVorb, inclVec:mag, dVtotal).
+	return list(vect, pitchVec, inclVec, fi, dI, dA, Vh, Vz, Vorb, dVorb, inclVec:mag, dVtotal).
 }
 
 function InclData {
