@@ -1,29 +1,39 @@
 //Ascend script v1.0
 //by maxpushka
-function Ascend {
-	//==================== LAUNCH PARAMETERS ===================//
-	//REQUIRED ACCELEROMETER ONBOARD! CHECK FOR ITS PRESENCE
-	set targetOrbit to 72000. //[m] Apoapsis=Periapsis=targetOrbit
-	set targetIncl to 90. //[deg] final orbit inclination
-	set finalPitch to 85. //[deg]
 
-	set gravTurnAlt to 100. //[m] radar altitude at which vessel shall start gravity turn
-	set gravTurnV to 150. //[m/s] velocity at which vessel shall start gravity turn
+function Ascend {
+	
+	parameter targetOrbit, targetIncl, finalPitch is 85, 
+	gravTurnAlt is 250, gravTurnV is 150,
+	accLimit is 9,
+	pre_stage is 0.5, post_stage is 1,
+	jettisonFairing is true, jettisonAlt is 50000, 
+	deployAntennas is false, deploySolar is true,
+	autoWarp is true.
+	
+	//=============== LAUNCH PARAMETERS GUIDELINE ==============//
+	//REQUIRED ACCELEROMETER ONBOARD! CHECK FOR ITS PRESENCE
+	// set targetOrbit to 72000. //[m] Apoapsis=Periapsis=targetOrbit
+	// set targetIncl to 3. //[deg] final orbit inclination
+	// set finalPitch to 85. //[deg]
+
+	// set gravTurnAlt to 250. //[m] radar altitude at which vessel shall start gravity turn
+	// set gravTurnV to 150. //[m/s] velocity at which vessel shall start gravity turn
 	//gravity turn start when ship's altitute == gravTurnAlt OR ground velocity == gravTurnV
 	//on bodies without atmosphere these parameters have no effect.
 
-	set accLimit to false. //[g] limit acceleration. may be set to false
+	// set accLimit to 5.25. //[g] limit g-force in atmosphere. may be set to false
 
-	set pre_stage to 0.5. //[s] pre staging delay
-	set post_stage to 1. //[s] post staging delay
+	// set pre_stage to 0.5. //[s] pre staging delay
+	// set post_stage to 1. //[s] post staging delay
 
-	set jettisonFairing to true. //auto-stage fairing when reached jettisonAlt and Q < 4 kPa
-	set jettisonAlt to 50000.//[m] alt at which fairing shall be jettisoned
-	set deployAntennas to true. //auto-deploy antennas
-	set deploySolar to true. //auto-deploy solar pannels
+	// set jettisonFairing to true. //auto-stage fairing when reached jettisonAlt and Q < 4 kPa
+	// set jettisonAlt to 50000.//[m] alt at which fairing shall be jettisoned
+	// set deployAntennas to true. //auto-deploy antennas
+	// set deploySolar to true. //auto-deploy solar pannels
 
-	set autoWarp to true. //auto warp to apoapsis burn
-
+	// set autoWarp to true. //auto warp to apoapsis burn
+	
 	//==================== PARAMETERS CHECK ====================//
 
 	if (targetOrbit:typename <> "Scalar") OR (targetIncl:typename <> "Scalar") OR 
@@ -60,6 +70,7 @@ function Ascend {
 
 	//CLEARING WORKSPACE
 	clearscreen.
+	AG1 ON.
 	SET SHIP:CONTROL:NEUTRALIZE TO TRUE. //block user control inputs
 	set ship:control:pilotmainthrottle to 0. //block user throttle inputs
 
@@ -179,7 +190,7 @@ function Ascend {
 		local line is 1.
 		print "gravTurnAlt = " + gravTurnAlt + "   " at(0,line).
 		local line is line + 1.
-		print "altitude    = " + round(alt:radar) + "   " at(0,line).
+		print "radar alt   = " + round(alt:radar) + "   " at(0,line).
 		local line is line + 2.
 		print "gravTurnV   = " + gravTurnV + "   " at(0,line).
 		local line is line + 1.
@@ -196,6 +207,8 @@ function Ascend {
 	set pitch_ang to Pitch_Calc(Pitch_Data)["Pitch"].
 	set compass to AzimuthCalc(targetIncl).
 	lock steering to lookdirup(heading(compass,90-pitch_ang):vector,ship:facing:upvector).
+	
+	when (altitude > ship:body:ATM:height) then {set ascendStage to 2.}
 	until (apoapsis >= targetOrbit AND altitude > ship:body:ATM:height) {
 		//Ascend stages:
 		//1=powered ascend; engine burning, apoapsis<targetOrbit
@@ -203,15 +216,16 @@ function Ascend {
 		//3=flight on a ballistic trajectory outside the atmosphere; MECO, apoapsis>=targetOrbit
 		
 		//it's important to lock throttle in range [0; 1] as it's value is used in DeltaV_Calc()
-		
-		if (apoapsis/targetOrbit < 0.9) { //while ascend stage = 1
+		local frac is apoapsis/targetOrbit.
+		if (frac < 0.9) { //while ascend stage = 1
 			local AThr is EngThrustIsp().
 			local g_alt is body:Mu/(ship:body:radius + ship:altitude)^2.
 			lock throttle to MIN(MAX( (g_alt^2*mass*(accLimit-1))/AThr[0], 0.01 ), 1).
 		}
-		else if (apoapsis/targetOrbit > 0.9) AND (apoapsis < targetOrbit) { //while ascend stage = 2
-			when 1 then {set ascendStage to 2.}
-			lock throttle to MIN(MAX((targetOrbit-apoapsis)/1000, 0.005), 1).
+		else if (frac > 0.9) AND (apoapsis < targetOrbit) { //while ascend stage = 2
+			local eng is EngThrustIsp().
+			local AThr is eng[0]/ship:mass.              
+			lock throttle to MIN(MAX((targetOrbit-apoapsis)/AThr, eng[0]*0.1), 1).
 		}
 		else {lock throttle to 0.}
 	  
@@ -243,7 +257,7 @@ function Ascend {
 		set line to line + 1.
 		print "target apo    = " + targetOrbit + "   " at(0,line).
 		set line to line + 2.
-		print "orbit incl  = " + round(orbit:inclination,5) + "   " at(0,line).
+		print "orbit incl    = " + round(orbit:inclination,5) + "   " at(0,line).
 		set line to line + 1.
 		print "target incl   = " + targetIncl + "   " at(0,line).
 		// Delta V Printout
@@ -264,35 +278,34 @@ function Ascend {
 	wait 1.
 
 	//==================== CIRCULARIZATION =====================//
-
+	
+	lock steering to prograde.
 	if autoWarp = true {kuniverse:timewarp:warpto(time:seconds + ETA:apoapsis - 5).}
-	until ETA:apoapsis < 1 {
-		print "ETA:apoapsis = " + round(ETA:apoapsis,1) at (0,1).
-		wait 0.5.
+	until ETA:apoapsis < 5 {
+		print "Burn in " + round(ETA:apoapsis,1) + " sec" + "   " at (0,1).
+		wait 1.
 	}
-	sas off.
-	rcs on.
-	wait 1.
 	
 	clearscreen.
+	sas off.
+	rcs on.
 	lock throttle to 1.
 	set stopburn to false.
 	until stopburn { //dVorb < 0
 		set data to BurnData().
 		//BurnData()
 		//return list(vect, pitchVec, inclVec, fi, dI, dA, Vh, Vz, Vorb, dVorb, dVincl, dVtotal).
-		//            0  , 1       , 2      , 3 , 4 , 5 , 6 , 7 , 8   , 9,   , 10    , 11
+		//            0   , 1       , 2      , 3 , 4 , 5 , 6 , 7 , 8   , 9,   , 10    , 11
 		
 		lock steering to data[0].
 		if (data[9]<0) { //dVorb < 0
 			lock throttle to 0.
-			unlock throttle.
-			unlock steering.
 			set stopburn to true.
-			sas on.
 		}
-		if (data[0]:mag < 50) {
-			lock throttle to MIN(MAX(data[0]:mag/1000, 0.001), 1).
+		else if (data[0]:mag < 50) {
+			local eng is EngThrustIsp().
+			local AThr is eng[0]/ship:mass.
+			lock throttle to MIN(MAX(data[0]:mag/AThr, eng[0]*0.1), 1).
 		}
 		
 		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dVincl", 1.0, TRUE, 0.2, TRUE, TRUE).
@@ -323,6 +336,8 @@ function Ascend {
 		wait 0. //wait for the next physics tick
 	}
 	
+	sas off.
+	rcs off.
 	set v1:show to false.
 	set v2:show to false.
 	set v3:show to false.
@@ -330,6 +345,7 @@ function Ascend {
 	clearscreen.
 	print "Circularization complete".
 	orbitData().
+	wait 1.
 
 	//======================= FUNCTIONS ========================//
 
@@ -373,18 +389,13 @@ function Ascend {
 		set Tpoints["EndPoint"] to p[1][0].	
 		local time_to_alt to p[2][0].
 		
-		// set solver to BisectionSolver(t_func@, Tpoints["StartPoint"], Tpoints["EndPoint"]).
-		// set Tpoints["StartPoint"] to solver[0].	
-		// set Tpoints["EndPoint"] to solver[1].
-		// local time_to_alt to solver[2].
-		
-		if body:atm:exists {
+		if (altitude < body:atm:height) {
 			print "Leaving atmo in " + round(time_to_alt,1) + " sec " + "   " at(0,19).
 		}
 		
 		set Pitch_Data["Time"] to t_2.
 		set Pitch_Data["Time_to_Alt"] to time_to_alt.
-		if MachNumber() < 0.85 OR MachNumber() > 1.1 { //Max Q is reached when speed = 1 mach
+		if MachNumber() < 0.85 OR MachNumber() > 1.1 { //Max Q is reached when speed is around 1 mach
 			local pitch_des to Pitch_Data["Pitch"].
 			local pitch_final to Pitch_Data["Pitch_Final"].
 			local pitch_rate to max(0,(pitch_final - pitch_des)/time_to_alt).
@@ -448,7 +459,8 @@ function Ascend {
 	}
 
 	function BurnData {
-		local eng is EngThrustIsp(). //return list(thrust, average_isp).
+		set eng to availablethrust. //EngThrustIsp()[0]. //return list(thrust, average_isp).
+		if eng = 0 {set eng to availablethrust.}
 		local inclVec is InclData(targetIncl). //return list(inclVec, dVincl).
 		
 		local Rad is ship:body:radius + ship:altitude.
@@ -458,7 +470,7 @@ function Ascend {
 		local Vorb is sqrt(ship:body:Mu/Rad). //1 косм. на текущей высоте
 		local Acentr is Vh^2/Rad. //центростремительное ускорение
 		
-		local AThr is eng[0]*Throttle/ship:mass. //моментальное ускорение сообщаемое движками
+		local AThr is eng*Throttle/ship:mass. //моментальное ускорение сообщаемое движками
 		local dVorb is Vorb-Vh.
 		local dA is g_alt-Acentr-Vz.
 		
