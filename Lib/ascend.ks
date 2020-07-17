@@ -86,6 +86,7 @@ function Ascend {
 	set Tpoints to lexicon().
 	Tpoints:add("StartPoint",110).
 	Tpoints:add("EndPoint",115).
+	Tpoints:add("Time_to_Alt",0).
 
 	set Pitch_Data to lexicon().
 	Pitch_Data:ADD("Time",time:seconds).
@@ -208,6 +209,7 @@ function Ascend {
 	set compass to AzimuthCalc(targetIncl).
 	lock steering to lookdirup(heading(compass,90-pitch_ang):vector,ship:facing:upvector).
 	
+	set placeholder to "                         ".
 	when (altitude > ship:body:ATM:height) then {set ascendStage to 2.}
 	until (apoapsis >= targetOrbit AND altitude > ship:body:ATM:height) {
 		//Ascend stages:
@@ -216,6 +218,7 @@ function Ascend {
 		//3=flight on a ballistic trajectory outside the atmosphere; MECO, apoapsis>=targetOrbit
 		
 		//it's important to lock throttle in range [0; 1] as it's value is used in DeltaV_Calc()
+		
 		local frac is apoapsis/targetOrbit.
 		if (frac < 0.9) { //while ascend stage = 1
 			local AThr is EngThrustIsp().
@@ -223,9 +226,10 @@ function Ascend {
 			lock throttle to MIN(MAX( (g_alt^2*mass*(accLimit-1))/AThr[0], 0.01 ), 1).
 		}
 		else if (frac > 0.9) AND (apoapsis < targetOrbit) { //while ascend stage = 2
+			rcs off.
 			local eng is EngThrustIsp().
-			local AThr is eng[0]/ship:mass.              
-			lock throttle to MIN(MAX((targetOrbit-apoapsis)/AThr, eng[0]*0.1), 1).
+			local AThr is eng[0]/ship:mass.
+			lock throttle to MIN(MAX(1-apoapsis/targetOrbit, 10^(-5)/AThr), 1).
 		}
 		else {lock throttle to 0.}
 	  
@@ -241,11 +245,14 @@ function Ascend {
 		print "throttle      = " + round(throttle*100, 2) + " %   " at(0,line).
 		local line is line + 1.
 		
-		if body:atm:exists {
+		if (altitude < body:atm:height) {
 			print "Mach Number   = " + MachNumber() + "   " at(0,line).
 			set line to line + 2.
 		}
-		else {set line to line + 1.}
+		else {
+			print placeholder at(0,line).
+			set line to line + 1.
+		}
 		
 		print "pitch angle   = " + round(pitch_ang,2) + "   " at(0,line).
 		set line to line + 1.
@@ -269,6 +276,10 @@ function Ascend {
 		print "DeltaV_Losses = " + round(DeltaV_Data["Total"] - DeltaV_Data["Gain"]) + "   " at(0,line).
 		set line to line + 1.
 		print "DeltaV_Eff    = " + round(100*DeltaV_Data["Gain"]/DeltaV_Data["Total"]) + "%   " at(0,line).
+		//Time to exiting atmosphere printout
+		set line to line + 2.
+		if (altitude < body:atm:height) {print "Leaving atmo in " + round(Tpoints["Time_to_Alt"],1) + " sec " + "   " at(0,line).}
+		else {print placeholder at(0,line).}
 		
 		wait 0. //wait for the next physics tick
 	}
@@ -279,9 +290,8 @@ function Ascend {
 
 	//==================== CIRCULARIZATION =====================//
 	
-	lock steering to prograde.
 	if autoWarp = true {kuniverse:timewarp:warpto(time:seconds + ETA:apoapsis - 5).}
-	until ETA:apoapsis < 5 {
+	until ETA:apoapsis < 1 {
 		print "Burn in " + round(ETA:apoapsis,1) + " sec" + "   " at (0,1).
 		wait 1.
 	}
@@ -305,7 +315,7 @@ function Ascend {
 		else if (data[0]:mag < 50) {
 			local eng is EngThrustIsp().
 			local AThr is eng[0]/ship:mass.
-			lock throttle to MIN(MAX(data[0]:mag/AThr, eng[0]*0.1), 1).
+			lock throttle to MIN(MAX(data[0]:mag/AThr, 0.01/eng[0]), 1).
 		}
 		
 		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dVincl", 1.0, TRUE, 0.2, TRUE, TRUE).
@@ -387,11 +397,8 @@ function Ascend {
 		set p to solver:call().
 		set Tpoints["StartPoint"] to p[0][0].	
 		set Tpoints["EndPoint"] to p[1][0].	
+		set Tpoints["Time_to_Alt"] to p[2][0].
 		local time_to_alt to p[2][0].
-		
-		if (altitude < body:atm:height) {
-			print "Leaving atmo in " + round(time_to_alt,1) + " sec " + "   " at(0,19).
-		}
 		
 		set Pitch_Data["Time"] to t_2.
 		set Pitch_Data["Time_to_Alt"] to time_to_alt.
