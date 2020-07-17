@@ -278,7 +278,7 @@ function Ascend {
 		print "DeltaV_Eff    = " + round(100*DeltaV_Data["Gain"]/DeltaV_Data["Total"]) + "%   " at(0,line).
 		//Time to exiting atmosphere printout
 		set line to line + 2.
-		if (altitude < body:atm:height) {print "Leaving atmo in " + round(Tpoints["Time_to_Alt"],1) + " sec " + "   " at(0,line).}
+		if (Tpoints["Time_to_Alt"] > 0) {print "Leaving atmo in " + round(Tpoints["Time_to_Alt"],1) + " sec " + "   " at(0,line).}
 		else {print placeholder at(0,line).}
 		
 		wait 0. //wait for the next physics tick
