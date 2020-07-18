@@ -14,6 +14,5 @@ function EngThrustIsp {
 		}
 	}
 
-	if (ActiveEng:length() = 0) {return list(10^(-5),10^(-5)).}
-	else {return list(eng_thrust, eng_isp/ActiveEng:length).}
+	return list(eng_thrust, eng_isp/ActiveEng:length).
 }

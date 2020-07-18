@@ -16,7 +16,7 @@ PART
 {
 	part = probeStackLarge_4289871386
 	partName = Part
-	persistentId = 2056116109
+	persistentId = 29661529
 	pos = 1.64418006,38.6892242,-0.398651987
 	attPos = 0,0,0
 	attPos0 = 1.64418006,38.6892242,-0.398651987
@@ -850,7 +850,7 @@ PART
 		IsRTPowered = True
 		IsRTBroken = False
 		RTDishCosAngle = 1
-		RTOmniRange = 3000
+		RTOmniRange = 30000
 		RTDishRange = -1
 		stagingEnabled = True
 		EVENTS
@@ -898,7 +898,7 @@ PART
 {
 	part = asasmodule1-2_4289869368
 	partName = Part
-	persistentId = 1344448603
+	persistentId = 3271643833
 	pos = 1.64418006,38.2492256,-0.398651987
 	attPos = 0,0,0
 	attPos0 = 0,-0.439998627,0
@@ -1028,7 +1028,7 @@ PART
 {
 	part = vernierEngine_4294121486
 	partName = Part
-	persistentId = 2372585283
+	persistentId = 984524433
 	pos = 0.561898828,38.8193893,0.226203352
 	attPos = 0,0,0
 	attPos0 = -1.08228123,0.1301651,0.62485534
@@ -1163,7 +1163,7 @@ PART
 {
 	part = vernierEngine_4294116076
 	partName = Part
-	persistentId = 1524659815
+	persistentId = 1067392193
 	pos = 2.26903558,38.8193893,0.683629274
 	attPos = 0,0,0
 	attPos0 = 0.62485522,0.1301651,1.08228123
@@ -1298,7 +1298,7 @@ PART
 {
 	part = vernierEngine_4294116006
 	partName = Part
-	persistentId = 3773205817
+	persistentId = 3189900494
 	pos = 2.72646117,38.8193893,-1.02350748
 	attPos = 0,0,0
 	attPos0 = 1.08228123,0.1301651,-0.624855459
@@ -1433,7 +1433,7 @@ PART
 {
 	part = vernierEngine_4294115936
 	partName = Part
-	persistentId = 1969661117
+	persistentId = 1496964370
 	pos = 1.01932478,38.8193893,-1.48093307
 	attPos = 0,0,0
 	attPos0 = -0.62485534,0.1301651,-1.08228111
@@ -1568,7 +1568,7 @@ PART
 {
 	part = batteryBankLarge_4293717434
 	partName = Part
-	persistentId = 309132940
+	persistentId = 1215484592
 	pos = 1.64418006,37.889225,-0.398651987
 	attPos = 0,0,0
 	attPos0 = 0,-0.36000061,0
@@ -1666,7 +1666,7 @@ PART
 {
 	part = fairingSize3_4294093732
 	partName = Part
-	persistentId = 1572055013
+	persistentId = 2730228050
 	pos = 1.64418006,37.5272255,-0.398651987
 	attPos = 0,0,0
 	attPos0 = 0,-0.361999512,0
@@ -2077,7 +2077,7 @@ PART
 {
 	part = Size3LargeTank_4294218722
 	partName = Part
-	persistentId = 4286715498
+	persistentId = 833188817
 	pos = 1.64418006,33.5872231,-0.398651987
 	attPos = 0,0,0
 	attPos0 = 0,-3.94000244,0
@@ -2124,6 +2124,8 @@ PART
 	link = vernierEngine_4294121866
 	link = vernierEngine_4294121778
 	link = vernierEngine_4294121690
+	link = largeSolarPanel_4292364014
+	link = largeSolarPanel_4292363928
 	attN = top,fairingSize3_4294093732_0|3.74000001|0_0|1|0_0|3.74000001|0_0|1|0
 	attN = bottom,Size3AdvancedEngine_4294210172_0|-3.74000001|0_0|-1|0_0|-3.74000001|0_0|-1|0
 	EVENTS
@@ -2226,7 +2228,7 @@ PART
 {
 	part = Size3AdvancedEngine_4294210172
 	partName = Part
-	persistentId = 3139539802
+	persistentId = 2470578072
 	pos = 1.64418006,28.3592491,-0.398651987
 	attPos = 0,0,0
 	attPos0 = 0,-5.22797394,0
@@ -2533,7 +2535,7 @@ PART
 {
 	part = Decoupler.3_4294165686
 	partName = Part
-	persistentId = 2208723966
+	persistentId = 639283926
 	pos = 1.64418006,25.6723766,-0.398651987
 	attPos = 0,0,0
 	attPos0 = 0,-2.68687248,0
@@ -2688,7 +2690,7 @@ PART
 {
 	part = Size3.Size4.Adapter.01_4294163556
 	partName = Part
-	persistentId = 3304010779
+	persistentId = 4071534653
 	pos = 1.64418006,24.272377,-0.398651987
 	attPos = 0,0,0
 	attPos0 = 0,-1.39999962,0
@@ -2821,7 +2823,7 @@ PART
 {
 	part = Size4.Tank.04_4289813488
 	partName = Part
-	persistentId = 1571244269
+	persistentId = 1353431108
 	pos = 1.64418006,15.522377,-0.398651987
 	attPos = 0,0,0
 	attPos0 = 0,-8.75,0
@@ -2986,7 +2988,7 @@ PART
 {
 	part = Size4.EngineAdapter.01_4289759960
 	partName = Part
-	persistentId = 3179946451
+	persistentId = 3271753090
 	pos = 1.64418006,6.77237701,-0.398651987
 	attPos = 0,0,0
 	attPos0 = 0,-8.75,0
@@ -3107,7 +3109,7 @@ PART
 {
 	part = Size3AdvancedEngine_4289759400
 	partName = Part
-	persistentId = 125001822
+	persistentId = 1727107773
 	pos = 1.64418006,3.9844017,-0.398651987
 	attPos = 0,0,0
 	attPos0 = 0,-2.78797722,0
@@ -3413,7 +3415,7 @@ PART
 {
 	part = LiquidEngineKE-1_4289758962
 	partName = Part
-	persistentId = 1829115959
+	persistentId = 933801271
 	pos = -0.123589993,4.67237473,-2.16642189
 	attPos = 0,0,0
 	attPos0 = -1.76777005,-2.10000038,-1.76777005
@@ -3721,7 +3723,7 @@ PART
 {
 	part = LiquidEngineKE-1_4289758338
 	partName = Part
-	persistentId = 1870955893
+	persistentId = 561981313
 	pos = -0.123589993,4.67237473,1.36911809
 	attPos = 0,0,0
 	attPos0 = -1.76777005,-2.10000038,1.76777005
@@ -4021,7 +4023,7 @@ PART
 {
 	part = LiquidEngineKE-1_4289758006
 	partName = Part
-	persistentId = 2381485411
+	persistentId = 1831888051
 	pos = 3.41195035,4.67237473,1.36911809
 	attPos = 0,0,0
 	attPos0 = 1.76777005,-2.10000038,1.76777005
@@ -4321,7 +4323,7 @@ PART
 {
 	part = LiquidEngineKE-1_4289757674
 	partName = Part
-	persistentId = 1181692894
+	persistentId = 3829849969
 	pos = 3.41195035,4.67237473,-2.16642189
 	attPos = 0,0,0
 	attPos0 = 1.76777005,-2.10000038,-1.76777005
@@ -4621,7 +4623,7 @@ PART
 {
 	part = launchClamp1_4289632662
 	partName = Part
-	persistentId = 1740969063
+	persistentId = 2756431704
 	pos = 1.64417982,6.03532028,-3.69837475
 	attPos = 0,0,0
 	attPos0 = -2.94616257E-07,-0.737056732,-3.29972267
@@ -4786,7 +4788,7 @@ PART
 		IsRTPowered = True
 		IsRTBroken = False
 		RTDishCosAngle = 1
-		RTOmniRange = 5000
+		RTOmniRange = 50000
 		RTDishRange = -1
 		stagingEnabled = True
 		EVENTS
@@ -4804,7 +4806,7 @@ PART
 {
 	part = launchClamp1_4288409194
 	partName = Part
-	persistentId = 3328611009
+	persistentId = 2489448075
 	pos = -1.65554237,6.03532028,-0.398651868
 	attPos = 0,0,0
 	attPos0 = -3.29972243,-0.737056732,9.79380275E-08
@@ -4969,7 +4971,7 @@ PART
 		IsRTPowered = True
 		IsRTBroken = False
 		RTDishCosAngle = 1
-		RTOmniRange = 5000
+		RTOmniRange = 50000
 		RTDishRange = -1
 		stagingEnabled = True
 		EVENTS
@@ -4987,7 +4989,7 @@ PART
 {
 	part = launchClamp1_4288409072
 	partName = Part
-	persistentId = 391159317
+	persistentId = 3804904762
 	pos = 1.64418054,6.03532028,2.90107059
 	attPos = 0,0,0
 	attPos0 = 5.83087967E-07,-0.737056732,3.29972267
@@ -5152,7 +5154,7 @@ PART
 		IsRTPowered = True
 		IsRTBroken = False
 		RTDishCosAngle = 1
-		RTOmniRange = 5000
+		RTOmniRange = 50000
 		RTDishRange = -1
 		stagingEnabled = True
 		EVENTS
@@ -5170,7 +5172,7 @@ PART
 {
 	part = launchClamp1_4288408950
 	partName = Part
-	persistentId = 862780493
+	persistentId = 2966337943
 	pos = 4.94390297,6.03532028,-0.398652464
 	attPos = 0,0,0
 	attPos0 = 3.29972243,-0.737056732,-4.91294486E-07
@@ -5335,7 +5337,7 @@ PART
 		IsRTPowered = True
 		IsRTBroken = False
 		RTDishCosAngle = 1
-		RTOmniRange = 5000
+		RTOmniRange = 50000
 		RTDishRange = -1
 		stagingEnabled = True
 		EVENTS
@@ -5353,7 +5355,7 @@ PART
 {
 	part = vernierEngine_4288085814
 	partName = Part
-	persistentId = 3805653563
+	persistentId = 1308449100
 	pos = -0.707431316,22.5243111,0.231460363
 	attPos = 0,0,0
 	attPos0 = -2.35161138,7.00193405,0.63011235
@@ -5492,7 +5494,7 @@ PART
 {
 	part = vernierEngine_4288080012
 	partName = Part
-	persistentId = 2138525384
+	persistentId = 621551960
 	pos = 0.426896572,22.5243111,1.70974529
 	attPos = 0,0,0
 	attPos0 = -1.21728349,7.00193405,2.10839725
@@ -5631,7 +5633,7 @@ PART
 {
 	part = vernierEngine_4288079918
 	partName = Part
-	persistentId = 3287751139
+	persistentId = 2025878049
 	pos = 2.27429223,22.5243111,1.95295942
 	attPos = 0,0,0
 	attPos0 = 0.630112171,7.00193405,2.35161138
@@ -5770,7 +5772,7 @@ PART
 {
 	part = vernierEngine_4288079824
 	partName = Part
-	persistentId = 1714628956
+	persistentId = 1158898880
 	pos = 3.75257707,22.5243111,0.818631649
 	attPos = 0,0,0
 	attPos0 = 2.10839701,7.00193405,1.21728361
@@ -5909,7 +5911,7 @@ PART
 {
 	part = vernierEngine_4288079730
 	partName = Part
-	persistentId = 1418840500
+	persistentId = 693876531
 	pos = 3.9957912,22.5243111,-1.02876461
 	attPos = 0,0,0
 	attPos0 = 2.35161138,7.00193405,-0.630112529
@@ -6048,7 +6050,7 @@ PART
 {
 	part = vernierEngine_4288079636
 	partName = Part
-	persistentId = 923237027
+	persistentId = 558486497
 	pos = 2.86146331,22.5243111,-2.50704932
 	attPos = 0,0,0
 	attPos0 = 1.21728337,7.00193405,-2.10839725
@@ -6187,7 +6189,7 @@ PART
 {
 	part = vernierEngine_4288079542
 	partName = Part
-	persistentId = 4273034635
+	persistentId = 3882037571
 	pos = 1.01406765,22.5243111,-2.75026321
 	attPos = 0,0,0
 	attPos0 = -0.630112469,7.00193405,-2.35161114
@@ -6326,7 +6328,7 @@ PART
 {
 	part = vernierEngine_4288079448
 	partName = Part
-	persistentId = 3314820078
+	persistentId = 557484158
 	pos = -0.464217424,22.5243111,-1.61593497
 	attPos = 0,0,0
 	attPos0 = -2.10839748,7.00193405,-1.21728301
@@ -6465,7 +6467,7 @@ PART
 {
 	part = vernierEngine_4288079256
 	partName = Part
-	persistentId = 153757049
+	persistentId = 902572063
 	pos = -0.688852549,20.1943092,0.226482183
 	attPos = 0,0,0
 	attPos0 = -2.33303261,4.67193222,0.62513417
@@ -6604,7 +6606,7 @@ PART
 {
 	part = vernierEngine_4288079152
 	partName = Part
-	persistentId = 4138719788
+	persistentId = 1170017794
 	pos = 0.436513662,20.1943092,1.69308794
 	attPos = 0,0,0
 	attPos0 = -1.2076664,4.67193222,2.09173989
@@ -6743,7 +6745,7 @@ PART
 {
 	part = vernierEngine_4288079052
 	partName = Part
-	persistentId = 3881198625
+	persistentId = 1996505165
 	pos = 2.26931405,20.1943092,1.93438065
 	attPos = 0,0,0
 	attPos0 = 0.625133991,4.67193222,2.33303261
@@ -6882,7 +6884,7 @@ PART
 {
 	part = vernierEngine_4288078952
 	partName = Part
-	persistentId = 1788986229
+	persistentId = 739628291
 	pos = 3.73591971,20.1943092,0.809014678
 	attPos = 0,0,0
 	attPos0 = 2.09173965,4.67193222,1.20766664
@@ -7021,7 +7023,7 @@ PART
 {
 	part = vernierEngine_4288078852
 	partName = Part
-	persistentId = 3067638949
+	persistentId = 3014488923
 	pos = 3.97721267,20.1943092,-1.02378643
 	attPos = 0,0,0
 	attPos0 = 2.33303261,4.67193222,-0.625134349
@@ -7160,7 +7162,7 @@ PART
 {
 	part = vernierEngine_4288078752
 	partName = Part
-	persistentId = 1482431737
+	persistentId = 3567911070
 	pos = 2.85184646,20.1943092,-2.49039197
 	attPos = 0,0,0
 	attPos0 = 1.20766628,4.67193222,-2.09173989
@@ -7299,7 +7301,7 @@ PART
 {
 	part = vernierEngine_4288078652
 	partName = Part
-	persistentId = 3437952268
+	persistentId = 812005694
 	pos = 1.01904583,20.1943092,-2.73168445
 	attPos = 0,0,0
 	attPos0 = -0.625134289,4.67193222,-2.33303237
@@ -7438,7 +7440,7 @@ PART
 {
 	part = vernierEngine_4288078552
 	partName = Part
-	persistentId = 2331454027
+	persistentId = 3223619373
 	pos = -0.447560072,20.1943092,-1.60631788
 	attPos = 0,0,0
 	attPos0 = -2.09174013,4.67193222,-1.20766604
@@ -7577,7 +7579,7 @@ PART
 {
 	part = vernierEngine_4288078354
 	partName = Part
-	persistentId = 2807994755
+	persistentId = 3880011253
 	pos = -0.688399553,17.5105038,0.226360828
 	attPos = 0,0,0
 	attPos0 = -2.33257961,1.98812675,0.625012815
@@ -7716,7 +7718,7 @@ PART
 {
 	part = vernierEngine_4288078244
 	partName = Part
-	persistentId = 2969457264
+	persistentId = 299223626
 	pos = 0.436748147,17.5105038,1.69268167
 	attPos = 0,0,0
 	attPos0 = -1.20743191,1.98812675,2.09133363
@@ -7855,7 +7857,7 @@ PART
 {
 	part = vernierEngine_4288078138
 	partName = Part
-	persistentId = 2804713216
+	persistentId = 1155536312
 	pos = 2.26919293,17.5105038,1.93392766
 	attPos = 0,0,0
 	attPos0 = 0.625012636,1.98812675,2.33257961
@@ -7994,7 +7996,7 @@ PART
 {
 	part = vernierEngine_4288078032
 	partName = Part
-	persistentId = 3440123427
+	persistentId = 675801487
 	pos = 3.73551345,17.5105038,0.808780074
 	attPos = 0,0,0
 	attPos0 = 2.09133339,1.98812675,1.20743203
@@ -8133,7 +8135,7 @@ PART
 {
 	part = vernierEngine_4288077926
 	partName = Part
-	persistentId = 3681260615
+	persistentId = 1524524266
 	pos = 3.97675967,17.5105038,-1.02366507
 	attPos = 0,0,0
 	attPos0 = 2.33257961,1.98812675,-0.625012994
@@ -8272,7 +8274,7 @@ PART
 {
 	part = vernierEngine_4288077820
 	partName = Part
-	persistentId = 2956435413
+	persistentId = 890725393
 	pos = 2.85161185,17.5105038,-2.48998594
 	attPos = 0,0,0
 	attPos0 = 1.20743179,1.98812675,-2.09133387
@@ -8411,7 +8413,7 @@ PART
 {
 	part = vernierEngine_4288077714
 	partName = Part
-	persistentId = 2374004067
+	persistentId = 2724459530
 	pos = 1.01916718,17.5105038,-2.73123145
 	attPos = 0,0,0
 	attPos0 = -0.625012934,1.98812675,-2.33257937
@@ -8550,7 +8552,7 @@ PART
 {
 	part = vernierEngine_4288077608
 	partName = Part
-	persistentId = 2592650413
+	persistentId = 15033338
 	pos = -0.447154045,17.5105038,-1.60608327
 	attPos = 0,0,0
 	attPos0 = -2.0913341,1.98812675,-1.20743144
@@ -8689,7 +8691,7 @@ PART
 {
 	part = vernierEngine_4288077404
 	partName = Part
-	persistentId = 2769180015
+	persistentId = 473675596
 	pos = -0.688931227,14.1574364,0.226503283
 	attPos = 0,0,0
 	attPos0 = -2.33311129,-1.36494064,0.62515527
@@ -8828,7 +8830,7 @@ PART
 {
 	part = vernierEngine_4288077288
 	partName = Part
-	persistentId = 3907365034
+	persistentId = 2039418220
 	pos = 0.436472893,14.1574364,1.69315851
 	attPos = 0,0,0
 	attPos0 = -1.20770717,-1.36494064,2.09181046
@@ -8967,7 +8969,7 @@ PART
 {
 	part = vernierEngine_4288077176
 	partName = Part
-	persistentId = 2127040275
+	persistentId = 2503395906
 	pos = 2.26933503,14.1574364,1.93445933
 	attPos = 0,0,0
 	attPos0 = 0.625155091,-1.36494064,2.33311129
@@ -9106,7 +9108,7 @@ PART
 {
 	part = vernierEngine_4288077064
 	partName = Part
-	persistentId = 2844165905
+	persistentId = 3700396148
 	pos = 3.73599029,14.1574364,0.809055328
 	attPos = 0,0,0
 	attPos0 = 2.09181023,-1.36494064,1.20770729
@@ -9245,7 +9247,7 @@ PART
 {
 	part = vernierEngine_4288076952
 	partName = Part
-	persistentId = 3175629374
+	persistentId = 302676758
 	pos = 3.97729135,14.1574364,-1.02380741
 	attPos = 0,0,0
 	attPos0 = 2.33311129,-1.36494064,-0.625155449
@@ -9384,7 +9386,7 @@ PART
 {
 	part = vernierEngine_4288076840
 	partName = Part
-	persistentId = 2414525213
+	persistentId = 1525738567
 	pos = 2.85188699,14.1574364,-2.49046254
 	attPos = 0,0,0
 	attPos0 = 1.20770705,-1.36494064,-2.09181046
@@ -9523,7 +9525,7 @@ PART
 {
 	part = vernierEngine_4288076728
 	partName = Part
-	persistentId = 414093514
+	persistentId = 397314740
 	pos = 1.01902461,14.1574364,-2.73176312
 	attPos = 0,0,0
 	attPos0 = -0.625155389,-1.36494064,-2.33311105
@@ -9662,7 +9664,7 @@ PART
 {
 	part = vernierEngine_4288076616
 	partName = Part
-	persistentId = 3293954570
+	persistentId = 4203517252
 	pos = -0.447630644,14.1574364,-1.60635865
 	attPos = 0,0,0
 	attPos0 = -2.0918107,-1.36494064,-1.20770669
@@ -9801,7 +9803,7 @@ PART
 {
 	part = vernierEngine_4288076406
 	partName = Part
-	persistentId = 354406084
+	persistentId = 3986843269
 	pos = -0.688451767,11.4875603,0.226374835
 	attPos = 0,0,0
 	attPos0 = -2.33263183,-4.03481674,0.625026822
@@ -9940,7 +9942,7 @@ PART
 {
 	part = vernierEngine_4288075402
 	partName = Part
-	persistentId = 3127606140
+	persistentId = 2851979032
 	pos = 0.436721087,11.4875603,1.69272864
 	attPos = 0,0,0
 	attPos0 = -1.20745897,-4.03481674,2.0913806
@@ -10079,7 +10081,7 @@ PART
 {
 	part = vernierEngine_4288075284
 	partName = Part
-	persistentId = 990247582
+	persistentId = 273453848
 	pos = 2.26920676,11.4875603,1.93397987
 	attPos = 0,0,0
 	attPos0 = 0.625026643,-4.03481674,2.33263183
@@ -10218,7 +10220,7 @@ PART
 {
 	part = vernierEngine_4288075166
 	partName = Part
-	persistentId = 3644599780
+	persistentId = 3345384897
 	pos = 3.73556018,11.4875603,0.808807135
 	attPos = 0,0,0
 	attPos0 = 2.09138036,-4.03481674,1.20745909
@@ -10357,7 +10359,7 @@ PART
 {
 	part = vernierEngine_4288075048
 	partName = Part
-	persistentId = 1649045802
+	persistentId = 3056759382
 	pos = 3.97681212,11.4875603,-1.0236789
 	attPos = 0,0,0
 	attPos0 = 2.33263183,-4.03481674,-0.625027001
@@ -10496,7 +10498,7 @@ PART
 {
 	part = vernierEngine_4288074930
 	partName = Part
-	persistentId = 3287463054
+	persistentId = 2180057640
 	pos = 2.85163903,11.4875603,-2.49003267
 	attPos = 0,0,0
 	attPos0 = 1.20745885,-4.03481674,-2.0913806
@@ -10635,7 +10637,7 @@ PART
 {
 	part = vernierEngine_4288074812
 	partName = Part
-	persistentId = 1955658940
+	persistentId = 2491809208
 	pos = 1.01915312,11.4875603,-2.73128366
 	attPos = 0,0,0
 	attPos0 = -0.625026941,-4.03481674,-2.33263159
@@ -10774,7 +10776,7 @@ PART
 {
 	part = vernierEngine_4288074694
 	partName = Part
-	persistentId = 243449308
+	persistentId = 2124316249
 	pos = -0.447200775,11.4875603,-1.60611045
 	attPos = 0,0,0
 	attPos0 = -2.09138083,-4.03481674,-1.2074585
@@ -10913,7 +10915,7 @@ PART
 {
 	part = vernierEngine_4288074478
 	partName = Part
-	persistentId = 2621808321
+	persistentId = 764668879
 	pos = -0.688777685,8.51013947,0.226462156
 	attPos = 0,0,0
 	attPos0 = -2.33295774,-7.01223946,0.625114143
@@ -11052,7 +11054,7 @@ PART
 {
 	part = vernierEngine_4288073426
 	partName = Part
-	persistentId = 1463450857
+	persistentId = 1256054272
 	pos = 0.436552405,8.51013947,1.6930207
 	attPos = 0,0,0
 	attPos0 = -1.20762765,-7.01223946,2.09167266
@@ -11191,7 +11193,7 @@ PART
 {
 	part = vernierEngine_4288073302
 	partName = Part
-	persistentId = 943523314
+	persistentId = 2577317315
 	pos = 2.26929402,8.51013947,1.93430579
 	attPos = 0,0,0
 	attPos0 = 0.625113964,-7.01223946,2.33295774
@@ -11330,7 +11332,7 @@ PART
 {
 	part = vernierEngine_4288073178
 	partName = Part
-	persistentId = 1386696334
+	persistentId = 3723673025
 	pos = 3.73585248,8.51013947,0.808975816
 	attPos = 0,0,0
 	attPos0 = 2.09167242,-7.01223946,1.20762777
@@ -11469,7 +11471,7 @@ PART
 {
 	part = vernierEngine_4288073054
 	partName = Part
-	persistentId = 3341398329
+	persistentId = 3533613115
 	pos = 3.9771378,8.51013947,-1.0237664
 	attPos = 0,0,0
 	attPos0 = 2.33295774,-7.01223946,-0.625114322
@@ -11608,7 +11610,7 @@ PART
 {
 	part = vernierEngine_4288072930
 	partName = Part
-	persistentId = 642414192
+	persistentId = 173764511
 	pos = 2.85180783,8.51013947,-2.49032497
 	attPos = 0,0,0
 	attPos0 = 1.20762753,-7.01223946,-2.0916729
@@ -11747,7 +11749,7 @@ PART
 {
 	part = vernierEngine_4288072806
 	partName = Part
-	persistentId = 2712137507
+	persistentId = 674387008
 	pos = 1.01906586,8.51013947,-2.73160958
 	attPos = 0,0,0
 	attPos0 = -0.625114262,-7.01223946,-2.33295751
@@ -11886,7 +11888,7 @@ PART
 {
 	part = vernierEngine_4288072682
 	partName = Part
-	persistentId = 1869968560
+	persistentId = 9532955
 	pos = -0.447493076,8.51013947,-1.60627925
 	attPos = 0,0,0
 	attPos0 = -2.09167314,-7.01223946,-1.20762718
@@ -12025,7 +12027,7 @@ PART
 {
 	part = radialDecoupler1-2_4289341310
 	partName = Part
-	persistentId = 1212574906
+	persistentId = 1186028503
 	pos = -0.0642800331,16.6453781,-2.10711169
 	attPos = 0,0,0
 	attPos0 = -1.70846009,1.1230011,-1.70845985
@@ -12186,7 +12188,7 @@ PART
 {
 	part = Mk1FuselageStructural_4288430404
 	partName = Part
-	persistentId = 3537571250
+	persistentId = 2479785541
 	pos = -0.622312546,16.7489834,-2.66514492
 	attPos = -0.0981152654,0.0357513539,0.037930645
 	attPos0 = -0.789177358,0.10360536,-1.6391273E-07
@@ -12281,8 +12283,8 @@ PART
 {
 	part = Pollux_4293948190
 	partName = Part
-	persistentId = 2054282004
-	pos = -1.72396088,17.1814747,-3.76679349
+	persistentId = 2204924210
+	pos = -1.72396111,17.1814747,-3.76679373
 	attPos = 0,0,0
 	attPos0 = 7.45056425E-08,0.43249163,1.5579344
 	rot = 4.56194122E-08,-0.923879683,1.10135034E-07,0.382683456
@@ -12485,11 +12487,11 @@ PART
 {
 	part = Size.1.5.Cone_4293948092
 	partName = Part
-	persistentId = 653827358
-	pos = -1.72398353,25.5189342,-3.76681709
+	persistentId = 353149021
+	pos = -1.72398448,25.5189342,-3.76681805
 	attPos = 0,0,0
 	attPos0 = 1.49011655E-07,8.33745956,1.8693747E-07
-	rot = -5.5066927E-08,0.382683516,2.28094237E-08,0.923879623
+	rot = -5.50669199E-08,0.382683516,2.28094272E-08,0.923879623
 	attRot = 0,0,0,1
 	attRot0 = 3.55271326E-15,1,-5.96046377E-08,-2.38418551E-07
 	mir = 1,1,1
@@ -12596,11 +12598,11 @@ PART
 {
 	part = strutConnector_4293948040
 	partName = CompoundPart
-	persistentId = 885971191
-	pos = -1.72398257,25.9501266,-4.43101978
+	persistentId = 883937185
+	pos = -1.72398305,25.9501266,-4.43102074
 	attPos = 0,0,0
 	attPos0 = 0.46965456,0.431192338,-0.469654381
-	rot = -0.0935535356,0.700890899,0.0935535803,-0.700890601
+	rot = -0.0935535505,0.700890958,0.0935535878,-0.70089066
 	attRot = 0,0,0,1
 	attRot0 = -0.122233711,0.915757716,0.0506308824,-0.37931937
 	mir = 1,1,1
@@ -12723,11 +12725,11 @@ PART
 {
 	part = strutConnector_4293915518
 	partName = CompoundPart
-	persistentId = 1746733478
-	pos = -1.55771589,27.3480396,-3.60055041
+	persistentId = 1305804053
+	pos = -1.55771637,27.3480396,-3.60055113
 	attPos = 0,0,0
 	attPos0 = 2.01489343E-07,1.82910538,0.235119715
-	rot = -0.139828786,0.913236797,-0.0579190068,0.378275126
+	rot = -0.139828786,0.913236856,-0.0579190068,0.378275156
 	attRot = 0,0,0,1
 	attRot0 = -0.107020266,0.698961079,-0.107020289,0.698961198
 	mir = 1,1,1
@@ -12850,8 +12852,8 @@ PART
 {
 	part = strutConnector_4291901298
 	partName = CompoundPart
-	persistentId = 3848747371
-	pos = -1.58757782,27.4778461,-3.63041401
+	persistentId = 2955440311
+	pos = -1.58757854,27.4778461,-3.63041472
 	attPos = 0,0,0
 	attPos0 = 1.26016971E-07,1.9589119,0.192893088
 	rot = -0.139828652,0.913236916,-0.0579189062,0.378275037
@@ -12977,7 +12979,7 @@ PART
 {
 	part = sepMotor1_4293947844
 	partName = Part
-	persistentId = 623041227
+	persistentId = 2412121218
 	pos = -2.37909913,24.3076496,-3.11165404
 	attPos = 0,0,0
 	attPos0 = 0.926478028,7.12617493,7.15256988E-07
@@ -13155,7 +13157,7 @@ PART
 {
 	part = sepMotor1_4293947800
 	partName = Part
-	persistentId = 2146611607
+	persistentId = 873686223
 	pos = -2.37814832,11.1743164,-3.11261082
 	attPos = 0,0,0
 	attPos0 = 0.925124705,-6.00715828,7.15256988E-07
@@ -13333,8 +13335,8 @@ PART
 {
 	part = sepMotor1_4293947756
 	partName = Part
-	persistentId = 3301747633
-	pos = -1.07605934,24.2186527,-4.41470194
+	persistentId = 1190738262
+	pos = -1.07605958,24.2186527,-4.41470242
 	attPos = 0,0,0
 	attPos0 = -0.916249633,7.03717804,1.07288554E-06
 	rot = 0.653281629,-0.65328151,0.270598084,-0.270598084
@@ -13511,8 +13513,8 @@ PART
 {
 	part = sepMotor1_4293947712
 	partName = Part
-	persistentId = 3236726486
-	pos = -1.07168818,11.0225296,-4.41906452
+	persistentId = 1007346733
+	pos = -1.07168818,11.0225296,-4.419065
 	attPos = 0,0,0
 	attPos0 = -0.922422588,-6.15894508,1.43051398E-06
 	rot = 0.653281629,-0.65328151,0.270598084,-0.270598084
@@ -13689,8 +13691,8 @@ PART
 {
 	part = strutConnector_4293947668
 	partName = CompoundPart
-	persistentId = 2024871956
-	pos = -1.27086592,11.7542839,-4.55157089
+	persistentId = 1185366889
+	pos = -1.27086592,11.7542839,-4.55157137
 	attPos = 0,0,0
 	attPos0 = -0.875286818,-5.42718887,0.234532416
 	rot = -1.54268651E-08,-0.866025805,1.41867318E-07,0.499999702
@@ -13816,7 +13818,7 @@ PART
 {
 	part = radialDecoupler1-2_4293974138
 	partName = Part
-	persistentId = 3200463109
+	persistentId = 3577307209
 	pos = -0.771947145,16.6453781,-0.39865163
 	attPos = 0,0,0
 	attPos0 = -2.4161272,1.1230011,3.57627869E-07
@@ -13977,11 +13979,11 @@ PART
 {
 	part = Mk1FuselageStructural_4293969060
 	partName = Part
-	persistentId = 1127774869
+	persistentId = 3070383790
 	pos = -1.56112456,16.7489834,-0.398651868
 	attPos = -0.0981152654,0.0357513539,0.037930645
 	attPos0 = -0.789177239,0.10360536,-1.87504284E-07
-	rot = -8.42940793E-08,0.707106829,-8.42936885E-08,-0.707106769
+	rot = -8.42940864E-08,0.707106829,-8.42936885E-08,-0.707106769
 	attRot = 0,0,0,1
 	attRot0 = 4.39363497E-08,-0.707106829,4.39363497E-08,0.707106769
 	mir = 1,1,1
@@ -14072,7 +14074,7 @@ PART
 {
 	part = Pollux_4293960300
 	partName = Part
-	persistentId = 1086358607
+	persistentId = 366290528
 	pos = -3.11906171,17.1814747,-0.398652077
 	attPos = 0,0,0
 	attPos0 = 1.00511087E-07,0.43249163,1.55793381
@@ -14276,11 +14278,11 @@ PART
 {
 	part = Size.1.5.Cone_4293960208
 	partName = Part
-	persistentId = 946299291
+	persistentId = 2010349000
 	pos = -3.11906266,25.5189342,-0.398652077
 	attPos = 0,0,0
 	attPos0 = 1.49011655E-07,8.33745956,1.8693747E-07
-	rot = -4.21467803E-08,0.707106829,4.21467021E-08,0.707106769
+	rot = -4.21467767E-08,0.707106829,4.21466915E-08,0.707106769
 	attRot = 0,0,0,1
 	attRot0 = 3.55271326E-15,1,-5.96046377E-08,-2.38418551E-07
 	mir = 1,1,1
@@ -14387,7 +14389,7 @@ PART
 {
 	part = strutConnector_4293960162
 	partName = CompoundPart
-	persistentId = 36964672
+	persistentId = 2382720988
 	pos = -3.58872342,25.9501266,-0.868311048
 	attPos = 0,0,0
 	attPos0 = 0.46965456,0.431192338,-0.469654381
@@ -14514,11 +14516,11 @@ PART
 {
 	part = strutConnector_4293960064
 	partName = CompoundPart
-	persistentId = 577219644
+	persistentId = 3055675703
 	pos = -2.88394284,27.3480396,-0.398652077
 	attPos = 0,0,0
 	attPos0 = 1.42872281E-07,1.82910538,0.235120296
-	rot = -0.151349425,0.988480389,-1.97830854E-08,9.14908469E-08
+	rot = -0.151349425,0.988480389,-1.97830783E-08,9.14908469E-08
 	attRot = 0,0,0,1
 	attRot0 = -0.107020259,0.698961079,-0.107020274,0.698961258
 	mir = 1,1,1
@@ -14641,11 +14643,11 @@ PART
 {
 	part = strutConnector_4291903420
 	partName = CompoundPart
-	persistentId = 3218592540
+	persistentId = 3502285476
 	pos = -2.92616963,27.4778461,-0.398652077
 	attPos = 0,0,0
 	attPos0 = 1.26964196E-07,1.9589119,0.192893267
-	rot = -0.151349679,0.988480389,1.00192148E-08,-2.77184427E-08
+	rot = -0.151349679,0.988480389,1.00192183E-08,-2.77184427E-08
 	attRot = 0,0,0,1
 	attRot0 = -0.107020348,0.698961198,-0.107020333,0.698961139
 	mir = 1,1,1
@@ -14768,11 +14770,11 @@ PART
 {
 	part = sepMotor1_4293959966
 	partName = Part
-	persistentId = 901530776
-	pos = -3.11906266,24.3076496,0.527838111
+	persistentId = 757146373
+	pos = -3.11906266,24.3076496,0.52783823
 	attPos = 0,0,0
 	attPos0 = 0.926478028,7.12617493,7.15256988E-07
-	rot = 8.413088E-10,5.26120374E-08,-0.707106411,-0.707107127
+	rot = 8.41305248E-10,5.26120374E-08,-0.707106411,-0.707107127
 	attRot = 0,0,-0.707106709,-0.707106709
 	attRot0 = -0.50000006,-0.5,-0.499999911,-0.5
 	mir = 1,1,1
@@ -14946,11 +14948,11 @@ PART
 {
 	part = sepMotor1_4293959922
 	partName = Part
-	persistentId = 1578665713
-	pos = -3.11906075,11.1743164,0.526485324
+	persistentId = 3612613334
+	pos = -3.11906075,11.1743164,0.526485205
 	attPos = 0,0,0
 	attPos0 = 0.925124705,-6.00715828,7.15256988E-07
-	rot = 8.413088E-10,5.26120374E-08,-0.707106411,-0.707107127
+	rot = 8.41305248E-10,5.26120374E-08,-0.707106411,-0.707107127
 	attRot = 0,0,-0.707106709,-0.707106709
 	attRot0 = -0.50000006,-0.5,-0.499999911,-0.5
 	mir = 1,1,1
@@ -15124,11 +15126,11 @@ PART
 {
 	part = sepMotor1_4293959878
 	partName = Part
-	persistentId = 2744121448
+	persistentId = 1386154107
 	pos = -3.11906457,24.2186527,-1.31491363
 	attPos = 0,0,0
 	attPos0 = -0.916249633,7.03717804,1.07288554E-06
-	rot = 0.707107008,-0.70710665,-6.6597444E-08,-2.28096972E-08
+	rot = 0.707107008,-0.70710665,-6.65974511E-08,-2.28096972E-08
 	attRot = 0,0,-0.707106709,0.707106709
 	attRot0 = 0.499999911,-0.5,-0.50000006,0.5
 	mir = 1,1,1
@@ -15302,11 +15304,11 @@ PART
 {
 	part = sepMotor1_4293959834
 	partName = Part
-	persistentId = 2069499048
+	persistentId = 2953192947
 	pos = -3.11906266,11.0225296,-1.321087
 	attPos = 0,0,0
 	attPos0 = -0.922422588,-6.15894508,1.43051398E-06
-	rot = 0.70710665,-0.707107008,5.2611842E-08,3.67949298E-08
+	rot = 0.70710665,-0.707107008,5.26118384E-08,3.67949298E-08
 	attRot = 0,0,-0.707106709,0.707106709
 	attRot0 = 0.499999911,-0.50000006,-0.500000179,0.5
 	mir = 1,1,1
@@ -15480,11 +15482,11 @@ PART
 {
 	part = strutConnector_4293959790
 	partName = CompoundPart
-	persistentId = 1123443839
+	persistentId = 3494909117
 	pos = -3.35359311,11.7542839,-1.27394569
 	attPos = 0,0,0
 	attPos0 = -0.875286818,-5.42718887,0.234532416
-	rot = 4.00377083E-08,-0.608761728,1.36972119E-07,0.793353081
+	rot = 4.00377154E-08,-0.608761787,1.36972133E-07,0.79335314
 	attRot = 0,0,0,1
 	attRot0 = 6.97532609E-09,0.130525813,5.29830331E-08,0.991444945
 	mir = 1,1,1
@@ -15607,7 +15609,7 @@ PART
 {
 	part = radialDecoupler1-2_4293974080
 	partName = Part
-	persistentId = 2261992818
+	persistentId = 2325997654
 	pos = -0.0642797947,16.6453781,1.3098079
 	attPos = 0,0,0
 	attPos0 = -1.70845985,1.1230011,1.70845985
@@ -15768,7 +15770,7 @@ PART
 {
 	part = Mk1FuselageStructural_4293968952
 	partName = Part
-	persistentId = 1927736845
+	persistentId = 2595639415
 	pos = -0.622312784,16.7489834,1.86784041
 	attPos = -0.0981152654,0.0357513539,0.037930645
 	attPos0 = -0.789177358,0.10360536,-3.129243E-07
@@ -15863,7 +15865,7 @@ PART
 {
 	part = Pollux_4293951934
 	partName = Part
-	persistentId = 1345990909
+	persistentId = 2660507891
 	pos = -1.72394109,17.1814747,2.96946836
 	attPos = 0,0,0
 	attPos0 = 1.34110195E-07,0.43249163,1.55793381
@@ -16067,11 +16069,11 @@ PART
 {
 	part = Size.1.5.Cone_4293951836
 	partName = Part
-	persistentId = 1017314460
+	persistentId = 3443527458
 	pos = -1.72394204,25.5189342,2.96946955
 	attPos = 0,0,0
 	attPos0 = 1.49011655E-07,8.33745956,1.8693747E-07
-	rot = -2.28100401E-08,0.923879623,5.50672326E-08,0.382683456
+	rot = -2.28100472E-08,0.923879623,5.50672326E-08,0.382683456
 	attRot = 0,0,0,1
 	attRot0 = 3.55271326E-15,1,-5.96046377E-08,-2.38418551E-07
 	mir = 1,1,1
@@ -16178,7 +16180,7 @@ PART
 {
 	part = strutConnector_4293951784
 	partName = CompoundPart
-	persistentId = 618145510
+	persistentId = 1971817190
 	pos = -2.38814139,25.9501266,2.96947098
 	attPos = 0,0,0
 	attPos0 = 0.46965456,0.431192338,-0.469654381
@@ -16305,7 +16307,7 @@ PART
 {
 	part = strutConnector_4293916106
 	partName = CompoundPart
-	persistentId = 3236159846
+	persistentId = 3241637046
 	pos = -1.55768704,27.3480396,2.80321407
 	attPos = 0,0,0
 	attPos0 = 2.80669752E-07,1.82910538,0.235120311
@@ -16432,7 +16434,7 @@ PART
 {
 	part = strutConnector_4291901886
 	partName = CompoundPart
-	persistentId = 4208232077
+	persistentId = 1139353467
 	pos = -1.58754611,27.4778461,2.83307314
 	attPos = 0,0,0
 	attPos0 = 3.18445444E-07,1.9589119,0.192893356
@@ -16559,7 +16561,7 @@ PART
 {
 	part = sepMotor1_4293951588
 	partName = Part
-	persistentId = 2499610292
+	persistentId = 2351311768
 	pos = -1.06881356,24.3076496,3.6245966
 	attPos = 0,0,0
 	attPos0 = 0.926478028,7.12617493,7.15256988E-07
@@ -16737,7 +16739,7 @@ PART
 {
 	part = sepMotor1_4293951544
 	partName = Part
-	persistentId = 3706798828
+	persistentId = 1802977289
 	pos = -1.06976962,11.1743164,3.62363911
 	attPos = 0,0,0
 	attPos0 = 0.925124705,-6.00715828,7.15256988E-07
@@ -16915,7 +16917,7 @@ PART
 {
 	part = sepMotor1_4293951500
 	partName = Part
-	persistentId = 3053382969
+	persistentId = 3948019064
 	pos = -2.37183785,24.2186527,2.32157516
 	attPos = 0,0,0
 	attPos0 = -0.916249633,7.03717804,1.07288554E-06
@@ -17093,7 +17095,7 @@ PART
 {
 	part = sepMotor1_4293951456
 	partName = Part
-	persistentId = 1885812414
+	persistentId = 3240731470
 	pos = -2.37620187,11.0225296,2.31720853
 	attPos = 0,0,0
 	attPos0 = -0.922422588,-6.15894508,1.43051398E-06
@@ -17271,11 +17273,11 @@ PART
 {
 	part = strutConnector_4293951412
 	partName = CompoundPart
-	persistentId = 1865832446
+	persistentId = 3541011232
 	pos = -2.50870633,11.7542839,2.51638126
 	attPos = 0,0,0
 	attPos0 = -0.875286818,-5.42718887,0.234532416
-	rot = 8.94068748E-08,-0.25881952,1.11223812E-07,0.965925753
+	rot = 8.94068819E-08,-0.25881955,1.11223812E-07,0.965925813
 	attRot = 0,0,0,1
 	attRot0 = 6.97532609E-09,0.130525813,5.29830331E-08,0.991444945
 	mir = 1,1,1
@@ -17398,7 +17400,7 @@ PART
 {
 	part = radialDecoupler1-2_4293974022
 	partName = Part
-	persistentId = 1024421450
+	persistentId = 1499610962
 	pos = 1.64418006,16.6453781,2.01747513
 	attPos = 0,0,0
 	attPos0 = 0,1.1230011,2.4161272
@@ -17559,7 +17561,7 @@ PART
 {
 	part = Mk1FuselageStructural_4293968844
 	partName = Part
-	persistentId = 1301979544
+	persistentId = 2890132095
 	pos = 1.64417982,16.7489834,2.80665255
 	attPos = -0.0981152654,0.0357513539,0.037930645
 	attPos0 = -0.789177239,0.10360536,-1.78813892E-07
@@ -17654,7 +17656,7 @@ PART
 {
 	part = Pollux_4293951310
 	partName = Part
-	persistentId = 3473893011
+	persistentId = 3999297407
 	pos = 1.64417958,17.1814747,4.36458969
 	attPos = 0,0,0
 	attPos0 = 1.78813593E-07,0.43249163,1.55793381
@@ -17858,7 +17860,7 @@ PART
 {
 	part = Size.1.5.Cone_4293951212
 	partName = Part
-	persistentId = 1828905254
+	persistentId = 1914590174
 	pos = 1.64417946,25.5189342,4.36459064
 	attPos = 0,0,0
 	attPos0 = 1.49011655E-07,8.33745956,1.8693747E-07
@@ -17969,7 +17971,7 @@ PART
 {
 	part = strutConnector_4293951160
 	partName = CompoundPart
-	persistentId = 3841521560
+	persistentId = 3660286974
 	pos = 1.17452073,25.9501266,4.8342514
 	attPos = 0,0,0
 	attPos0 = 0.46965456,0.431192338,-0.469654381
@@ -18096,7 +18098,7 @@ PART
 {
 	part = strutConnector_4293916008
 	partName = CompoundPart
-	persistentId = 3080385592
+	persistentId = 174954004
 	pos = 1.64417958,27.3480396,4.12947083
 	attPos = 0,0,0
 	attPos0 = 1.19209645E-07,1.82910538,0.235120311
@@ -18223,7 +18225,7 @@ PART
 {
 	part = strutConnector_4291901788
 	partName = CompoundPart
-	persistentId = 101983942
+	persistentId = 3031421512
 	pos = 1.64417958,27.4778461,4.17169762
 	attPos = 0,0,0
 	attPos0 = 1.19209417E-07,1.9589119,0.192893267
@@ -18350,7 +18352,7 @@ PART
 {
 	part = sepMotor1_4293950964
 	partName = Part
-	persistentId = 218486188
+	persistentId = 42444082
 	pos = 2.57067037,24.3076496,4.36459064
 	attPos = 0,0,0
 	attPos0 = 0.926478028,7.12617493,7.15256988E-07
@@ -18528,8 +18530,8 @@ PART
 {
 	part = sepMotor1_4293950920
 	partName = Part
-	persistentId = 1860065613
-	pos = 2.5693171,11.1743164,4.36461544
+	persistentId = 769236323
+	pos = 2.5693171,11.1743164,4.36461592
 	attPos = 0,0,0
 	attPos0 = 0.925124705,-6.00715828,7.15256988E-07
 	rot = -0.49999994,-0.50000006,-0.49999997,-0.500000238
@@ -18706,7 +18708,7 @@ PART
 {
 	part = sepMotor1_4293950876
 	partName = Part
-	persistentId = 782891040
+	persistentId = 1813562831
 	pos = 0.727917671,24.2186527,4.36459208
 	attPos = 0,0,0
 	attPos0 = -0.916249633,7.03717804,1.07288554E-06
@@ -18884,7 +18886,7 @@ PART
 {
 	part = sepMotor1_4293950832
 	partName = Part
-	persistentId = 3726271018
+	persistentId = 1669266791
 	pos = 0.721744299,11.0225296,4.36459017
 	attPos = 0,0,0
 	attPos0 = -0.922422588,-6.15894508,1.43051398E-06
@@ -19062,7 +19064,7 @@ PART
 {
 	part = strutConnector_4293950788
 	partName = CompoundPart
-	persistentId = 64038534
+	persistentId = 1199266220
 	pos = 0.768885612,11.7542839,4.59912109
 	attPos = 0,0,0
 	attPos0 = -0.875286818,-5.42718887,0.234532416
@@ -19189,7 +19191,7 @@ PART
 {
 	part = radialDecoupler1-2_4293973964
 	partName = Part
-	persistentId = 2028817660
+	persistentId = 2042260922
 	pos = 3.35264039,16.6453781,1.30980766
 	attPos = 0,0,0
 	attPos0 = 1.70846033,1.1230011,1.70845973
@@ -19350,8 +19352,8 @@ PART
 {
 	part = Mk1FuselageStructural_4293968736
 	partName = Part
-	persistentId = 3663036132
-	pos = 3.91068888,16.7489834,1.86785471
+	persistentId = 372046164
+	pos = 3.91068912,16.7489834,1.86785495
 	attPos = -0.0981152654,0.0357513539,0.037930645
 	attPos0 = -0.789177954,0.10360536,-1.19209169E-07
 	rot = -1.10135019E-07,-0.382683456,4.56194229E-08,-0.923879683
@@ -19445,8 +19447,8 @@ PART
 {
 	part = Pollux_4293950686
 	partName = Part
-	persistentId = 1464096772
-	pos = 5.01235676,17.1814747,2.96952391
+	persistentId = 2425760529
+	pos = 5.01235771,17.1814747,2.96952486
 	attPos = 0,0,0
 	attPos0 = -1.19208742E-07,0.43249163,1.55793488
 	rot = 1.10135034E-07,0.382683456,-4.56194158E-08,0.923879683
@@ -19649,11 +19651,11 @@ PART
 {
 	part = Size.1.5.Cone_4293950588
 	partName = Part
-	persistentId = 1098432958
-	pos = 5.01239109,25.5189342,2.96955729
+	persistentId = 1269724062
+	pos = 5.012393,25.5189342,2.96955919
 	attPos = 0,0,0
 	attPos0 = 1.49011655E-07,8.33745956,1.8693747E-07
-	rot = 2.28093544E-08,0.923879623,5.50668773E-08,-0.382683545
+	rot = 2.28093509E-08,0.923879623,5.50668702E-08,-0.382683545
 	attRot = 0,0,0,1
 	attRot0 = 3.55271326E-15,1,-5.96046377E-08,-2.38418551E-07
 	mir = 1,1,1
@@ -19760,8 +19762,8 @@ PART
 {
 	part = strutConnector_4293950536
 	partName = CompoundPart
-	persistentId = 503669710
-	pos = 5.01239204,25.9501266,3.6337862
+	persistentId = 1903230153
+	pos = 5.01239395,25.9501266,3.63378906
 	attPos = 0,0,0
 	attPos0 = 0.46965456,0.431192338,-0.469654381
 	rot = 0.0935535505,-0.700890601,0.093553558,-0.700890899
@@ -19887,8 +19889,8 @@ PART
 {
 	part = strutConnector_4293915910
 	partName = CompoundPart
-	persistentId = 1212122264
-	pos = 4.84612703,27.3480396,2.8032887
+	persistentId = 1693294902
+	pos = 4.84612846,27.3480396,2.80329061
 	attPos = 0,0,0
 	attPos0 = 5.54003691E-07,1.82910538,0.235119298
 	rot = -0.0579189993,0.378275186,0.139828801,-0.913236797
@@ -20014,8 +20016,8 @@ PART
 {
 	part = strutConnector_4291901690
 	partName = CompoundPart
-	persistentId = 1976384268
-	pos = 4.87599564,27.4778461,2.83315897
+	persistentId = 3023991853
+	pos = 4.87599754,27.4778461,2.83316088
 	attPos = 0,0,0
 	attPos0 = -1.42203731E-07,1.9589119,0.192891866
 	rot = -0.0579189584,0.378274947,0.139828816,-0.913236916
@@ -20141,8 +20143,8 @@ PART
 {
 	part = sepMotor1_4293950340
 	partName = Part
-	persistentId = 2065903763
-	pos = 5.66750717,24.3076496,2.31436729
+	persistentId = 1803893452
+	pos = 5.66750908,24.3076496,2.31436777
 	attPos = 0,0,0
 	attPos0 = 0.926478028,7.12617493,7.15256988E-07
 	rot = -0.65328145,-0.653281629,-0.270597965,-0.270598143
@@ -20319,8 +20321,8 @@ PART
 {
 	part = sepMotor1_4293950296
 	partName = Part
-	persistentId = 3959285511
-	pos = 5.66655064,11.1743164,2.31532431
+	persistentId = 1072252526
+	pos = 5.66655159,11.1743164,2.31532526
 	attPos = 0,0,0
 	attPos0 = 0.925124705,-6.00715828,7.15256988E-07
 	rot = -0.65328145,-0.653281629,-0.270597965,-0.270598143
@@ -20497,8 +20499,8 @@ PART
 {
 	part = sepMotor1_4293950252
 	partName = Part
-	persistentId = 776833110
-	pos = 4.36443806,24.2186527,3.61744785
+	persistentId = 4195397656
+	pos = 4.36443901,24.2186527,3.61744928
 	attPos = 0,0,0
 	attPos0 = -0.916249633,7.03717804,1.07288554E-06
 	rot = 0.270597905,-0.270598173,-0.653281569,0.653281689
@@ -20675,8 +20677,8 @@ PART
 {
 	part = sepMotor1_4293950208
 	partName = Part
-	persistentId = 2908786141
-	pos = 4.360075,11.0225296,3.62180996
+	persistentId = 803400398
+	pos = 4.36007547,11.0225296,3.62181091
 	attPos = 0,0,0
 	attPos0 = -0.922422588,-6.15894508,1.43051398E-06
 	rot = 0.270598054,-0.270598054,-0.653281689,0.653281629
@@ -20853,8 +20855,8 @@ PART
 {
 	part = strutConnector_4293950164
 	partName = CompoundPart
-	persistentId = 402249670
-	pos = 4.55925179,11.7542839,3.75432491
+	persistentId = 369263744
+	pos = 4.55925226,11.7542839,3.75432682
 	attPos = 0,0,0
 	attPos0 = -0.875286818,-5.42718887,0.234532416
 	rot = 1.41867361E-07,0.499999702,1.54268598E-08,0.866025746
@@ -20980,7 +20982,7 @@ PART
 {
 	part = radialDecoupler1-2_4293973906
 	partName = Part
-	persistentId = 558537256
+	persistentId = 1016886784
 	pos = 4.0603075,16.6453781,-0.398652464
 	attPos = 0,0,0
 	attPos0 = 2.4161272,1.1230011,-4.76837158E-07
@@ -21141,7 +21143,7 @@ PART
 {
 	part = Mk1FuselageStructural_4293968628
 	partName = Part
-	persistentId = 2087947978
+	persistentId = 2946184122
 	pos = 4.84948444,16.7489834,-0.398652345
 	attPos = -0.0981152654,0.0357513539,0.037930645
 	attPos0 = -0.789177239,0.10360536,-1.55211069E-07
@@ -21236,7 +21238,7 @@ PART
 {
 	part = Pollux_4293950062
 	partName = Part
-	persistentId = 1876922239
+	persistentId = 1119454067
 	pos = 6.40742207,17.1814747,-0.398652285
 	attPos = 0,0,0
 	attPos0 = 1.67346073E-07,0.43249163,1.55793369
@@ -21440,7 +21442,7 @@ PART
 {
 	part = Size.1.5.Cone_4293949964
 	partName = Part
-	persistentId = 3852674020
+	persistentId = 1256366336
 	pos = 6.40742302,25.5189342,-0.398652285
 	attPos = 0,0,0
 	attPos0 = 1.49011655E-07,8.33745956,1.8693747E-07
@@ -21551,7 +21553,7 @@ PART
 {
 	part = strutConnector_4293949912
 	partName = CompoundPart
-	persistentId = 2210600455
+	persistentId = 2530507883
 	pos = 6.87708378,25.9501266,0.0710066557
 	attPos = 0,0,0
 	attPos0 = 0.46965456,0.431192338,-0.469654381
@@ -21678,11 +21680,11 @@ PART
 {
 	part = strutConnector_4293915812
 	partName = CompoundPart
-	persistentId = 3591632559
+	persistentId = 2321482863
 	pos = 6.1723032,27.3480396,-0.398652285
 	attPos = 0,0,0
 	attPos0 = 1.08483235E-07,1.82910538,0.235120073
-	rot = -4.12512406E-08,1.26464656E-07,0.151349083,-0.988480449
+	rot = -3.380066E-08,1.26464656E-07,0.151349097,-0.988480449
 	attRot = 0,0,0,1
 	attRot0 = -0.107020251,0.698961079,-0.107020289,0.698961258
 	mir = 1,1,1
@@ -21805,7 +21807,7 @@ PART
 {
 	part = strutConnector_4291901592
 	partName = CompoundPart
-	persistentId = 524647250
+	persistentId = 2140956369
 	pos = 6.21452999,27.4778461,-0.398652285
 	attPos = 0,0,0
 	attPos0 = 1.10409658E-07,1.9589119,0.192893267
@@ -21932,7 +21934,7 @@ PART
 {
 	part = sepMotor1_4293949716
 	partName = Part
-	persistentId = 1909454336
+	persistentId = 2838699439
 	pos = 6.40742207,24.3076496,-1.32514274
 	attPos = 0,0,0
 	attPos0 = 0.926478028,7.12617493,7.15256988E-07
@@ -22110,7 +22112,7 @@ PART
 {
 	part = sepMotor1_4293949672
 	partName = Part
-	persistentId = 2641089255
+	persistentId = 890038467
 	pos = 6.40742111,11.1743164,-1.32378972
 	attPos = 0,0,0
 	attPos0 = 0.925124705,-6.00715828,7.15256988E-07
@@ -22288,7 +22290,7 @@ PART
 {
 	part = sepMotor1_4293949628
 	partName = Part
-	persistentId = 2549002170
+	persistentId = 3078018543
 	pos = 6.40742493,24.2186527,0.517609596
 	attPos = 0,0,0
 	attPos0 = -0.916249633,7.03717804,1.07288554E-06
@@ -22466,7 +22468,7 @@ PART
 {
 	part = sepMotor1_4293949584
 	partName = Part
-	persistentId = 2943333711
+	persistentId = 617780630
 	pos = 6.40742207,11.0225296,0.523782969
 	attPos = 0,0,0
 	attPos0 = -0.922422588,-6.15894508,1.43051398E-06
@@ -22644,7 +22646,7 @@ PART
 {
 	part = strutConnector_4293949540
 	partName = CompoundPart
-	persistentId = 3177254256
+	persistentId = 272396806
 	pos = 6.64195347,11.7542839,0.476641566
 	attPos = 0,0,0
 	attPos0 = -0.875286818,-5.42718887,0.234532416
@@ -22771,7 +22773,7 @@ PART
 {
 	part = radialDecoupler1-2_4293973848
 	partName = Part
-	persistentId = 3960796960
+	persistentId = 2789089855
 	pos = 3.35263991,16.6453781,-2.10711193
 	attPos = 0,0,0
 	attPos0 = 1.70845962,1.1230011,-1.70846009
@@ -22932,8 +22934,8 @@ PART
 {
 	part = Mk1FuselageStructural_4293968520
 	partName = Part
-	persistentId = 2767978507
-	pos = 3.91068673,16.7489834,-2.66515875
+	persistentId = 135840191
+	pos = 3.91068697,16.7489834,-2.66515899
 	attPos = -0.0981152654,0.0357513539,0.037930645
 	attPos0 = -0.789177954,0.10360536,-1.78813778E-07
 	rot = -4.56194158E-08,-0.923879564,1.10135005E-07,-0.382683545
@@ -23027,8 +23029,8 @@ PART
 {
 	part = Pollux_4293949438
 	partName = Part
-	persistentId = 3917239614
-	pos = 5.01234722,17.1814747,-3.76681805
+	persistentId = 4207686991
+	pos = 5.01234818,17.1814747,-3.76681876
 	attPos = 0,0,0
 	attPos0 = 1.78813579E-07,0.43249163,1.55793452
 	rot = 4.56194122E-08,0.923879564,-1.10135019E-07,0.382683545
@@ -23231,11 +23233,11 @@ PART
 {
 	part = Size.1.5.Cone_4293949340
 	partName = Part
-	persistentId = 2203352245
-	pos = 5.01238537,25.5189342,-3.76685524
+	persistentId = 3036548227
+	pos = 5.01238728,25.5189342,-3.76685715
 	attPos = 0,0,0
 	attPos0 = 1.49011655E-07,8.33745956,1.8693747E-07
-	rot = 5.50669128E-08,0.382683456,2.28098518E-08,-0.923879623
+	rot = 5.50669057E-08,0.382683456,2.28098589E-08,-0.923879623
 	attRot = 0,0,0,1
 	attRot0 = 3.55271326E-15,1,-5.96046377E-08,-2.38418551E-07
 	mir = 1,1,1
@@ -23342,8 +23344,8 @@ PART
 {
 	part = strutConnector_4293949288
 	partName = CompoundPart
-	persistentId = 739775448
-	pos = 5.67658806,25.9501266,-3.76685047
+	persistentId = 300683285
+	pos = 5.67658997,25.9501266,-3.76685238
 	attPos = 0,0,0
 	attPos0 = 0.46965456,0.431192338,-0.469654381
 	rot = 0.132304713,-0.991209269,1.76508266E-08,-2.98023224E-07
@@ -23469,8 +23471,8 @@ PART
 {
 	part = strutConnector_4293915714
 	partName = CompoundPart
-	persistentId = 2524803800
-	pos = 4.84611559,27.3480396,-3.60058403
+	persistentId = 3827954187
+	pos = 4.84611702,27.3480396,-3.6005857
 	attPos = 0,0,0
 	attPos0 = 7.71671509E-08,1.82910538,0.235119581
 	rot = 0.0579189584,-0.378274977,0.139828756,-0.913236916
@@ -23596,8 +23598,8 @@ PART
 {
 	part = strutConnector_4291901494
 	partName = CompoundPart
-	persistentId = 333486622
-	pos = 4.8759799,27.4778461,-3.63045025
+	persistentId = 303157762
+	pos = 4.87598133,27.4778461,-3.63045168
 	attPos = 0,0,0
 	attPos0 = -1.88193326E-07,1.9589119,0.192892671
 	rot = 0.0579190031,-0.378275216,0.139828831,-0.913236856
@@ -23723,8 +23725,8 @@ PART
 {
 	part = sepMotor1_4293949092
 	partName = Part
-	persistentId = 3476809556
-	pos = 4.35720348,24.3076496,-4.42196321
+	persistentId = 344544238
+	pos = 4.35720396,24.3076496,-4.42196417
 	attPos = 0,0,0
 	attPos0 = 0.926478028,7.12617493,7.15256988E-07
 	rot = -0.65328145,-0.653281748,0.270598024,0.270597816
@@ -23901,8 +23903,8 @@ PART
 {
 	part = sepMotor1_4293949048
 	partName = Part
-	persistentId = 4083154847
-	pos = 4.3581605,11.1743164,-4.42100334
+	persistentId = 883107815
+	pos = 4.35816097,11.1743164,-4.4210043
 	attPos = 0,0,0
 	attPos0 = 0.925124705,-6.00715828,7.15256988E-07
 	rot = -0.65328145,-0.653281748,0.270598024,0.270597816
@@ -24079,8 +24081,8 @@ PART
 {
 	part = sepMotor1_4293949004
 	partName = Part
-	persistentId = 213118233
-	pos = 5.66025543,24.2186527,-3.11890793
+	persistentId = 1481216382
+	pos = 5.66025639,24.2186527,-3.11890841
 	attPos = 0,0,0
 	attPos0 = -0.916249633,7.03717804,1.07288554E-06
 	rot = -0.270598203,0.270597905,-0.653281629,0.65328151
@@ -24257,8 +24259,8 @@ PART
 {
 	part = sepMotor1_4293948960
 	partName = Part
-	persistentId = 54177653
-	pos = 5.66462135,11.0225296,-3.11454248
+	persistentId = 1775347680
+	pos = 5.66462231,11.0225296,-3.11454296
 	attPos = 0,0,0
 	attPos0 = -0.922422588,-6.15894508,1.43051398E-06
 	rot = -0.270598024,0.270598114,-0.653281569,0.653281629
@@ -24435,11 +24437,11 @@ PART
 {
 	part = strutConnector_4293948916
 	partName = CompoundPart
-	persistentId = 532299861
-	pos = 5.79712582,11.7542839,-3.31372023
+	persistentId = 1981077396
+	pos = 5.79712677,11.7542839,-3.31372118
 	attPos = 0,0,0
 	attPos0 = -0.875286818,-5.42718887,0.234532416
-	rot = 1.11223827E-07,0.965925753,-8.94068251E-08,0.25881952
+	rot = 1.11223827E-07,0.965925813,-8.94068393E-08,0.25881955
 	attRot = 0,0,0,1
 	attRot0 = 6.97532609E-09,0.130525813,5.29830331E-08,0.991444945
 	mir = 1,1,1
@@ -24562,7 +24564,7 @@ PART
 {
 	part = radialDecoupler1-2_4293973790
 	partName = Part
-	persistentId = 3360377842
+	persistentId = 118158551
 	pos = 1.64417911,16.6453781,-2.81477952
 	attPos = 0,0,0
 	attPos0 = -9.53674316E-07,1.1230011,-2.41612744
@@ -24723,7 +24725,7 @@ PART
 {
 	part = Mk1FuselageStructural_4293968412
 	partName = Part
-	persistentId = 2326577713
+	persistentId = 2350574863
 	pos = 1.64417911,16.7489834,-3.60395718
 	attPos = -0.0981152654,0.0357513539,0.037930645
 	attPos0 = -0.789177477,0.10360536,-1.19209261E-07
@@ -24818,7 +24820,7 @@ PART
 {
 	part = Pollux_4293948814
 	partName = Part
-	persistentId = 2058329680
+	persistentId = 4022079578
 	pos = 1.64417887,17.1814747,-5.16189432
 	attPos = 0,0,0
 	attPos0 = 1.19209083E-07,0.43249163,1.55793381
@@ -25022,7 +25024,7 @@ PART
 {
 	part = Size.1.5.Cone_4293948716
 	partName = Part
-	persistentId = 3854702680
+	persistentId = 2355511432
 	pos = 1.64417887,25.5189342,-5.16189528
 	attPos = 0,0,0
 	attPos0 = 1.49011655E-07,8.33745956,1.8693747E-07
@@ -25133,8 +25135,8 @@ PART
 {
 	part = strutConnector_4293948664
 	partName = CompoundPart
-	persistentId = 1566844214
-	pos = 2.11383772,25.9501266,-5.63158274
+	persistentId = 665186792
+	pos = 2.11383772,25.9501266,-5.63158321
 	attPos = 0,0,0
 	attPos0 = 0.46965456,0.431192338,-0.469654381
 	rot = 0.122233614,-0.915757895,-0.0506307967,0.379319191
@@ -25260,7 +25262,7 @@ PART
 {
 	part = strutConnector_4293915616
 	partName = CompoundPart
-	persistentId = 331711761
+	persistentId = 2113490718
 	pos = 1.64417887,27.3480396,-4.92677546
 	attPos = 0,0,0
 	attPos0 = 7.71663906E-08,1.82910538,0.235120073
@@ -25387,7 +25389,7 @@ PART
 {
 	part = strutConnector_4291901396
 	partName = CompoundPart
-	persistentId = 2687285117
+	persistentId = 2976170861
 	pos = 1.64417887,27.4778461,-4.96900225
 	attPos = 0,0,0
 	attPos0 = 8.47173425E-08,1.9589119,0.192893267
@@ -25514,8 +25516,8 @@ PART
 {
 	part = sepMotor1_4293948468
 	partName = Part
-	persistentId = 462608574
-	pos = 0.717688441,24.3076496,-5.1618948
+	persistentId = 2800973416
+	pos = 0.717688322,24.3076496,-5.1618948
 	attPos = 0,0,0
 	attPos0 = 0.926478028,7.12617493,7.15256988E-07
 	rot = -0.499999911,-0.50000006,0.499999911,0.500000179
@@ -25692,8 +25694,8 @@ PART
 {
 	part = sepMotor1_4293948424
 	partName = Part
-	persistentId = 1011329040
-	pos = 0.719041109,11.1743164,-5.16189384
+	persistentId = 294818464
+	pos = 0.71904099,11.1743164,-5.16189384
 	attPos = 0,0,0
 	attPos0 = 0.925124705,-6.00715828,7.15256988E-07
 	rot = -0.499999911,-0.50000006,0.499999911,0.500000179
@@ -25870,7 +25872,7 @@ PART
 {
 	part = sepMotor1_4293948380
 	partName = Part
-	persistentId = 1742480642
+	persistentId = 1774421975
 	pos = 2.56044054,24.2186527,-5.16189766
 	attPos = 0,0,0
 	attPos0 = -0.916249633,7.03717804,1.07288554E-06
@@ -26048,7 +26050,7 @@ PART
 {
 	part = sepMotor1_4293948336
 	partName = Part
-	persistentId = 1514310501
+	persistentId = 3745804711
 	pos = 2.56661415,11.0225296,-5.16189528
 	attPos = 0,0,0
 	attPos0 = -0.922422588,-6.15894508,1.43051398E-06
@@ -26226,7 +26228,7 @@ PART
 {
 	part = strutConnector_4293948292
 	partName = CompoundPart
-	persistentId = 1039877901
+	persistentId = 2746165409
 	pos = 2.5194726,11.7542839,-5.3964262
 	attPos = 0,0,0
 	attPos0 = -0.875286818,-5.42718887,0.234532416
@@ -26353,7 +26355,7 @@ PART
 {
 	part = strutConnector_4291711314
 	partName = CompoundPart
-	persistentId = 4197458824
+	persistentId = 3320181528
 	pos = 0.279753327,25.0332298,-1.76307857
 	attPos = 0,0,0
 	attPos0 = -1.36442673,0.760852814,-1.36442661
@@ -26480,7 +26482,7 @@ PART
 {
 	part = strutConnector_4293329378
 	partName = CompoundPart
-	persistentId = 1092469096
+	persistentId = 1844133201
 	pos = -0.285410643,25.0332298,-0.398651779
 	attPos = 0,0,0
 	attPos0 = -1.9295907,0.760852814,2.08616257E-07
@@ -26607,7 +26609,7 @@ PART
 {
 	part = strutConnector_4293329280
 	partName = CompoundPart
-	persistentId = 1414961514
+	persistentId = 72165944
 	pos = 0.279753447,25.0332298,0.965774655
 	attPos = 0,0,0
 	attPos0 = -1.36442661,0.760852814,1.36442661
@@ -26734,7 +26736,7 @@ PART
 {
 	part = strutConnector_4293329182
 	partName = CompoundPart
-	persistentId = 4048036393
+	persistentId = 1338587221
 	pos = 1.64418006,25.0332298,1.53093863
 	attPos = 0,0,0
 	attPos0 = 0,0.760852814,1.92959058
@@ -26861,7 +26863,7 @@ PART
 {
 	part = strutConnector_4293329084
 	partName = CompoundPart
-	persistentId = 1998192561
+	persistentId = 1516378318
 	pos = 3.00860691,25.0332298,0.965774536
 	attPos = 0,0,0
 	attPos0 = 1.36442685,0.760852814,1.36442649
@@ -26988,7 +26990,7 @@ PART
 {
 	part = strutConnector_4293328986
 	partName = CompoundPart
-	persistentId = 1364284553
+	persistentId = 168210380
 	pos = 3.57377076,25.0332298,-0.398652315
 	attPos = 0,0,0
 	attPos0 = 1.9295907,0.760852814,-3.27825546E-07
@@ -27115,7 +27117,7 @@ PART
 {
 	part = strutConnector_4293328888
 	partName = CompoundPart
-	persistentId = 1027815941
+	persistentId = 305226352
 	pos = 3.00860667,25.0332298,-1.76307869
 	attPos = 0,0,0
 	attPos0 = 1.36442661,0.760852814,-1.36442673
@@ -27242,7 +27244,7 @@ PART
 {
 	part = strutConnector_4293328790
 	partName = CompoundPart
-	persistentId = 4093197616
+	persistentId = 2403182260
 	pos = 1.64417946,25.0332298,-2.32824254
 	attPos = 0,0,0
 	attPos0 = -5.96046448E-07,0.760852814,-1.92959058
@@ -27369,7 +27371,7 @@ PART
 {
 	part = strutConnector_4291471444
 	partName = CompoundPart
-	persistentId = 3545999424
+	persistentId = 1303694435
 	pos = 0.66114074,25.1387596,-2.10132551
 	attPos = 0,0,0
 	attPos0 = -0.98303932,0.866382599,-1.70267355
@@ -27496,7 +27498,7 @@ PART
 {
 	part = strutConnector_4293328600
 	partName = CompoundPart
-	persistentId = 1384995963
+	persistentId = 3820703777
 	pos = -0.25490582,25.1387596,-0.907510042
 	attPos = 0,0,0
 	attPos0 = -1.89908588,0.866382599,-0.508858085
@@ -27623,7 +27625,7 @@ PART
 {
 	part = strutConnector_4293328502
 	partName = CompoundPart
-	persistentId = 1910601703
+	persistentId = 1103937453
 	pos = -0.058493495,25.1387596,0.584387183
 	attPos = 0,0,0
 	attPos0 = -1.70267355,0.866382599,0.983039141
@@ -27750,7 +27752,7 @@ PART
 {
 	part = strutConnector_4293328404
 	partName = CompoundPart
-	persistentId = 3398368700
+	persistentId = 639219913
 	pos = 1.13532174,25.1387596,1.50043368
 	attPos = 0,0,0
 	attPos0 = -0.508858323,0.866382599,1.89908564
@@ -27877,7 +27879,7 @@ PART
 {
 	part = strutConnector_4293328306
 	partName = CompoundPart
-	persistentId = 2752691607
+	persistentId = 675415630
 	pos = 2.62721944,25.1387596,1.30402148
 	attPos = 0,0,0
 	attPos0 = 0.983039379,0.866382599,1.70267344
@@ -28004,7 +28006,7 @@ PART
 {
 	part = strutConnector_4293328208
 	partName = CompoundPart
-	persistentId = 1776521234
+	persistentId = 3817617738
 	pos = 3.54326606,25.1387596,0.110206038
 	attPos = 0,0,0
 	attPos0 = 1.899086,0.866382599,0.508858025
@@ -28131,7 +28133,7 @@ PART
 {
 	part = strutConnector_4293328110
 	partName = CompoundPart
-	persistentId = 1076768247
+	persistentId = 851341083
 	pos = 3.34685349,25.1387596,-1.38169134
 	attPos = 0,0,0
 	attPos0 = 1.70267344,0.866382599,-0.983039379
@@ -28258,7 +28260,7 @@ PART
 {
 	part = strutConnector_4293328012
 	partName = CompoundPart
-	persistentId = 1463605991
+	persistentId = 446802485
 	pos = 2.15303779,25.1387596,-2.29773784
 	attPos = 0,0,0
 	attPos0 = 0.508857727,0.866382599,-1.89908588
@@ -28385,7 +28387,7 @@ PART
 {
 	part = strutConnector_4291709450
 	partName = CompoundPart
-	persistentId = 4246922490
+	persistentId = 4152153958
 	pos = 0.661403835,25.1315804,1.30356634
 	attPos = 0,0,0
 	attPos0 = -0.982776225,0.859203339,1.70221829
@@ -28512,7 +28514,7 @@ PART
 {
 	part = strutConnector_4293327822
 	partName = CompoundPart
-	persistentId = 3465285225
+	persistentId = 2083235269
 	pos = 2.1529026,25.1315804,1.49992585
 	attPos = 0,0,0
 	attPos0 = 0.508722544,0.859203339,1.89857781
@@ -28639,7 +28641,7 @@ PART
 {
 	part = strutConnector_4293327724
 	partName = CompoundPart
-	persistentId = 1907765205
+	persistentId = 3724809655
 	pos = 3.34639812,25.1315804,0.584124327
 	attPos = 0,0,0
 	attPos0 = 1.70221806,0.859203339,0.982776284
@@ -28766,7 +28768,7 @@ PART
 {
 	part = strutConnector_4293327626
 	partName = CompoundPart
-	persistentId = 2484408536
+	persistentId = 455683930
 	pos = 3.54275775,25.1315804,-0.907374144
 	attPos = 0,0,0
 	attPos0 = 1.89857769,0.859203339,-0.508722186
@@ -28893,7 +28895,7 @@ PART
 {
 	part = strutConnector_4293327528
 	partName = CompoundPart
-	persistentId = 1959007151
+	persistentId = 2245655534
 	pos = 2.62695622,25.1315804,-2.10087037
 	attPos = 0,0,0
 	attPos0 = 0.982776165,0.859203339,-1.70221841
@@ -29020,7 +29022,7 @@ PART
 {
 	part = strutConnector_4293327430
 	partName = CompoundPart
-	persistentId = 985859127
+	persistentId = 2265611170
 	pos = 1.13545752,25.1315804,-2.29722977
 	attPos = 0,0,0
 	attPos0 = -0.508722544,0.859203339,-1.89857781
@@ -29147,7 +29149,7 @@ PART
 {
 	part = strutConnector_4293327332
 	partName = CompoundPart
-	persistentId = 855885086
+	persistentId = 1055211305
 	pos = -0.0580382347,25.1315804,-1.381428
 	attPos = 0,0,0
 	attPos0 = -1.70221829,0.859203339,-0.982776046
@@ -29274,7 +29276,7 @@ PART
 {
 	part = strutConnector_4293327234
 	partName = CompoundPart
-	persistentId = 3686224341
+	persistentId = 4056512614
 	pos = -0.254397631,25.1315804,0.110070974
 	attPos = 0,0,0
 	attPos0 = -1.89857769,0.859203339,0.508722961
@@ -29401,7 +29403,7 @@ PART
 {
 	part = vernierEngine_4294134632
 	partName = Part
-	persistentId = 66423016
+	persistentId = 2261615455
 	pos = 0.0756007433,30.1659603,0.506967783
 	attPos = 0,0,0
 	attPos0 = -1.56857932,-3.42126274,0.90561974
@@ -29538,7 +29540,7 @@ PART
 {
 	part = vernierEngine_4294124886
 	partName = Part
-	persistentId = 568947183
+	persistentId = 736077223
 	pos = 1.64418006,30.1659603,1.41258729
 	attPos = 0,0,0
 	attPos0 = 2.92820914E-08,-3.42126274,1.81123936
@@ -29675,7 +29677,7 @@ PART
 {
 	part = vernierEngine_4294124816
 	partName = Part
-	persistentId = 2978247068
+	persistentId = 853874772
 	pos = 3.21275973,30.1659603,0.506967664
 	attPos = 0,0,0
 	attPos0 = 1.56857955,-3.42126274,0.905619562
@@ -29812,7 +29814,7 @@ PART
 {
 	part = vernierEngine_4294124746
 	partName = Part
-	persistentId = 4215517761
+	persistentId = 907214456
 	pos = 3.21275926,30.1659603,-1.30427182
 	attPos = 0,0,0
 	attPos0 = 1.5685792,-3.42126274,-0.90561986
@@ -29949,7 +29951,7 @@ PART
 {
 	part = vernierEngine_4294124676
 	partName = Part
-	persistentId = 2807835132
+	persistentId = 155208549
 	pos = 1.64417982,30.1659603,-2.20989156
 	attPos = 0,0,0
 	attPos0 = -1.3724275E-07,-3.42126274,-1.8112396
@@ -30086,7 +30088,7 @@ PART
 {
 	part = vernierEngine_4294124606
 	partName = Part
-	persistentId = 3778288011
+	persistentId = 3789514781
 	pos = 0.0756007433,30.1659603,-1.30427182
 	attPos = 0,0,0
 	attPos0 = -1.56857932,-3.42126274,-0.905619919
@@ -30223,7 +30225,7 @@ PART
 {
 	part = vernierEngine_4294127556
 	partName = Part
-	persistentId = 2238558336
+	persistentId = 3386466690
 	pos = 0.0755627155,32.647007,0.506989717
 	attPos = 0,0,0
 	attPos0 = -1.56861734,-0.940214157,0.905641675
@@ -30360,7 +30362,7 @@ PART
 {
 	part = vernierEngine_4294123000
 	partName = Part
-	persistentId = 1679798352
+	persistentId = 1557300674
 	pos = 1.64418006,32.647007,1.41263115
 	attPos = 0,0,0
 	attPos0 = 1.12449925E-08,-0.940214157,1.81128323
@@ -30497,7 +30499,7 @@ PART
 {
 	part = vernierEngine_4294122924
 	partName = Part
-	persistentId = 2592164241
+	persistentId = 2177099164
 	pos = 3.21279788,32.647007,0.506989598
 	attPos = 0,0,0
 	attPos0 = 1.56861758,-0.940214157,0.905641496
@@ -30634,7 +30636,7 @@ PART
 {
 	part = vernierEngine_4294122848
 	partName = Part
-	persistentId = 1971028692
+	persistentId = 3163180714
 	pos = 3.2127974,32.647007,-1.30429375
 	attPos = 0,0,0
 	attPos0 = 1.56861722,-0.940214157,-0.905641794
@@ -30771,7 +30773,7 @@ PART
 {
 	part = vernierEngine_4294122772
 	partName = Part
-	persistentId = 1160561105
+	persistentId = 2417748383
 	pos = 1.64418006,32.647007,-2.20993543
 	attPos = 0,0,0
 	attPos0 = -1.19205652E-07,-0.940214157,-1.81128347
@@ -30908,7 +30910,7 @@ PART
 {
 	part = vernierEngine_4294122696
 	partName = Part
-	persistentId = 2429524323
+	persistentId = 362811817
 	pos = 0.0755628347,32.647007,-1.30429399
 	attPos = 0,0,0
 	attPos0 = -1.56861722,-0.940214157,-0.905641913
@@ -31045,7 +31047,7 @@ PART
 {
 	part = vernierEngine_4294127022
 	partName = Part
-	persistentId = 739351377
+	persistentId = 3261323382
 	pos = 0.0755676031,34.8840752,0.506986856
 	attPos = 0,0,0
 	attPos0 = -1.56861246,1.2968502,0.905638814
@@ -31182,7 +31184,7 @@ PART
 {
 	part = vernierEngine_4294122536
 	partName = Part
-	persistentId = 3335127136
+	persistentId = 288786534
 	pos = 1.64418006,34.8840752,1.41262567
 	attPos = 0,0,0
 	attPos0 = -2.26827979E-08,1.2968502,1.81127763
@@ -31319,7 +31321,7 @@ PART
 {
 	part = vernierEngine_4294122454
 	partName = Part
-	persistentId = 2310041803
+	persistentId = 2811575560
 	pos = 3.21279263,34.8840752,0.506986737
 	attPos = 0,0,0
 	attPos0 = 1.56861258,1.2968502,0.905638695
@@ -31456,7 +31458,7 @@ PART
 {
 	part = vernierEngine_4294122372
 	partName = Part
-	persistentId = 2277064315
+	persistentId = 306387605
 	pos = 3.21279263,34.8840752,-1.30429089
 	attPos = 0,0,0
 	attPos0 = 1.56861234,1.2968502,-0.905638933
@@ -31593,7 +31595,7 @@ PART
 {
 	part = vernierEngine_4294122290
 	partName = Part
-	persistentId = 1422784595
+	persistentId = 1932263070
 	pos = 1.64418006,34.8840752,-2.2099297
 	attPos = 0,0,0
 	attPos0 = -8.52778612E-08,1.2968502,-1.81127775
@@ -31730,7 +31732,7 @@ PART
 {
 	part = vernierEngine_4294122208
 	partName = Part
-	persistentId = 237876012
+	persistentId = 4080230564
 	pos = 0.0755677223,34.8840752,-1.30429113
 	attPos = 0,0,0
 	attPos0 = -1.56861234,1.2968502,-0.905639112
@@ -31867,7 +31869,7 @@ PART
 {
 	part = vernierEngine_4294126452
 	partName = Part
-	persistentId = 701433152
+	persistentId = 996665967
 	pos = 0.0755860806,37.1273232,0.506976247
 	attPos = 0,0,0
 	attPos0 = -1.56859398,3.54009819,0.905628204
@@ -32004,7 +32006,7 @@ PART
 {
 	part = vernierEngine_4294122042
 	partName = Part
-	persistentId = 3297901994
+	persistentId = 1809522766
 	pos = 1.64418006,37.1273232,1.41260421
 	attPos = 0,0,0
 	attPos0 = 2.78305379E-08,3.54009819,1.81125629
@@ -32141,7 +32143,7 @@ PART
 {
 	part = vernierEngine_4294121954
 	partName = Part
-	persistentId = 742690970
+	persistentId = 2318583087
 	pos = 3.21277452,37.1273232,0.506976128
 	attPos = 0,0,0
 	attPos0 = 1.56859422,3.54009819,0.905628026
@@ -32278,7 +32280,7 @@ PART
 {
 	part = vernierEngine_4294121866
 	partName = Part
-	persistentId = 1208772549
+	persistentId = 2294624421
 	pos = 3.21277404,37.1273232,-1.3042804
 	attPos = 0,0,0
 	attPos0 = 1.56859386,3.54009819,-0.905628324
@@ -32415,7 +32417,7 @@ PART
 {
 	part = vernierEngine_4294121778
 	partName = Part
-	persistentId = 3683871882
+	persistentId = 1929120894
 	pos = 1.64417982,37.1273232,-2.20990825
 	attPos = 0,0,0
 	attPos0 = -1.35787559E-07,3.54009819,-1.81125653
@@ -32552,7 +32554,7 @@ PART
 {
 	part = vernierEngine_4294121690
 	partName = Part
-	persistentId = 2300745856
+	persistentId = 2458726172
 	pos = 0.0755860806,37.1273232,-1.3042804
 	attPos = 0,0,0
 	attPos0 = -1.56859398,3.54009819,-0.905628383
@@ -32689,7 +32691,7 @@ PART
 {
 	part = sensorAccelerometer_4292276024
 	partName = Part
-	persistentId = 3151895644
+	persistentId = 1646688237
 	pos = 0.436525226,38.3172646,-0.398651928
 	attPos = 0,0,0
 	attPos0 = -1.20765483,0.0680389404,5.96046448E-08
@@ -32823,7 +32825,7 @@ PART
 {
 	part = KAL9000_4292350874
 	partName = Part
-	persistentId = 284127002
+	persistentId = 2918474468
 	pos = 0.430871725,38.298481,-0.0735470057
 	attPos = 0,0,0
 	attPos0 = -1.21330833,0.0492553711,0.325104982
@@ -33039,11 +33041,11 @@ PART
 {
 	part = sepMotor1_4286528610
 	partName = Part
-	persistentId = 3358754500
+	persistentId = 3140610544
 	pos = -2.38293862,23.6519184,2.31047273
 	attPos = 0,0,0
 	attPos0 = -0.931961954,6.47044325,-1.1920929E-07
-	rot = -0.653281808,0.65328145,0.270597875,-0.270597965
+	rot = -0.653281748,0.65328145,0.270597905,-0.270597965
 	attRot = 0,0,-0.707106709,0.707106709
 	attRot0 = -0.500000119,0.499999851,0.49999994,-0.50000006
 	mir = 1,1,1
@@ -33217,7 +33219,7 @@ PART
 {
 	part = sepMotor1_4286528468
 	partName = Part
-	persistentId = 946694427
+	persistentId = 2456754609
 	pos = 0.712217569,23.6519184,4.36459064
 	attPos = 0,0,0
 	attPos0 = -0.931962013,6.47044373,-3.10189051E-07
@@ -33395,8 +33397,8 @@ PART
 {
 	part = sepMotor1_4286528422
 	partName = Part
-	persistentId = 3700968553
-	pos = 4.35335779,23.6519184,3.62852716
+	persistentId = 1769148649
+	pos = 4.35335827,23.6519184,3.62852859
 	attPos = 0,0,0
 	attPos0 = -0.93196243,6.47044325,1.66893017E-06
 	rot = -0.270598292,0.270598024,0.653281629,-0.65328151
@@ -33573,7 +33575,7 @@ PART
 {
 	part = sepMotor1_4286528376
 	partName = Part
-	persistentId = 2742696952
+	persistentId = 420824922
 	pos = 6.40742302,23.6519184,0.533309698
 	attPos = 0,0,0
 	attPos0 = -0.931961954,6.47044373,-5.48607943E-07
@@ -33751,8 +33753,8 @@ PART
 {
 	part = sepMotor1_4286528330
 	partName = Part
-	persistentId = 3330129316
-	pos = 5.67134762,23.6519184,-3.10782003
+	persistentId = 3174624617
+	pos = 5.67134857,23.6519184,-3.10782075
 	attPos = 0,0,0
 	attPos0 = -0.931962609,6.47044325,1.19209278E-06
 	rot = 0.270597756,-0.270597726,0.653281868,-0.65328145
@@ -33929,7 +33931,7 @@ PART
 {
 	part = sepMotor1_4286528284
 	partName = Part
-	persistentId = 1430452536
+	persistentId = 3361524649
 	pos = 2.57614088,23.6519184,-5.16189575
 	attPos = 0,0,0
 	attPos0 = -0.931962013,6.47044373,-2.38418579E-07
@@ -34107,8 +34109,8 @@ PART
 {
 	part = sepMotor1_4286528238
 	partName = Part
-	persistentId = 1483108325
-	pos = -1.0649631,23.6519184,-4.42579317
+	persistentId = 605250373
+	pos = -1.0649631,23.6519184,-4.42579365
 	attPos = 0,0,0
 	attPos0 = -0.931962371,6.47044325,4.76837215E-07
 	rot = -0.653281569,0.65328151,-0.270598352,0.270598084
@@ -34285,11 +34287,11 @@ PART
 {
 	part = sepMotor1_4286528192
 	partName = Part
-	persistentId = 2489018003
+	persistentId = 3068625086
 	pos = -3.11906266,23.6519184,-1.33061409
 	attPos = 0,0,0
 	attPos0 = -0.931962013,6.47044373,-3.57625765E-07
-	rot = -0.707106948,0.707106709,-1.71821156E-07,-1.26201883E-07
+	rot = -0.707106948,0.707106709,-1.71821142E-07,-1.26201883E-07
 	attRot = 0,0,-0.707106709,0.707106709
 	attRot0 = -0.500000119,0.499999881,0.49999997,-0.500000119
 	mir = 1,1,1
@@ -34463,7 +34465,7 @@ PART
 {
 	part = sepMotor1_4286526894
 	partName = Part
-	persistentId = 4220574265
+	persistentId = 104423077
 	pos = -1.06839299,23.6434822,3.62501907
 	attPos = 0,0,0
 	attPos0 = 0.92708683,6.46200705,1.1920929E-07
@@ -34641,7 +34643,7 @@ PART
 {
 	part = sepMotor1_4286526754
 	partName = Part
-	persistentId = 1716850256
+	persistentId = 317241975
 	pos = 2.57126641,23.6434822,4.3645916
 	attPos = 0,0,0
 	attPos0 = 0.92708683,6.46200752,7.26428553E-08
@@ -34819,8 +34821,8 @@ PART
 {
 	part = sepMotor1_4286526708
 	partName = Part
-	persistentId = 995944036
-	pos = 5.66791439,23.6434822,2.31397343
+	persistentId = 747531607
+	pos = 5.66791534,23.6434822,2.3139739
 	attPos = 0,0,0
 	attPos0 = 0.927087128,6.46200705,1.43051147E-06
 	rot = -0.65328151,-0.65328151,-0.270598143,-0.270598084
@@ -34997,7 +34999,7 @@ PART
 {
 	part = sepMotor1_4286526662
 	partName = Part
-	persistentId = 1565592762
+	persistentId = 3672744793
 	pos = 6.40742397,23.6434822,-1.32573903
 	attPos = 0,0,0
 	attPos0 = 0.927086771,6.46200752,7.26425498E-08
@@ -35175,8 +35177,8 @@ PART
 {
 	part = sepMotor1_4286526616
 	partName = Part
-	persistentId = 3553203735
-	pos = 4.35679865,23.6434822,-4.42237329
+	persistentId = 1472722742
+	pos = 4.35679913,23.6434822,-4.42237425
 	attPos = 0,0,0
 	attPos0 = 0.927087188,6.46200705,1.19209278E-06
 	rot = -0.653281569,-0.653281569,0.270598114,0.270597905
@@ -35353,7 +35355,7 @@ PART
 {
 	part = sepMotor1_4286526570
 	partName = Part
-	persistentId = 3071398892
+	persistentId = 1660151448
 	pos = 0.717092037,23.6434822,-5.16189575
 	attPos = 0,0,0
 	attPos0 = 0.92708683,6.46200752,1.1920929E-07
@@ -35531,8 +35533,8 @@ PART
 {
 	part = sepMotor1_4286526524
 	partName = Part
-	persistentId = 2107008728
-	pos = -2.37951684,23.6434822,-3.11124468
+	persistentId = 3750522777
+	pos = -2.37951732,23.6434822,-3.11124468
 	attPos = 0,0,0
 	attPos0 = 0.927086949,6.46200705,8.34465141E-07
 	rot = 0.270598203,0.270598084,-0.653281569,-0.65328151
@@ -35709,11 +35711,11 @@ PART
 {
 	part = sepMotor1_4286526478
 	partName = Part
-	persistentId = 2721934270
+	persistentId = 1794328146
 	pos = -3.11906362,23.6434822,0.528434634
 	attPos = 0,0,0
 	attPos0 = 0.927086711,6.46200752,1.19211407E-07
-	rot = 9.02482924E-08,5.26120374E-08,-0.70710665,-0.707106888
+	rot = 9.02482853E-08,5.26120374E-08,-0.70710665,-0.707106888
 	attRot = 0,0,-0.707106709,-0.707106709
 	attRot0 = -0.49999997,-0.50000006,-0.50000006,-0.50000006
 	mir = 1,1,1
@@ -35887,7 +35889,7 @@ PART
 {
 	part = SurfAntenna_4291482296
 	partName = Part
-	persistentId = 2865689081
+	persistentId = 3458117832
 	pos = 0.403256774,38.1021957,-0.0661475956
 	attPos = 0,0,0
 	attPos0 = -1.24092329,-0.147029877,0.332504392
@@ -35977,8 +35979,8 @@ PART
 		IsRTBroken = False
 		IsNonRetractable = False
 		RTDishCosAngle = 1
-		RTOmniRange = 1500000
-		RTDishRange = -1
+		RTOmniRange = 15000000
+		RTDishRange = -10
 		RTDeactivatePowerThreshold = 20
 		RTActivatePowerThreshold = 80
 		stagingEnabled = True
@@ -36046,7 +36048,7 @@ PART
 {
 	part = mediumDishAntenna_4292838322
 	partName = Part
-	persistentId = 2869140004
+	persistentId = 1274014086
 	pos = 0.575559139,38.270237,-1.01562071
 	attPos = 0,0,0
 	attPos0 = -1.06862092,0.0210113525,-0.616968751
@@ -39362,7 +39364,7 @@ PART
 		IsRTPowered = True
 		IsRTBroken = False
 		RTDishCosAngle = 1
-		RTOmniRange = 3000
+		RTOmniRange = 30000
 		RTDishRange = -1
 		stagingEnabled = True
 		EVENTS
@@ -40983,7 +40985,7 @@ PART
 		IsNonRetractable = False
 		RTDishCosAngle = 1
 		RTOmniRange = 0
-		RTDishRange = -1
+		RTDishRange = -10
 		RTDeactivatePowerThreshold = 20
 		RTActivatePowerThreshold = 80
 		stagingEnabled = True
@@ -41181,7 +41183,7 @@ PART
 		IsNonRetractable = False
 		RTDishCosAngle = 1
 		RTOmniRange = 0
-		RTDishRange = -1
+		RTDishRange = -10
 		RTDeactivatePowerThreshold = 20
 		RTActivatePowerThreshold = 80
 		stagingEnabled = True
@@ -41379,7 +41381,7 @@ PART
 		IsNonRetractable = False
 		RTDishCosAngle = 1
 		RTOmniRange = 0
-		RTDishRange = -1
+		RTDishRange = -10
 		RTDeactivatePowerThreshold = 20
 		RTActivatePowerThreshold = 80
 		stagingEnabled = True
@@ -41577,7 +41579,7 @@ PART
 		IsNonRetractable = False
 		RTDishCosAngle = 1
 		RTOmniRange = 0
-		RTDishRange = -1
+		RTDishRange = -10
 		RTDeactivatePowerThreshold = 20
 		RTActivatePowerThreshold = 80
 		stagingEnabled = True
@@ -43721,6 +43723,280 @@ PART
 	{
 		name = ModuleRTDataTransmitter
 		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	part = largeSolarPanel_4292364014
+	partName = Part
+	persistentId = 3476810968
+	pos = -0.168652177,33.7274055,-0.398651868
+	attPos = 0,0,0
+	attPos0 = -1.81283224,0.140182495,1.1920929E-07
+	rot = 0,0,0,1
+	attRot = 0,0,0,1
+	attRot0 = 0,0,0,1
+	mir = 1,1,1
+	symMethod = Radial
+	autostrutMode = Off
+	rigidAttachment = False
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sidx = -1
+	sqor = -1
+	sepI = -1
+	attm = 1
+	sameVesselCollision = False
+	modCost = 0
+	modMass = 0
+	modSize = 0,0,0
+	sym = largeSolarPanel_4292363928
+	srfN = srfAttach,Size3LargeTank_4294218722,COL_L,0|0|0,1|0|0,0|0|0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+		ToggleSameVesselInteraction
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		SetSameVesselInteraction
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		RemoveSameVesselInteraction
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDeployableSolarPanel
+		isEnabled = True
+		efficiencyMult = 1
+		launchUT = -1
+		currentRotation = (0, 0, -0.707106829, 0.707106829)
+		storedAnimationTime = 0
+		storedAnimationSpeed = -10
+		deployState = RETRACTED
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ExtendPanelsAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+			ExtendAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+			RetractAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = KISCollider
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = KOSNameTag
+		isEnabled = True
+		nameTag = 
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	part = largeSolarPanel_4292363928
+	partName = Part
+	persistentId = 2571579762
+	pos = 3.45701218,33.7274055,-0.398652256
+	attPos = 0,0,0
+	attPos0 = 1.81283212,0.140182495,-2.68220901E-07
+	rot = 0,1,0,-4.37113883E-08
+	attRot = 0,0,0,1
+	attRot0 = 0,1,0,-4.37113883E-08
+	mir = 1,1,1
+	symMethod = Radial
+	autostrutMode = Off
+	rigidAttachment = False
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sidx = -1
+	sqor = -1
+	sepI = -1
+	attm = 1
+	sameVesselCollision = False
+	modCost = 0
+	modMass = 0
+	modSize = 0,0,0
+	sym = largeSolarPanel_4292364014
+	srfN = srfAttach,Size3LargeTank_4294218722,COL_L,0|0|0,1|0|0,0|0|0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+		ToggleSameVesselInteraction
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		SetSameVesselInteraction
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		RemoveSameVesselInteraction
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDeployableSolarPanel
+		isEnabled = True
+		efficiencyMult = 1
+		launchUT = -1
+		currentRotation = (0, 0, -0.707106829, 0.707106829)
+		storedAnimationTime = 0
+		storedAnimationSpeed = -10
+		deployState = RETRACTED
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ExtendPanelsAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+			ExtendAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+			RetractAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = KISCollider
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = KOSNameTag
+		isEnabled = True
+		nameTag = 
 		stagingEnabled = True
 		EVENTS
 		{
