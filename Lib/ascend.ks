@@ -300,10 +300,10 @@ function Ascend {
 		print "Burn in " + round(ETA:apoapsis,1) + " sec" + "   " at (0,0).
 		wait 1.
 	}
+	rcs on.
 	until ETA:apoapsis < 1 {
 		print "Burn in " + round(ETA:apoapsis,1) + " sec" + "   " at (0,0).
 		when (ETA:apoapsis < 15) AND (ETA:apoapsis > 2) then {
-			rcs on.
 			lock steering to Heading(90-targetIncl, 0).
 		}
 		wait 0.25.
