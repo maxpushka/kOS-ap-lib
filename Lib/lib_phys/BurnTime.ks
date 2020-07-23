@@ -1,6 +1,7 @@
 function BurnTime {
 	parameter dV, R. //alt of place where burn occurs
-	if (dV*R < 0) {return false.}
+	if (dV < 0) {set dV to abs(dV).}
+	else if (R < 0) {return false.}
 	
 	runoncepath("0:/kOS_ap_lib/Lib/lib_phys/EngThrustIsp.ks").
 	
