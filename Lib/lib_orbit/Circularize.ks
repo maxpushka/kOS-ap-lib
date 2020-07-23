@@ -1,6 +1,8 @@
 function Circularize {
 	parameter targetAp.
-	if targetAp < 0 {return false.}
+	if (targetAp < 0) OR ((NOT (apoapsis >= targetAp)) AND (NOT (periapsis <= targetAp))) {
+  		return false.
+	}
 
 	runoncepath("0:/kOS_ap_lib/Lib/lib_phys/EngThrustIsp.ks").
 	SET SHIP:CONTROL:NEUTRALIZE TO TRUE. //block user control inputs
@@ -18,7 +20,7 @@ function Circularize {
 	sas off.
 	rcs on.
 	
-	until (altitude < targetAp+5) AND (altitude > targetAp-5) {
+	until (altitude < targetAp+1) AND (altitude > targetAp-1) {
 		set v1 to ship:velocity:orbit.
 		set v2 to VXCL(ship:up:vector, ship:velocity:orbit):normalized*sqrt(body:Mu/(ship:body:radius+targetAp)).
 		set v3 to v2-v1.
@@ -53,6 +55,6 @@ function Circularize {
 	print "Circularization complete.".
 	print "Apoapsis     = " + round(apoapsis, 1).
 	print "Periapsis    = " + round(periapsis, 1).
-	print "Apo-Per      = " + round(apoapsis, 1) - round(periapsis, 1).
-	print "Eccentricity = " + round(eccentricity, 1).
+	print "Apo-Per      = " + (round(apoapsis, 1) - round(periapsis, 1)).
+	print "Eccentricity = " + round(orbit:eccentricity, 1).
 }

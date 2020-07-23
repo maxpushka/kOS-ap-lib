@@ -1,8 +1,8 @@
 //Inclination changing script
 
 function InclChange {
-	parameter targetIncl. //[degrees] target orbit inclination
-	parameter tolerance. //[degrees] maximum deviation from target inclination.
+	parameter targetIncl. //[deg] target orbit inclination
+	parameter tolerance is 10^(-4). //[deg] maximum deviation from target inclination.
 	if targetIncl*tolerance < 0 {return false.} //check if both parameters > 0
 	
 	runoncepath("0:/kOS_ap_lib/Lib/lib_phys/EngThrustIsp.ks").
