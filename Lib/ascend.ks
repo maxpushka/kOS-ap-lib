@@ -5,7 +5,7 @@ function Ascend {
 	
 	parameter targetOrbit, targetIncl, finalPitch is 85, 
 	gravTurnAlt is 250, gravTurnV is 150,
-	accLimit is false,
+	accLimit is 9,
 	pre_stage is 0.5, post_stage is 1,
 	jettisonFairing is true, jettisonAlt is 50000, 
 	deployAntennas is false, deploySolar is true,
@@ -70,7 +70,6 @@ function Ascend {
 
 	//CLEARING WORKSPACE
 	clearscreen.
-	AG1 ON.
 	SET SHIP:CONTROL:NEUTRALIZE TO TRUE. //block user control inputs
 	set ship:control:pilotmainthrottle to 0. //block user throttle inputs
 
@@ -172,7 +171,7 @@ function Ascend {
 	wait 1.
 		
 	//STAGING LOGIC
-	local current_max is maxthrust.
+	set current_max to maxthrust.
 	when maxthrust < current_max OR availablethrust = 0 then {
 		set prevThrottle to throttle.
 		lock throttle to 0.
@@ -232,12 +231,13 @@ function Ascend {
 		else if (frac > 0.9) AND (apoapsis <= targetOrbit) AND (altitude <= body:ATM:height) {
 			local eng is EngThrustIsp().
 			local AThr is eng[0]/ship:mass.
-			lock throttle to MIN(MAX((targetOrbit-apoapsis)/AThr, 0.1/eng[0]), 1).
+			lock throttle to MIN(MAX((targetOrbit-apoapsis)/AThr, 0.1*AThr), 1).
 		}
 		else if (frac > 0.9) AND (apoapsis <= targetOrbit) AND (altitude >= body:ATM:height) { //while ascend stage = 2
 			rcs off.
 			local eng is EngThrustIsp().
-			lock throttle to MIN(MAX(1-apoapsis/targetOrbit, 0.1/eng[0]), 1).
+			local AThr is eng[0]/ship:mass.
+			lock throttle to MIN(MAX(1-apoapsis/targetOrbit, 0.1*AThr), 1).
 		}
 		else {lock throttle to 0.}
 	  

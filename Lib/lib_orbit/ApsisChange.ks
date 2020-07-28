@@ -3,7 +3,7 @@ function ApChange {
     runoncepath("0:/kOS_ap_lib/Lib/lib_phys/EngThrustIsp.ks").
     runoncepath("0:/kOS_ap_lib/Lib/lib_phys/BurnTime.ks").
 	
-    parameter targetAp, autowarp is true, useRCS is false.
+    parameter targetAp, useRCS is false, autowarp is true.
     //it's highly recommended not to use RCS during the precise burns 
 	//when difference between apo/pe is very small
 	
@@ -13,7 +13,8 @@ function ApChange {
 	}
 	
     local v0 is VisVivaCalc(apoapsis,ship:orbit:semimajoraxis).
-    local v1 is VisVivaCalc(targetAp,(2*body:radius+periapsis+targetAp)/2).
+	local targetSMA is (2*body:radius+periapsis+targetAp)/2.
+    local v1 is VisVivaCalc(targetAp,(targetSMA+ship:orbit:semimajoraxis)/2).
     local dV is v0-v1.
 	local t_burn is BurnTime(dv, periapsis).
 	
@@ -34,10 +35,11 @@ function ApChange {
     local stopburn is false.
 	until stopburn {
 		local v0 is VisVivaCalc(apoapsis,ship:orbit:semimajoraxis).
-		local v1 is VisVivaCalc(targetAp,(2*body:radius+periapsis+targetAp)/2).
+		local targetSMA is (2*body:radius+periapsis+targetAp)/2.
+		local v1 is VisVivaCalc(targetAp,(targetSMA+ship:orbit:semimajoraxis)/2).
 		local dV is v0-v1.
-	
-		lock steering to prograde:vector:normalized*dV.
+		
+		lock steering to prograde:vector:normalized*dV..
 		if abs(dV) < 10^(-5) {
 			lock throttle to 0.
 			set stopburn to true.
@@ -48,7 +50,7 @@ function ApChange {
 			lock throttle to MIN(MAX(abs(dV)/AThr, 10^(-3)/eng[0]), 1).
 		}
 		
-		print "dV: " + round(dV,5) + "   " at(0,0).
+		print "dV: " + round(abs(dV),5) + "   " at(0,0).
 		print "Burn time: " + round(t_burn,5) + "   " at(0,1).
 		
 		wait 0.
@@ -64,9 +66,9 @@ function PeChange {
     runoncepath("0:/kOS_ap_lib/Lib/lib_phys/EngThrustIsp.ks").
     runoncepath("0:/kOS_ap_lib/Lib/lib_phys/BurnTime.ks").
 	
-    parameter targetPe, autowarp is true, useRCS is false.
-	//it's highly recommended not to use RCS during the precise burns 
-	//when difference between apo/pe is very small
+    parameter targetPe, useRCS is false, autowarp is true.
+	//it's highly recommended not to use RCS when the difference 
+	//between apo/pe is very small
     
 	if targetPe > apoapsis {
 		print "Error: new periapsis can not be higher than apoapsis".
@@ -74,7 +76,8 @@ function PeChange {
 	}
 	
     local v0 is VisVivaCalc(periapsis,ship:orbit:semimajoraxis).
-    local v1 is VisVivaCalc(targetPe,(2*body:radius+apoapsis+targetPe)/2).
+	local targetSMA is (2*body:radius+apoapsis+targetPe)/2.
+    local v1 is VisVivaCalc(targetPe,(targetSMA+ship:orbit:semimajoraxis)/2).
     local dV is v0-v1.
 	local t_burn is BurnTime(dv, apoapsis).
 	
@@ -95,7 +98,8 @@ function PeChange {
     local stopburn is false.
 	until stopburn {
 		local v0 is VisVivaCalc(periapsis,ship:orbit:semimajoraxis).
-		local v1 is VisVivaCalc(targetPe,(2*body:radius+apoapsis+targetPe)/2).
+		local targetSMA is (2*body:radius+apoapsis+targetPe)/2.
+		local v1 is VisVivaCalc(targetPe,(targetSMA+ship:orbit:semimajoraxis)/2).
 		local dV is v0-v1.
 	
 		lock steering to prograde:vector:normalized*dV.
