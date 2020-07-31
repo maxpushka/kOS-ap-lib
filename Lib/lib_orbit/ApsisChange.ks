@@ -1,8 +1,4 @@
-function ApChange {
-    runoncepath("0:/kOS_ap_lib/Lib/lib_phys/VisVivaCalc.ks").
-    runoncepath("0:/kOS_ap_lib/Lib/lib_phys/EngThrustIsp.ks").
-    runoncepath("0:/kOS_ap_lib/Lib/lib_phys/BurnTime.ks").
-	
+function ApChange {	
     parameter targetAp, useRCS is false, autowarp is true.
     //it's highly recommended not to use RCS during the precise burns 
 	//when difference between apo/pe is very small
@@ -61,11 +57,7 @@ function ApChange {
 	print "Current apoapsis = " + round(apoapsis, 1).
 }
 
-function PeChange {
-    runoncepath("0:/kOS_ap_lib/Lib/lib_phys/VisVivaCalc.ks").
-    runoncepath("0:/kOS_ap_lib/Lib/lib_phys/EngThrustIsp.ks").
-    runoncepath("0:/kOS_ap_lib/Lib/lib_phys/BurnTime.ks").
-	
+function PeChange {	
     parameter targetPe, useRCS is false, autowarp is true.
 	//it's highly recommended not to use RCS when the difference 
 	//between apo/pe is very small

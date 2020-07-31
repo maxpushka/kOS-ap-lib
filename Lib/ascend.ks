@@ -1,6 +1,3 @@
-//Ascend script v1.0
-//by maxpushka
-
 function Ascend {
 	
 	parameter targetOrbit, targetIncl, finalPitch is 85, 
@@ -60,13 +57,6 @@ function Ascend {
 	}
 
 	//======================== PRELAUNCH =======================//
-
-	//IMPORTS
-	runoncepath("0:/kOS_ap_lib/Lib/lib_phys/VerticalAccelCalc.ks").
-	runoncepath("0:/kOS_ap_lib/Lib/lib_phys/MachNumber.ks").
-	runoncepath("0:/kOS_ap_lib/Lib/lib_phys/EngThrustIsp.ks").
-	runoncepath("0:/kOS_ap_lib/Lib/lib_math/BisectionSolver.ks").
-	runoncepath("0:/kOS_ap_lib/Lib/lib_math/Derivator.ks").
 
 	//CLEARING WORKSPACE
 	clearscreen.

@@ -1,10 +1,16 @@
-
 function MoonTransfer {
+	parameter targetMoon, targetPe.
 	
-	set pe to 100000.
+	//PARAMETERS CHECK
+	local validBodies is list("Kerbol","Eve","Kerbin","Duna","Jool").
+	if (targetPe <= 0) AND (NOT validBodies:contains(body:name)) {return false.}
+	if round(orbit:inclination, 1) <> round(body(targetMoon):orbit:inclination, 1) OR
+	round(orbit:lan, 1) <> round(body(targetMoon):orbit:lan, 1) {
+		print "Error: target moon and the vessel must be in the same plane".
+		return false.
+	}
 	
-	runoncepath("0:/kOS_ap_lib/Lib/lib_phys/EngThrustIsp.ks").
-	
+	//SETTING STAGING
 	set current_max to maxthrust.
 	when maxthrust < current_max OR availablethrust = 0 then {
 		set prevThrottle to throttle.
@@ -21,9 +27,7 @@ function MoonTransfer {
 	
 	lock steering to prograde.
 	wait until CheckAngle().
-
-	// if (ship:orbit:eccentricity < 1) AND (target:orbit:eccentricity ) {
-	// }
+	
 	
 	clearscreen.
 	set stopburn to false.

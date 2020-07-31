@@ -1,6 +1,6 @@
 function BisectionSolver {
   parameter ScoreFunction, TestPoint1, TestPoint2.
-  //
+  
   local TestPoints is LIST().
   local Score1 is ScoreFunction:call(TestPoint1).
   local Score2 is ScoreFunction:call(TestPoint2).

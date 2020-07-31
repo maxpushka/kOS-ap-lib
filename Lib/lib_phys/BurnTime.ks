@@ -3,8 +3,6 @@ function BurnTime {
 	if (dV < 0) {set dV to abs(dV).}
 	else if (R < 0) {return false.}
 	
-	runoncepath("0:/kOS_ap_lib/Lib/lib_phys/EngThrustIsp.ks").
-	
 	local f is EngThrustIsp().
 	local m is ship:mass.
 	local e is constant:e.

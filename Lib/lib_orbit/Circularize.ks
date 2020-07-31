@@ -4,7 +4,6 @@ function Circularize {
   		return false.
 	}
 
-	runoncepath("0:/kOS_ap_lib/Lib/lib_phys/EngThrustIsp.ks").
 	SET SHIP:CONTROL:NEUTRALIZE TO TRUE. //block user control inputs
 	set ship:control:pilotmainthrottle to 0. //block user throttle inputs
 	

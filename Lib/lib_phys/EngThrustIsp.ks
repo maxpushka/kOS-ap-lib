@@ -13,6 +13,7 @@ function EngThrustIsp {
 			set eng_isp to eng_isp + eng:isp.
 		}
 	}
-
-	return list(eng_thrust, eng_isp/ActiveEng:length).
+	
+	if (ActiveEng:length = 0) {return list(eng_thrust,0).}
+	else {return list(eng_thrust, eng_isp/ActiveEng:length).}
 }
