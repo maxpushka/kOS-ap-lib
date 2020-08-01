@@ -1,13 +1,15 @@
 function BurnTime {
-	parameter dV, R. //alt of place where burn occurs
+	parameter dV, Rad. //alt of place where burn occurs
 	if (dV < 0) {set dV to abs(dV).}
-	else if (R < 0) {return false.}
+	else if (Rad < 0) {return false.}
 	
-	local f is EngThrustIsp().
+	local eng is EngThrustIsp().
+	
+	local f is eng[0].
 	local m is ship:mass.
 	local e is constant:e.
-	local p is f[1].
-	local g is body:Mu/(body:radius+R)^2.
+	local p is eng[1].
+	local g is body:Mu/(body:radius+Rad)^2 * 9.81.
 	
-	return g * m * p * (1 - e^(-dV/(g*p))) / f[0].
+	return g * m * p * (1 - e^(-dV/(g*p))) / f.
 }

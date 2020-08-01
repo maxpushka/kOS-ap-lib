@@ -41,7 +41,7 @@ function Circularize {
 		SET corr_vec TO VECDRAW(V(0,0,0), v3, RGB(255,0,0), round(v3:mag,1), 1.0, TRUE, 0.2, TRUE, TRUE).
 		
 		lock steering to v3.
-		lock throttle to MIN(MAX( v3:mag/AThr, 0.001), 1).
+		lock throttle to MIN(MAX( v3:mag/AThr, 0.1*AThr), 1).
 		
 		if (v3:mag < 0.01) {
 			lock throttle to 0.
