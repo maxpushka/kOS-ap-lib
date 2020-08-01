@@ -1,5 +1,6 @@
 //Import script
-runoncepath("0:/kOS_ap_lib/Lib/Ascend.ks").
+runoncepath("0:/kOS_ap_lib/Lib/Import.ks").
+import("Ascend").
 
 //Set ascend script's parameters
 set targetOrbit to 72000.
