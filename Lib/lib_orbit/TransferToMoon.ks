@@ -31,32 +31,46 @@ function TransferToMoon {
 	//====================== TRANSFER BURN ======================//
 	
 	clearscreen.
+	set pastdV to 0.
 	set stopburn to false.
-	set burnAp to body(targetMoon):altitude - targetPe.
 	until stopburn {
 		
-		if apoapsis >= burnAp {set stopburn to true.}
+		local v0 is ship:velocity:orbit:mag.
+		local v1 is VisVivaCalc(altitude, body(targetMoon):orbit:semimajoraxis-targetPe).
+		local dV is v1-v0.
+		local t_burn is BurnTime(dV, altitude).
 		
-		local eng is EngThrustIsp().
-		local AThr is eng[0]/ship:mass.
-		lock throttle to MIN(MAX( 1-(apoapsis/burnAp), 0.1*AThr), 1).
+		if ((pastdV > 0) AND (dv<0)) {
+			lock throttle to 0.
+			unlock steering.
+			sas on.
+			set stopburn to true.
+		}
+		else {
+			local eng is EngThrustIsp().
+			local AThr is eng[0]/ship:mass.
+			lock throttle to MIN(MAX(abs(dV)/AThr, 0.01*AThr), 1).
+		}
 		
-		print "Target apoapsis  = " + round(burnAp,1) at(0,0).
-		print "Current apoapsis = " + round(apoapsis,1) at(0,1).
+		print "dV: " + round(dV,5) + "     " at(0,0).
+		print "Burn time: " + round(t_burn,5) + " sec" + "     " at(0,1).
 		
 		wait 0.
+		set pastdV to dV.
 	}
-
+	
+	wait 1.
 	clearscreen.
-	print "Target apoapsis  = " + round(burnAp,1).
-	print "Current apoapsis = " + round(apoapsis,1).
 	
 	//===================== INSERTION BURN ======================//
 	
-	if (autowarp = true) {kuniverse:timewarp:warpto(time:seconds + ETA:transition - 3).}
-	wait until (ship:body = body(targetMoon)).
-	wait 1.
-	ApChange(targetPe, 1).
+	if (insertionBurn) {
+		if (autowarp = true) {kuniverse:timewarp:warpto(time:seconds + ETA:transition - 3).}
+		wait until (ship:body = body(targetMoon)).
+		wait 1.
+		rcs on.
+		HoffmanTransfer(targetPe, ETA:periapsis).
+	}
 	
 	//======================== FUNCTIONS ========================//
 	

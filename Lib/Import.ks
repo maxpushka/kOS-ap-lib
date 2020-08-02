@@ -20,8 +20,8 @@ scriptDB:add("Derivator",
 	list("lib_math/Derivator.ks")).
 
 //lib_orbit
-scriptDB:add("ApsisChange",
-	list("lib_orbit/ApsisChange.ks", scriptDB["VisVivaCalc"], 
+scriptDB:add("HoffmanTransfer",
+	list("lib_orbit/HoffmanTransfer.ks", scriptDB["VisVivaCalc"], 
 		scriptDB["BurnTime"], scriptDB["EngThrustIsp"])
 	).
 scriptDB:add("Circularize", 
@@ -30,7 +30,8 @@ scriptDB:add("inclChange",
 	list("lib_orbit/inclChange.ks", scriptDB["EngThrustIsp"])).
 scriptDB:add("TransferToMoon", 
 	list("lib_orbit/TransferToMoon.ks", scriptDB["EngThrustIsp"],
-		scriptDB["ApsisChange"])	
+		scriptDB["HoffmanTransfer"], scriptDB["VisVivaCalc"],
+		scriptDB["BurnTime"])	
 	).
 
 scriptDB:add("Ascend",
