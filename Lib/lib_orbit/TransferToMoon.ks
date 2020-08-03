@@ -36,7 +36,8 @@ function TransferToMoon {
 	until stopburn {
 		
 		local v0 is ship:velocity:orbit:mag.
-		local v1 is VisVivaCalc(altitude, body(targetMoon):orbit:semimajoraxis-targetPe).
+		local targetSMA is (2*body:radius + ship:altitude + body(targetMoon):altitude - targetPe)/2.
+		local v1 is VisVivaCalc(altitude, targetSMA).
 		local dV is v1-v0.
 		local t_burn is BurnTime(dV, altitude).
 		
@@ -49,7 +50,8 @@ function TransferToMoon {
 		else {
 			local eng is EngThrustIsp().
 			local AThr is eng[0]/ship:mass.
-			lock throttle to MIN(MAX(abs(dV)/AThr, 0.01*AThr), 1).
+			local AThrLim is ship:mass/eng[0].
+			lock throttle to MIN(MAX(abs(dV)/AThr, 0.1*AThrLim), 1).
 		}
 		
 		print "dV: " + round(dV,5) + "     " at(0,0).
@@ -67,17 +69,19 @@ function TransferToMoon {
 	if (insertionBurn) {
 		if (autowarp = true) {kuniverse:timewarp:warpto(time:seconds + ETA:transition - 3).}
 		wait until (ship:body = body(targetMoon)).
-		wait 1.
+		wait 5.
 		rcs on.
-		HoffmanTransfer(targetPe, ETA:periapsis).
+		HoffmanTransfer(targetPe, ETA:periapsis). //orbit insertion
+		wait 2.
+		HoffmanTransfer(targetPe, ETA:periapsis). //apoapsis correction of moonar orbit
 	}
 	
 	//======================== FUNCTIONS ========================//
 	
 	function CalculateAngle {
-		local an1 is (2*body:radius + ship:altitude + body(targetMoon):altitude - targetPe)/2.
-		local an2 is body:radius+body(targetMoon):altitude.
-		return 180*(1-(an1/an2)^1.5).
+		local a1 is (2*body:radius + ship:altitude + body(targetMoon):altitude - targetPe)/2.
+		local a2 is body:radius+body(targetMoon):altitude. //moonar semimajor axis
+		return 180*(1-(a1/a2)^1.5).
 	}
 
 	function CheckAngle {
@@ -91,8 +95,9 @@ function TransferToMoon {
 			set curr_ang to -curr_ang.
 		}
 		
-		print targetMoon + " angle: " + mun_ang at(0,0).
-		print "Current angle: " + curr_ang at(0,1).
+		print targetMoon + " angle: " + mun_ang + "     " at(0,0).
+		print "Current angle: " + curr_ang + "     " at(0,1).
+		print "Burn start angle: " + (mun_ang+3) + "     " at(0,2).
 		
 		if abs(curr_ang - mun_ang) < 6 {
 			set kuniverse:timewarp:rate to 0.

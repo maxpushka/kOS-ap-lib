@@ -1,8 +1,8 @@
 function Ascend {
 	
-	parameter targetOrbit, targetIncl, finalPitch is 85, 
+	parameter targetOrbit, targetIncl is 0, finalPitch is 85, 
 	gravTurnAlt is 250, gravTurnV is 150,
-	accLimit is 9,
+	accLimit is 3.5,
 	pre_stage is 0.5, post_stage is 1,
 	jettisonFairing is true, jettisonAlt is 50000, 
 	deployAntennas is false, deploySolar is true,
@@ -221,13 +221,14 @@ function Ascend {
 		else if (frac > 0.9) AND (apoapsis <= targetOrbit) AND (altitude <= body:ATM:height) {
 			local eng is EngThrustIsp().
 			local AThr is eng[0]/ship:mass.
-			lock throttle to MIN(MAX((targetOrbit-apoapsis)/AThr, 0.1*AThr), 1).
+			local AThrLim is ship:mass/eng[0].
+			lock throttle to MIN(MAX((targetOrbit-apoapsis)/AThr, 0.1*AThrLim), 1).
 		}
 		else if (frac > 0.9) AND (apoapsis <= targetOrbit) AND (altitude >= body:ATM:height) { //while ascend stage = 2
 			rcs off.
 			local eng is EngThrustIsp().
-			local AThr is eng[0]/ship:mass.
-			lock throttle to MIN(MAX(1-apoapsis/targetOrbit, 0.1*AThr), 1).
+			local AThrLim is ship:mass/eng[0].
+			lock throttle to MIN(MAX(1-apoapsis/targetOrbit, 0.1*AThrLim), 1).
 		}
 		else {lock throttle to 0.}
 	  
@@ -318,7 +319,8 @@ function Ascend {
 		else if (data[0]:mag < 50) {
 			local eng is EngThrustIsp().
 			local AThr is eng[0]/ship:mass.
-			lock throttle to MIN(MAX(data[0]:mag/AThr, 10^(-3)/eng[0]), 1).
+			local AThrLim is ship:mass/eng[0].
+			lock throttle to MIN(MAX(data[0]:mag/AThr, 0.1*AThrLim), 1).
 		}
 		
 		set v1 to VECDRAW(V(0,0,0), data[2], RGB(255,0,0), "dVincl", 1.0, TRUE, 0.2, TRUE, TRUE).

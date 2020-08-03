@@ -31,7 +31,6 @@ function Circularize {
 	
 	set stopburn to false.
 	until stopburn {
-		set AThr to EngThrustIsp()[0]/ship:mass.
 		set v1 to ship:velocity:orbit.
 		set v2 to VXCL(ship:up:vector, ship:velocity:orbit):normalized*sqrt(body:Mu/(ship:body:radius+targetAp)).
 		set v3 to v2-v1.
@@ -41,7 +40,10 @@ function Circularize {
 		SET corr_vec TO VECDRAW(V(0,0,0), v3, RGB(255,0,0), round(v3:mag,1), 1.0, TRUE, 0.2, TRUE, TRUE).
 		
 		lock steering to v3.
-		lock throttle to MIN(MAX( v3:mag/AThr, 0.1*AThr), 1).
+		local eng is EngThrustIsp().
+		local AThr is eng[0]/ship:mass.
+		local AThrLim is ship:mass/eng[0].
+		lock throttle to MIN(MAX( v3:mag/AThr, 0.1*AThrLim), 1).
 		
 		if (v3:mag < 0.01) {
 			lock throttle to 0.

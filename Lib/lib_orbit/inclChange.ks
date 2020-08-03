@@ -58,7 +58,8 @@ function InclChange {
 		else {
 			local eng is EngThrustIsp().
 			local AThr is eng[0]/ship:mass.
-			lock throttle to MIN(MAX(inclVec:mag/AThr, 0), 1).
+			local AThrLim is ship:mass/eng[0].
+			lock throttle to MIN(MAX(inclVec:mag/AThr, 0.1*AThrLim), 1).
 		}
 		print "dVincl = " + inclVec:mag at (0,1).
 	}

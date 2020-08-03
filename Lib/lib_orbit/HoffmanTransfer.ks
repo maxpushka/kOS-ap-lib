@@ -26,6 +26,9 @@ function HoffmanTransfer {
     if (autowarp = true) {kuniverse:timewarp:warpto(burnTimestamp-30).}
     until (time:seconds >= burnTimestamp) {
 		set v0 to velocityat(ship, burnTimestamp):orbit:mag.
+		set predR to (positionat(ship, burnTimestamp)-body:position):mag - body:radius.
+		set targetSMA to (2*body:radius+predR+targetR)/2.
+		set v1 to VisVivaCalc(predR, targetSMA).
 		set dV to v1-v0.
 		lock steering to prograde:vector:normalized*dV.
 		
@@ -45,7 +48,6 @@ function HoffmanTransfer {
 		local t_burn is BurnTime(dV, altitude).
 		
 		set burnNode to node(0,0,0,dV).
-		add burnNode.
 		
 		lock steering to prograde:vector:normalized*dV.
 		if ((pastdV < 0) AND (dv>0)) OR ((pastdV > 0) AND (dv<0)) {
@@ -58,7 +60,8 @@ function HoffmanTransfer {
 		else {
 			local eng is EngThrustIsp().
 			local AThr is eng[0]/ship:mass.
-			lock throttle to MIN(MAX(abs(dV)/AThr, 0.001*AThr), 1).
+			local AThrLim is ship:mass/eng[0].
+			lock throttle to MIN(MAX(abs(dV)/AThr, 0.001*AThrLim), 1).
 		}
 		
 		print "Throttle: " + round(throttle*100,5) + " %" + "     " at(0,0).
