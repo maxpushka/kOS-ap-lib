@@ -57,5 +57,5 @@ function Circularize {
 	print "Apoapsis     = " + round(apoapsis, 1).
 	print "Periapsis    = " + round(periapsis, 1).
 	print "Apo-Per      = " + (round(apoapsis, 1) - round(periapsis, 1)).
-	print "Eccentricity = " + round(orbit:eccentricity, 1).
+	print "Eccentricity = " + round(orbit:eccentricity, 5).
 }

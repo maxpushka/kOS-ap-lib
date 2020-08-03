@@ -31,55 +31,37 @@ function TransferToMoon {
 	//====================== TRANSFER BURN ======================//
 	
 	clearscreen.
-	set pastdV to 0.
+	local targetAp is body(targetMoon):altitude - targetPe.
 	set stopburn to false.
-	until stopburn {
-		
-		local v0 is ship:velocity:orbit:mag.
-		local targetSMA is (2*body:radius + ship:altitude + body(targetMoon):altitude - targetPe)/2.
-		local v1 is VisVivaCalc(altitude, targetSMA).
-		local dV is v1-v0.
-		local t_burn is BurnTime(dV, altitude).
-		
-		if ((pastdV > 0) AND (dv<0)) {
-			lock throttle to 0.
-			unlock steering.
-			sas on.
-			set stopburn to true.
-		}
-		else {
-			local eng is EngThrustIsp().
-			local AThr is eng[0]/ship:mass.
-			local AThrLim is ship:mass/eng[0].
-			lock throttle to MIN(MAX(abs(dV)/AThr, 0.1*AThrLim), 1).
-		}
-		
-		print "dV: " + round(dV,5) + "     " at(0,0).
-		print "Burn time: " + round(t_burn,5) + " sec" + "     " at(0,1).
-		
-		wait 0.
-		set pastdV to dV.
+	lock throttle to 1.
+	wait until ship:orbit:hasnextpatch.
+	until (ship:orbit:nextpatch:periapsis <= targetPe) {
+		local eng is EngThrustIsp().
+		local AThrLim is ship:mass/eng[0].
+		lock throttle to MIN(MAX(1-targetPe/ship:orbit:nextpatch:periapsis, 0.1*AThrLim), 1).
 	}
 	
+	lock throttle to 0.
+	unlock steering.
+	sas on.
 	wait 1.
 	clearscreen.
 	
 	//===================== INSERTION BURN ======================//
 	
 	if (insertionBurn) {
-		if (autowarp = true) {kuniverse:timewarp:warpto(time:seconds + ETA:transition - 3).}
+		if (autowarp = true) {kuniverse:timewarp:warpto(time:seconds + ETA:transition - 1).}
 		wait until (ship:body = body(targetMoon)).
 		wait 5.
 		rcs on.
 		HoffmanTransfer(targetPe, ETA:periapsis). //orbit insertion
-		wait 2.
-		HoffmanTransfer(targetPe, ETA:periapsis). //apoapsis correction of moonar orbit
+		HoffmanTransfer(targetPe, ETA:apoapsis). //periapsis correction of moonar orbit
 	}
 	
 	//======================== FUNCTIONS ========================//
 	
 	function CalculateAngle {
-		local a1 is (2*body:radius + ship:altitude + body(targetMoon):altitude - targetPe)/2.
+		local a1 is (2*body:radius + ship:altitude + body(targetMoon):altitude - targetPe)/2. //ship's target semimajor axis
 		local a2 is body:radius+body(targetMoon):altitude. //moonar semimajor axis
 		return 180*(1-(a1/a2)^1.5).
 	}
@@ -97,11 +79,11 @@ function TransferToMoon {
 		
 		print targetMoon + " angle: " + mun_ang + "     " at(0,0).
 		print "Current angle: " + curr_ang + "     " at(0,1).
-		print "Burn start angle: " + (mun_ang+3) + "     " at(0,2).
+		print "Burn start angle: " + (mun_ang+8) + "     " at(0,2).
 		
-		if abs(curr_ang - mun_ang) < 6 {
+		if abs(curr_ang - mun_ang) < 10 {
 			set kuniverse:timewarp:rate to 0.
 		}
-		return abs(curr_ang - mun_ang) < 3.
+		return abs(curr_ang - mun_ang) < 8.
 	}
 }
