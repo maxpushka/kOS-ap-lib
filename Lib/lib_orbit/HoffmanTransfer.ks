@@ -33,7 +33,7 @@ function HoffmanTransfer {
 		lock steering to prograde:vector:normalized*dV.
 		
 		print "Burn time = " + round(t_burn,5) + " sec" + "     " at(0,0).
-		print "Burn dV   = " + round(dV,10) + "     " at(0,1).
+		print "Burn dV   = " + dV + "     " at(0,1).
         print "Burn starts in " + round(burnTimestamp-time:seconds) + " sec" + "     " at(0,2).
 		wait 0.
     }

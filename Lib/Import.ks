@@ -31,7 +31,7 @@ scriptDB:add("inclChange",
 scriptDB:add("TransferToMoon", 
 	list("lib_orbit/TransferToMoon.ks", scriptDB["EngThrustIsp"],
 		scriptDB["HoffmanTransfer"], scriptDB["VisVivaCalc"],
-		scriptDB["BurnTime"])	
+		scriptDB["BurnTime"], scriptDB["Derivator"])	
 	).
 
 scriptDB:add("Ascend",
