@@ -23,12 +23,17 @@ function HoffmanTransfer {
 	
 	sas off.
 	
-    if (autowarp = true) {kuniverse:timewarp:warpto(burnTimestamp-30).}
-    until (time:seconds >= burnTimestamp) {
-		set v0 to velocityat(ship, burnTimestamp):orbit:mag.
-		set predR to (positionat(ship, burnTimestamp)-body:position):mag - body:radius.
+    if (autowarp = true) {kuniverse:timewarp:warpto(burnTimestamp-60).}
+	print "Burn time = " + round(t_burn,5) + " sec" + "     " at(0,0).
+	print "Burn dV   = " + dV + "     " at(0,1).
+    until (time:seconds >= burnTimestamp-60) {		
+        print "Burn starts in " + round(burnTimestamp-time:seconds) + " sec" + "     " at(0,2).
+		wait 0.
+    }
+	until (time:seconds >= burnTimestamp) {
+		set v0 to ship:velocity:orbit:mag.
 		set targetSMA to (2*body:radius+predR+targetR)/2.
-		set v1 to VisVivaCalc(predR, targetSMA).
+		set v1 to VisVivaCalc(altitude, targetSMA).
 		set dV to v1-v0.
 		lock steering to prograde:vector:normalized*dV.
 		
@@ -36,7 +41,7 @@ function HoffmanTransfer {
 		print "Burn dV   = " + dV + "     " at(0,1).
         print "Burn starts in " + round(burnTimestamp-time:seconds) + " sec" + "     " at(0,2).
 		wait 0.
-    }
+	}
     clearscreen.
 	
 	set pastdV to 0.
