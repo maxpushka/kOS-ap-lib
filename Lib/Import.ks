@@ -40,7 +40,9 @@ scriptDB:add("Ascend",
 		scriptDB["BisectionSolver"], scriptDB["Derivator"])
 	).
 scriptDB:add("Rendezvous",
-	list("Rendezvous")).
+	list("Rendezvous", scriptDB["HoffmanTransfer"],
+		scriptDB["Derivator"])
+	).
 
 function Import {
 	parameter scriptName.
