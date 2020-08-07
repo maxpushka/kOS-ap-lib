@@ -283,8 +283,8 @@ function Ascend {
 	rcs off.
 	clearscreen.
 	wait 1.
-
-	//==================== CIRCULARIZATION =====================//
+	
+	//================= BALLISTIC FLIGHT TO APO ================//
 	
 	if autoWarp = true {kuniverse:timewarp:warpto(time:seconds + ETA:apoapsis - 17).}
 	until ETA:apoapsis < 15 {
@@ -299,6 +299,8 @@ function Ascend {
 		}
 		wait 0.25.
 	}
+	
+	//==================== CIRCULARIZATION =====================//
 	
 	clearscreen.
 	sas off.

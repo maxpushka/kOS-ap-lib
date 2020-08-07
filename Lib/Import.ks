@@ -39,6 +39,8 @@ scriptDB:add("Ascend",
 		scriptDB["MachNumber"], scriptDB["EngThrustIsp"], 
 		scriptDB["BisectionSolver"], scriptDB["Derivator"])
 	).
+scriptDB:add("Rendezvous",
+	list("Rendezvous")).
 
 function Import {
 	parameter scriptName.
