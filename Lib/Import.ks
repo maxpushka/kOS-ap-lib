@@ -41,7 +41,7 @@ scriptDB:add("Ascend",
 	).
 scriptDB:add("Rendezvous",
 	list("Rendezvous", scriptDB["HoffmanTransfer"],
-		scriptDB["Derivator"])
+		scriptDB["Derivator"], scriptDB["BurnTime"])
 	).
 
 function Import {

@@ -7,15 +7,13 @@ function Circularize {
 	SET SHIP:CONTROL:NEUTRALIZE TO TRUE. //block user control inputs
 	set ship:control:pilotmainthrottle to 0. //block user throttle inputs
 	
-	print "Circularization program." at(0,0).
 	until (altitude < targetAp+100) AND (altitude > targetAp-100) {
-		print "Current alt     = " + round(altitude,1) at(0,1).
-		print "Burn start alt  = " + targetAp at(0,2).
+		print "Current alt     = " + round(altitude,1) at(0,0).
+		print "Burn start alt  = " + targetAp at(0,1).
 		wait 1.
 	}
 	
 	clearscreen.
-	print "Circularization program." at(0,0).
 	sas off.
 	rcs on.
 	
@@ -23,7 +21,7 @@ function Circularize {
 		set v1 to ship:velocity:orbit.
 		set v2 to VXCL(ship:up:vector, ship:velocity:orbit):normalized*sqrt(body:Mu/(ship:body:radius+targetAp)).
 		set v3 to v2-v1.
-		print "Correction dV = " + round(v3:mag,5) at(0,1).
+		print "Correction dV = " + round(v3:mag,5) at(0,0).
 		lock steering to v3.
 		SET corr_vec TO VECDRAW(V(0,0,0), v3, RGB(255,0,0), round(v3:mag,1), 1.0, TRUE, 0.2, TRUE, TRUE).
 		wait 0. //wait for the next physics tick
@@ -36,7 +34,7 @@ function Circularize {
 		set v3 to v2-v1.
 		
 		clearscreen.
-		print "Correction dV = " + round(v3:mag,5) at(0,1).
+		print "Correction dV = " + round(v3:mag,5) at(0,0).
 		SET corr_vec TO VECDRAW(V(0,0,0), v3, RGB(255,0,0), round(v3:mag,1), 1.0, TRUE, 0.2, TRUE, TRUE).
 		
 		lock steering to v3.

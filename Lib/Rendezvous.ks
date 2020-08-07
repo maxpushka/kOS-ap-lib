@@ -1,12 +1,24 @@
 function Rendezvous {
-	parameter targetShip.
+	parameter targetShip, d_final is 1000, autowarp is true.
 	set targetShip to vessel(targetShip). //converting str to Vessel type object
 	
 	clearscreen.
+	set ship:control:neutralize to true. //block user control inputs
+	set ship:control:pilotmainthrottle to 0. //block user throttle inputs
 	if (targetShip:typename <> "Vessel") {
 		print "Error: the selected target is not a vessel.".
 		return false.
 	}
+	else if (ship:body <> targetShip:body) {
+		print "Error: the selected target must be in the same SOI.".
+		return false.
+	}
+	
+	sas off.
+	if (targetShip:orbit:semimajoraxis > ship:orbit:semimajoraxis) {
+		lock steering to prograde.
+	}
+	else {lock steering to retrograde.}
 	
 	set placeholder to "                          ".
 	set t_wait to 0.
@@ -18,6 +30,7 @@ function Rendezvous {
 		set kuniverse:timewarp:rate to 0.
 		if true {wait 1.}
 		kuniverse:timewarp:warpto(time:seconds + t_wait - 60).
+		unset t_wait_dt.
 	}
 	
 	set startburn to false.
@@ -60,7 +73,71 @@ function Rendezvous {
 		set prev_t_wait to t_wait.
 	}
 	
-	local burnTimestamp is time:seconds + TOF.
-	local transferR is (positionat(targetShip, burnTimestamp)-body:position):mag - body:radius.
+	//===================== RENDEZVOUS BURN =====================//
+	
+	local t_intercept is time:seconds + TOF.
+	local transferR is (positionat(targetShip, t_intercept)-body:position):mag - body:radius.
 	HoffmanTransfer(transferR).
+	
+	//============= FLYING TO INTERSECTION POSITION =============//
+	
+	rcs off.
+	unlock steering.
+	sas on.
+	
+	set dV to (velocityat(targetShip, t_intercept):orbit - velocityat(ship, t_intercept):orbit):mag.
+	set predR to (positionat(ship, t_intercept)-body:position):mag - body:radius.
+	set t_burn to BurnTime(dV, predR).
+	set t_intercept to t_intercept - (t_burn/2).
+	kuniverse:timewarp:warpto(t_intercept - 60).
+	
+	clearscreen.
+	print "CANCELLING OUT RELATIVE VELOCITY." at(0,0).
+	until (time:seconds >= t_intercept) {
+		set relativeVelocityVec to target:velocity:orbit - ship:velocity:orbit.
+		lock steering to relativeVelocityVec.
+		
+		print "Burn in " + (t_intercept - time:seconds) + placeholder at(0,1).
+		
+		wait 0.
+	}
+	
+	//============ CANCELLING OUT RELATIVE VELOCITY =============//
+	
+	sas off.
+	rcs on.
+	clearscreen.
+	set stopburn to false.
+	until stopburn {
+		set relativeVelocityVec to target:velocity:orbit - ship:velocity:orbit.
+		set relativeSpeed to relativeVelocityVec:mag.
+		
+		lock steering to relativeVelocityVec.
+		print "Relative speed = " + round(relativeSpeed,2) at(0,0).
+		print "Throttle = " + round(throttle*100,2) at(0,1).
+		
+		if (relativeSpeed < 0.05) {
+			lock trottle to 0.
+			set stopburn to true.
+		}
+		else if (relativeSpeed < 10) {
+			local eng is EngThrustIsp().
+			local AThr is eng[0]/ship:mass.
+			local AThrLim is ship:mass/eng[0].
+			lock throttle to MIN(MAX(abs(dV)/AThr, 0.001*AThrLim), 2*AThrLim). // [0.001; 2] m/s^2
+		}
+		else {
+			local eng is EngThrustIsp().
+			local AThr is eng[0]/ship:mass.
+			local AThrLim is ship:mass/eng[0].
+			lock throttle to MIN(MAX(abs(dV)/AThr, 0.001*AThrLim), 1).
+		}
+		
+	}
+	
+	clearscreen.
+	unlock steering.
+	sas on.
+	rcs off.
+	print "Distance to target = " + (ship:position - targetShip:position):mag.
 }
