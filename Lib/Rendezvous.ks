@@ -1,5 +1,5 @@
 function Rendezvous {
-	parameter targetShip, d_final is 1000, autowarp is true.
+	parameter targetShip, finalDistance is 1000, autowarp is true.
 	set targetShip to vessel(targetShip). //converting str to Vessel type object
 	
 	clearscreen.
@@ -93,7 +93,8 @@ function Rendezvous {
 	
 	clearscreen.
 	print "CANCELLING OUT RELATIVE VELOCITY." at(0,0).
-	until (time:seconds >= t_intercept) {
+	until (time:seconds >= t_intercept) OR 
+	( finalDistance >= (ship:position-targetShip:position):mag ) {
 		set relativeVelocityVec to target:velocity:orbit - ship:velocity:orbit.
 		lock steering to relativeVelocityVec.
 		
@@ -124,7 +125,7 @@ function Rendezvous {
 			local eng is EngThrustIsp().
 			local AThr is eng[0]/ship:mass.
 			local AThrLim is ship:mass/eng[0].
-			lock throttle to MIN(MAX(abs(dV)/AThr, 0.001*AThrLim), 2*AThrLim). // [0.001; 2] m/s^2
+			lock throttle to MIN(MAX(abs(dV)/AThr, 0.001*AThrLim), AThrLim). // [0.001; 2] m/s^2
 		}
 		else {
 			local eng is EngThrustIsp().
