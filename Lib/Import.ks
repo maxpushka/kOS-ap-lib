@@ -20,8 +20,8 @@ scriptDB:add("Derivator",
 	list("lib_math/Derivator.ks")).
 
 //lib_orbit
-scriptDB:add("HoffmanTransfer",
-	list("lib_orbit/HoffmanTransfer.ks", scriptDB["VisVivaCalc"], 
+scriptDB:add("HohmannTransfer",
+	list("lib_orbit/HohmannTransfer.ks", scriptDB["VisVivaCalc"], 
 		scriptDB["BurnTime"], scriptDB["EngThrustIsp"])
 	).
 scriptDB:add("Circularize", 
@@ -30,7 +30,7 @@ scriptDB:add("inclChange",
 	list("lib_orbit/inclChange.ks", scriptDB["EngThrustIsp"])).
 scriptDB:add("TransferToMoon", 
 	list("lib_orbit/TransferToMoon.ks", scriptDB["EngThrustIsp"],
-		scriptDB["HoffmanTransfer"], scriptDB["VisVivaCalc"],
+		scriptDB["HohmannTransfer"], scriptDB["VisVivaCalc"],
 		scriptDB["BurnTime"], scriptDB["Derivator"])	
 	).
 
@@ -40,7 +40,7 @@ scriptDB:add("Ascend",
 		scriptDB["BisectionSolver"], scriptDB["Derivator"])
 	).
 scriptDB:add("Rendezvous",
-	list("Rendezvous", scriptDB["HoffmanTransfer"],
+	list("Rendezvous", scriptDB["HohmannTransfer"],
 		scriptDB["Derivator"], scriptDB["BurnTime"])
 	).
 

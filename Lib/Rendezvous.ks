@@ -142,3 +142,95 @@ function Rendezvous {
 	rcs off.
 	print "Distance to target = " + (ship:position - targetShip:position):mag.
 }
+
+// function Coorbital {
+	// parameter targetShip, finalDistance is 1000, autowarp is true.
+	// set targetShip to vessel(targetShip). //converting str to Vessel type object
+	
+	// clearscreen.
+	// set ship:control:neutralize to true. //block user control inputs
+	// set ship:control:pilotmainthrottle to 0. //block user throttle inputs
+	// if (targetShip:typename <> "Vessel") {
+		// print "Error: the selected target is not a vessel.".
+		// return false.
+	// }
+	// else if (ship:body <> targetShip:body) {
+		// print "Error: the selected target must be in the same SOI.".
+		// return false.
+	// }
+	
+	// sas off.
+	
+	
+	
+	// until false {
+	// local pi is constant:pi.
+	// local w_target is sqrt(body:Mu/targetShip:orbit:semimajoraxis^3).
+	
+	// local vecS is ship:position - body:position.
+	// local vecM is targetShip:position - body:position.
+	// local fi_init is VANG(vecM, vecS).
+	
+	// local fi_travel is 2*pi-fi_init.
+	// local TOF is fi_travel/w_target.
+	// local a_phasing is (body:Mu*(fi_travel/2*pi*w_target)^2)^(1/3).
+	
+	// local targetR is 2*a_phasing - (altitude + 2*body:radius).
+	
+	// local line is 0.
+	// print "w_target = " + w_target at(0,line).
+	// local line is line+1.
+	// print "fi_init = " + fi_init at(0,line).
+	// local line is line+1.
+	// print "fi_travel = " + fi_travel at(0,line).
+	// local line is line+1.
+	// print "TOF = " + TOF at(0,line).
+	// local line is line+1.
+	// print "a_phasing = " + a_phasing at(0,line).
+	// local line is line+1.
+	// print "targetR = " + targetR at(0,line).
+	// }
+	// HoffmanTransfer(targetR, time:seconds+60).
+	
+	// local TOF is TOF+time:seconds.
+	// wait until (time:seconds >= TOF).
+	
+	// //============ CANCELLING OUT RELATIVE VELOCITY =============//
+	
+	// sas off.
+	// rcs on.
+	// clearscreen.
+	// set stopburn to false.
+	// until stopburn {
+		// set relativeVelocityVec to target:velocity:orbit - ship:velocity:orbit.
+		// set relativeSpeed to relativeVelocityVec:mag.
+		
+		// lock steering to relativeVelocityVec.
+		// print "Relative speed = " + round(relativeSpeed,2) at(0,0).
+		// print "Throttle = " + round(throttle*100,2) at(0,1).
+		
+		// if (relativeSpeed < 0.05) {
+			// lock trottle to 0.
+			// set stopburn to true.
+		// }
+		// else if (relativeSpeed < 10) {
+			// local eng is EngThrustIsp().
+			// local AThr is eng[0]/ship:mass.
+			// local AThrLim is ship:mass/eng[0].
+			// lock throttle to MIN(MAX(abs(dV)/AThr, 0.001*AThrLim), AThrLim). // [0.001; 2] m/s^2
+		// }
+		// else {
+			// local eng is EngThrustIsp().
+			// local AThr is eng[0]/ship:mass.
+			// local AThrLim is ship:mass/eng[0].
+			// lock throttle to MIN(MAX(abs(dV)/AThr, 0.001*AThrLim), 1).
+		// }
+		
+	// }
+	
+	// clearscreen.
+	// unlock steering.
+	// sas on.
+	// rcs off.
+	// print "Distance to target = " + (ship:position - targetShip:position):mag.
+// }

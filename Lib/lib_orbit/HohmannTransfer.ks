@@ -1,4 +1,4 @@
-function HoffmanTransfer {	
+function HohmannTransfer {	
     parameter targetR, burnIn is 0, autowarp is true.
 	//targetR = [m] radius of target orbit
 	//burnIn = [s] execute burn in (time:seconds+burnIn) seconds
