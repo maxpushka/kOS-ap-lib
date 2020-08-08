@@ -93,7 +93,7 @@ function TransferToMoon {
 		print "Calculating insertion maneuver...".
 		wait 5.
 		rcs on.
-		HoffmanTransfer(targetPe, ETA:periapsis, autowarp). //orbit insertion
+		HohmannTransfer(targetPe, ETA:periapsis, autowarp). //orbit insertion
 	}
 	
 	//======================== FUNCTIONS ========================//
