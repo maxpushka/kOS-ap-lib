@@ -165,21 +165,42 @@ function Coorbital {
 	
 	//==========================================================//
 	
-	if data()[1] <= orbit:semimajoraxis {lock steering to prograde.}
-	else {lock steering to retrograde.}
+	// if data()[1] <= orbit:semimajoraxis {lock steering to prograde.}
+	// else {lock steering to retrograde.}
 	
-	FROM {local countdown is 10.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
-		PRINT "Burn in " + countdown + " sec" + "     " at(0,0).
-		WAIT 1. // pauses the script here for 1 second.
-	}
+	// FROM {local countdown is 10.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
+		// PRINT "Burn in " + countdown + " sec" + "     " at(0,0).
+		// WAIT 1. // pauses the script here for 1 second.
+	// }
 	
-	local data_list is data().
-	HohmannTransfer(data_list[0], 0, autowarp).
+	local pi is constant:pi.
+		
+	local vecS is ship:position - body:position.
+	local vecM is targetShip:position - body:position.
+	local fi_init is VANG(vecM, vecS) * constant:degtorad.
+	local fi_travel is 2*pi-fi_init.
 	
-	clearscreen.
-	print data_list[2].
-	kuniverse:timewarp:warpto(time:seconds+data_list[2]-30).
-	wait until (time:seconds >= data_list[2]-25).
+	local w_target is sqrt(body:Mu/targetShip:orbit:semimajoraxis^3).
+	local a_phasing is (body:Mu*(fi_travel/(2*pi*w_target))^2)^(1/3).
+	local w_ship is sqrt(body:Mu/a_phasing^3).
+	local TOF is abs(fi_travel)/abs(w_target-w_ship).
+	local targetR is abs(a_phasing-orbit:semimajoraxis).
+	
+	local t_intercept is time:seconds+TOF.
+	
+	print "fi_init = " + fi_init at(0,0).
+	print "fi_travel = " + fi_travel at(0,1).
+	print "w_target = " + w_target at(0,2).
+	print "TOF = " + TOF at(0,3).
+	print "a_phasing = " + a_phasing at(0,4).
+	print "targetR = " + targetR at(0,5).
+
+	// HohmannTransfer(targetR, 0, autowarp).
+	
+	// clearscreen.
+	// print data_list[2].
+	// kuniverse:timewarp:warpto(t_intercept-30).
+	// wait until (time:seconds >= t_intercept-25).
 	return 0.
 	//wait until closest approach
 	
@@ -221,30 +242,4 @@ function Coorbital {
 	sas on.
 	rcs off.
 	print "Distance to target = " + (ship:position - targetShip:position):mag.
-	
-	function data {
-		local pi is constant:pi.
-		
-		local vecS is ship:position - body:position.
-		local vecM is targetShip:position - body:position.
-		local fi_init is VANG(vecM, vecS) * constant:degtorad.
-		local fi_travel is 2*pi-fi_init.
-		
-		local w_target is sqrt(body:Mu/targetShip:orbit:semimajoraxis^3).
-		local a_phasing is (body:Mu*(fi_travel/(2*pi*w_target))^2)^(1/3).
-		local w_ship is sqrt(body:Mu/a_phasing^3).
-		local TOF is abs(fi_travel)/abs(w_target-w_ship).
-		local targetR is abs(a_phasing-orbit:semimajoraxis).
-		
-		local t_intercept is time:seconds+TOF.
-		
-		print "fi_init = " + fi_init at(0,0).
-		print "fi_travel = " + fi_travel at(0,1).
-		print "w_target = " + w_target at(0,2).
-		print "TOF = " + TOF at(0,3).
-		print "a_phasing = " + a_phasing at(0,4).
-		print "targetR = " + targetR at(0,5).
-		
-		return list(targetR, a_phasing, TOF).
-	}
 }
