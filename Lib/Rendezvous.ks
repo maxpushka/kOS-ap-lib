@@ -1,5 +1,5 @@
 function Rendezvous {
-	parameter targetShip, finalDistance is 1000, autowarp is true.
+	parameter targetShip, finalDistance is 1000, autowarp is false.
 	set targetShip to vessel(targetShip). //converting str to Vessel type object
 	
 	clearscreen.
@@ -16,6 +16,19 @@ function Rendezvous {
 
 	//==========================================================//
 	
+	local w_target is sqrt(body:Mu/targetShip:orbit:semimajoraxis^3).
+	local w_ship is sqrt(body:Mu/orbit:semimajoraxis^3).
+	
+	print (w_ship/w_target).
+	
+	if (((w_ship/w_target) > 0.9) AND ((w_ship/w_target) < 1.1)) AND 
+	(targetShip:orbit:apoapsis*0.8 > body:atm:height+100)
+	{
+		HohmannTransfer(targetShip:orbit:apoapsis*0.8, ETA:periapsis, autowarp).
+		HohmannTransfer(targetShip:orbit:periapsis*0.8, ETA:periapsis, autowarp).
+	}
+	
+	//==========================================================//
 	sas off.
 	if (targetShip:orbit:semimajoraxis > ship:orbit:semimajoraxis) {
 		lock steering to prograde.
@@ -85,6 +98,7 @@ function Rendezvous {
 	//============= FLYING TO INTERSECTION POSITION =============//
 	
 	rcs off.
+	sas off.
 	unlock steering.
 	
 	set dV to (velocityat(targetShip, t_intercept):orbit - velocityat(ship, t_intercept):orbit):mag.
@@ -107,106 +121,6 @@ function Rendezvous {
 	
 	//============ CANCELLING OUT RELATIVE VELOCITY =============//
 	
-	sas off.
-	rcs on.
-	clearscreen.
-	set stopburn to false.
-	until stopburn {
-		set relativeVelocityVec to target:velocity:orbit - ship:velocity:orbit.
-		set relativeSpeed to relativeVelocityVec:mag.
-		
-		lock steering to relativeVelocityVec.
-		print "Relative speed = " + round(relativeSpeed,2) at(0,0).
-		print "Throttle = " + round(throttle*100,2) at(0,1).
-		
-		if (relativeSpeed < 0.05) {
-			lock trottle to 0.
-			set stopburn to true.
-		}
-		else if (relativeSpeed < 10) {
-			local eng is EngThrustIsp().
-			local AThr is eng[0]/ship:mass.
-			local AThrLim is ship:mass/eng[0].
-			lock throttle to MIN(MAX(abs(relativeSpeed)/AThr, 0.001*AThrLim), AThrLim). // [0.001; 2] m/s^2
-		}
-		else {
-			local eng is EngThrustIsp().
-			local AThr is eng[0]/ship:mass.
-			local AThrLim is ship:mass/eng[0].
-			lock throttle to MIN(MAX(abs(relativeSpeed)/AThr, 0.001*AThrLim), 1).
-		}
-		
-	}
-	
-	clearscreen.
-	unlock steering.
-	sas on.
-	rcs off.
-	print "Distance to target = " + (ship:position - targetShip:position):mag.
-}
-
-function Coorbital {
-	parameter targetShip, finalDistance is 1000, autowarp is true.
-	set targetShip to vessel(targetShip). //converting str to Vessel type object
-	
-	clearscreen.
-	set ship:control:neutralize to true. //block user control inputs
-	set ship:control:pilotmainthrottle to 0. //block user throttle inputs
-	if (targetShip:typename <> "Vessel") {
-		print "Error: the selected target is not a vessel.".
-		return false.
-	}
-	else if (ship:body <> targetShip:body) {
-		print "Error: the selected target must be in the same SOI.".
-		return false.
-	}
-	
-	sas off.
-	
-	//==========================================================//
-	
-	// if data()[1] <= orbit:semimajoraxis {lock steering to prograde.}
-	// else {lock steering to retrograde.}
-	
-	// FROM {local countdown is 10.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
-		// PRINT "Burn in " + countdown + " sec" + "     " at(0,0).
-		// WAIT 1. // pauses the script here for 1 second.
-	// }
-	
-	local pi is constant:pi.
-		
-	local vecS is ship:position - body:position.
-	local vecM is targetShip:position - body:position.
-	local fi_init is VANG(vecM, vecS) * constant:degtorad.
-	local fi_travel is 2*pi-fi_init.
-	
-	local w_target is sqrt(body:Mu/targetShip:orbit:semimajoraxis^3).
-	local a_phasing is (body:Mu*(fi_travel/(2*pi*w_target))^2)^(1/3).
-	local w_ship is sqrt(body:Mu/a_phasing^3).
-	local TOF is abs(fi_travel)/abs(w_target-w_ship).
-	local targetR is abs(a_phasing-orbit:semimajoraxis).
-	
-	local t_intercept is time:seconds+TOF.
-	
-	print "fi_init = " + fi_init at(0,0).
-	print "fi_travel = " + fi_travel at(0,1).
-	print "w_target = " + w_target at(0,2).
-	print "TOF = " + TOF at(0,3).
-	print "a_phasing = " + a_phasing at(0,4).
-	print "targetR = " + targetR at(0,5).
-
-	// HohmannTransfer(targetR, 0, autowarp).
-	
-	// clearscreen.
-	// print data_list[2].
-	// kuniverse:timewarp:warpto(t_intercept-30).
-	// wait until (time:seconds >= t_intercept-25).
-	return 0.
-	//wait until closest approach
-	
-	//============ CANCELLING OUT RELATIVE VELOCITY =============//
-	
-	sas off.
 	rcs on.
 	clearscreen.
 	set stopburn to false.

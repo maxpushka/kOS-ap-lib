@@ -110,10 +110,10 @@ function TransferToMoon {
 		
 		local vecS is ship:position - body:position.
 		local vecM is targetMoon:position - body:position.
+		local curr_ang is VANG(vecM, vecS).
+		local moon_ang is CalculateAngle().
 		local vecHV is VXCL(ship:up:vector, ship:velocity:orbit).
 		local vecSM is targetMoon:position-ship:position.
-		local moon_ang is CalculateAngle().
-		local curr_ang is VANG(vecM, vecS).
 		
 		if VANG(vecHV, vecSM) > 90 {
 			set curr_ang to -curr_ang.
