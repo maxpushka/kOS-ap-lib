@@ -43,6 +43,7 @@ scriptDB:add("Rendezvous",
 	list("Rendezvous", scriptDB["HohmannTransfer"],
 		scriptDB["Derivator"], scriptDB["BurnTime"])
 	).
+scriptDB:add("Dock", list("Dock")).
 
 function Import {
 	parameter scriptName.
