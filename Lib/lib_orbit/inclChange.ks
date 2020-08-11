@@ -67,6 +67,7 @@ function InclChange {
 	wait 1.
 	clearscreen.
 	print "Current inclination: " + round(ship:orbit:inclination,5).
+	return true.
 }
 
 function InclData {

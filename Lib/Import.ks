@@ -57,5 +57,8 @@ function Import {
 			if (script:typename() = "List") {imp(script).}
 			else {runoncepath(path+script).}
 		}
+		return true.
 	}
+	
+	return true.
 }

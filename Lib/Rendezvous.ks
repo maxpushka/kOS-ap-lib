@@ -156,4 +156,5 @@ function Rendezvous {
 	sas on.
 	rcs off.
 	print "Distance to target = " + (ship:position - targetShip:position):mag.
+	return true.
 }

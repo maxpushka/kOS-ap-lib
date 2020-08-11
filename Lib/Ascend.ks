@@ -363,7 +363,8 @@ function Ascend {
 	print "Circularization complete".
 	orbitData().
 	wait 1.
-
+	return true.
+	
 	//======================= FUNCTIONS ========================//
 
 	function DeltaV_Calc {

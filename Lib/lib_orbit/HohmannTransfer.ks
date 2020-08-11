@@ -79,4 +79,5 @@ function HohmannTransfer {
 	
 	if (allnodes:length > 0) {remove allnodes[0].}
 	clearscreen.
+	return true.
 }

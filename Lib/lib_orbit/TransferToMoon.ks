@@ -96,6 +96,8 @@ function TransferToMoon {
 		HohmannTransfer(targetPe, ETA:periapsis, autowarp). //orbit insertion
 	}
 	
+	return true.
+	
 	//======================== FUNCTIONS ========================//
 	
 	function CalculateAngle {

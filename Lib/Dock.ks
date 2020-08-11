@@ -1,10 +1,10 @@
 function Dock {
-	parameter targetShip, safeDistance is minSafeDist().
-	set targetShip to vessel(targetShip). //converting str to Vessel type object
+	parameter targetShip, targetNode, selectedNode, safeDistance is minSafeDist().
+
+	//==================== PARAMETERS CHECK ====================//	
 	
 	clearscreen.
-	set ship:control:neutralize to true. //block user control inputs
-	set ship:control:pilotmainthrottle to 0. //block user throttle inputs
+	set targetShip to vessel(targetShip). //converting str to Vessel type object
 	if (targetShip:typename <> "Vessel") {
 		print "Error: the selected target is not a vessel.".
 		return false.
@@ -14,34 +14,66 @@ function Dock {
 		return false.
 	}
 	
-	//==========================================================//
+	//====================== MAIN SEQUENCE =====================//
 	
+	//STARTING PARAMETERS
+	set ship:control:neutralize to true. //block user control inputs
+	set ship:control:pilotmainthrottle to 0. //block user throttle inputs
 	rcs on.
 	sas off.
-	ship:dockingports[0]:controlfrom.
-	set tgtport to targetShip:dockingports[0].
+	set prev_control_part to ship:controlpart.
 	set elem to targetShip:elements:length.
+	
+	set selectedNode to ship:partstagged(selectedNode)[0].
+	set targetNode to targetShip:partstagged(targetNode)[0].
+	
+	//CHECKING IF THE NODES ARE VALID
+	if (ship:dockingports:length = 0) {
+		print "Error: the ship has no docking ports.".
+		return false.
+	}
+	else if (targetShip:dockingports:length = 0) {
+		print "Error: target ship has no docking ports.".
+		return false.
+	}
+	else if (NOT ship:dockingports:contains(selectedNode)) {
+		print "Error: the part selected as the ship's node is not docking port.".
+		return false.
+	}
+	else if (NOT targetShip:dockingports:contains(targetNode)) {
+		print "Error: part selected as target node is not docking port.".
+		return false.
+	}	
+	else if (targetNode:nodetype <> selectedNode:nodetype) {
+		print "Error: the size of target node does not match with the ship's selected node.".
+		return false.
+	}
 	
 	//DATA PRINTOUT
 	print "Safety sphere radius: " + safeDistance + " m".
 	print " ". print " ". print " ". print " ". //leaving two lines free for data printout
 	print "Log:".
+	print "[MET " + round(missiontime) + "s]: " + "Sequence started".
 	local placeholder is "          ".
 	when 1 then {
-		local v_relative is ship:velocity:orbit - tgtport:ship:velocity:orbit.
-		local dist is (tgtport:nodeposition - ship:controlpart:position):mag.
+		lock steering to lookdirup(-targetNode:facing:forevector, targetNode:facing:topvector).
+		local v_relative is ship:velocity:orbit - targetNode:ship:velocity:orbit.
+		local dist is (targetNode:nodeposition - ship:controlpart:position):mag.
 		
-		print "Relative velocity  = " + round(v_relative:mag, 5) + placeholder at(0,2).
-		print "Distance to target = " + round(dist, 2) + placeholder at(0,3).
+		print "Relative velocity   = " + round(v_relative:mag, 5) + " m/s" + placeholder at(0,2).
+		print "Dist to target node = " + round(dist, 2) + " m" + placeholder at(0,3).
 		preserve.
 	}
 	
-	if tgtport:ship:position:mag < safedistance {
+	//LEAVING SAFERY SPHERE IF IN IT
+	if targetNode:ship:position:mag < safedistance {
+		print "[MET " + round(missiontime) + "s]: " + "Leaving safety sphere".
+		
 		local facing0 is ship:facing.
 		lock steering to facing0.
-		// Отходим от цели по прямой со скоростью 2 м/с
-		local lock v_relative to ship:velocity:orbit - tgtport:ship:velocity:orbit.
-		local lock tgtpos to tgtport:ship:position.
+		//Отходим от цели по прямой со скоростью 2 м/с
+		local lock v_relative to ship:velocity:orbit - targetNode:ship:velocity:orbit.
+		local lock tgtpos to targetNode:ship:position.
 		until tgtpos:mag > safedistance {
 			local tgtvel is -tgtpos:normalized * 2.
 			translatevec(tgtvel - v_relative).
@@ -51,11 +83,15 @@ function Dock {
 		unlock tgtpos.
 	}
 	
-	kill_relative_velocity(tgtport).
-	lock steering to lookdirup(-tgtport:facing:forevector, tgtport:facing:topvector).
-	approach(tgtport, safeDistance).
-	dock_finalize(tgtport).
+	kill_relative_velocity(targetNode).
+	approach(targetNode, safeDistance).
+	selectedNode:controlfrom.
+	dock_finalize(targetNode, selectedNode).
+	prev_control_part:controlfrom.
+	
 	return true.
+	
+	//======================= FUNCTIONS ========================//
 	
 	function minSafeDist { //intended to use only on docking init
 		set box to vessel(targetShip):bounds.
@@ -81,15 +117,15 @@ function Dock {
 	}
 	
 	function kill_relative_velocity {
-		parameter tgtport, threshold is 0.1.
+		parameter targetNode, threshold is 0.1.
 		// threshold - относительная скорость, по достижении которой считаем цель неподвижной 
 		// (по умолчанию ставим на 0.1 м/с)
-		print "Killing relative velocity".
-		local v_relative is ship:velocity:orbit - tgtport:ship:velocity:orbit.
+		print "[MET " + round(missiontime) + "s]: " + "Killing relative velocity".
+		local v_relative is ship:velocity:orbit - targetNode:ship:velocity:orbit.
 		until v_relative:sqrmagnitude < threshold^2 {
 			translatevec(-v_relative).
 			wait 0.
-			set v_relative to ship:velocity:orbit - tgtport:ship:velocity:orbit.
+			set v_relative to ship:velocity:orbit - targetNode:ship:velocity:orbit.
 		}
 		set ship:control:translation to V(0,0,0).
 	}
@@ -107,10 +143,11 @@ function Dock {
 		
 		local lock v_wanted to vel:call() * (origin:position + pos):normalized.
 		local lock v_relative to ship:velocity:orbit - origin:velocity:orbit.
+		local elem is origin:elements:length.
 		// "попали" тогда, когда ship:position - origin:position = pos
 		// ship:position = pos + origin:position
 		// а ship:position всегда равно V(0,0,0)
-		until (origin:position + pos):mag < tol {	
+		until ((origin:position + pos):mag < tol) OR (origin:elements:length > elem) {	
 			local lock v_wanted to vel:call() * (origin:position + pos):normalized.
 			local lock v_relative to ship:velocity:orbit - origin:velocity:orbit.
 			translatevec(v_wanted - v_relative).
@@ -124,61 +161,68 @@ function Dock {
 	}
 	
 	function approach {
-		parameter tgtport, rsafe.
-		local lock vec_i to tgtport:facing:vector.
-		local lock vec_j to vxcl(vec_i, -tgtport:ship:position):normalized.
+		parameter targetNode, rsafe.
+		local lock vec_i to targetNode:facing:vector.
+		local lock vec_j to vxcl(vec_i, -targetNode:ship:position):normalized.
 		
 		// фаза I
-		if vxcl(vec_i, -tgtport:ship:position):mag < rsafe {
-			print "Going around the target".
-			move(tgtport:ship, vxcl(vec_j, -tgtport:ship:position) + vec_j*rsafe).
-			kill_relative_velocity(tgtport).
+		if vxcl(vec_i, -targetNode:ship:position):mag < rsafe {
+			print "[MET " + round(missiontime) + "s]: " + "Going around the target".
+			move(targetNode:ship, vxcl(vec_j, -targetNode:ship:position) + vec_j*rsafe).
+			kill_relative_velocity(targetNode).
 		}
 		// фаза II
-		if vdot(-tgtport:ship:position, vec_i) < rsafe {
-			print "Getting in front of target".
-			move(tgtport:ship, (vec_i + vec_j)*rsafe).
-			kill_relative_velocity(tgtport).
+		if vdot(-targetNode:ship:position, vec_i) < rsafe {
+			print "[MET " + round(missiontime) + "s]: " + "Getting in front of target".
+			move(targetNode:ship, (vec_i + vec_j)*rsafe).
+			kill_relative_velocity(targetNode).
 		}
 		// фаза III
 		// выравниваемся уже не по центру масс корабля-цели, а по оси стыковочного узла
-		print "Getting in front of target docking port".
-		move(tgtport:ship, tgtport:position - tgtport:ship:position + vec_i*rsafe).
-		kill_relative_velocity(tgtport).
-		print "Ready for final approach".
+		print "[MET " + round(missiontime) + "s]: " + "Getting in front of target docking port".
+		move(targetNode:ship, targetNode:position - targetNode:ship:position + vec_i*rsafe).
+		kill_relative_velocity(targetNode).
+		print "[MET " + round(missiontime) + "s]: " + "Ready for final approach sequence".
 		unlock vec_i.
 		unlock vec_j.
 	}
 	
 	function dock_finalize {
-		parameter tgtport.
+		parameter targetNode, selectedNode.
 		
-		kill_relative_velocity(tgtport).
-		print "Starting final docking approach".
-		local dist is tgtport:nodeposition:mag.
+		kill_relative_velocity(targetNode).
+		print "[MET " + round(missiontime) + "s]: " + "Starting final docking approach".
+		local dist is targetNode:nodeposition:mag.
 		
 		// положение, в котором должен находиться центр 
 		// масс активного аппарата относительно цетра масс 
 		// цели, чтобы стыковочные узлы притянулись
-		local newposition is tgtport:facing:vector * dist + tgtport:nodeposition - ship:controlpart:position - tgtport:ship:position.
+		local newposition is targetNode:facing:vector * dist + targetNode:nodeposition - ship:controlpart:position - targetNode:ship:position.
 		
 		when 1 then {
-			set vdraw to VECDRAW(tgtport:nodeposition, newposition, RGB(255,0,0), "newposition", 1, true, 0.2, true).
+			local dist is (targetNode:nodeposition - ship:controlpart:position):mag.
+			set newposition to targetNode:facing:vector * dist + targetNode:nodeposition - ship:controlpart:position - targetNode:ship:position.
+			
+			set selectedNode_draw to VECDRAW(selectedNode:nodeposition, selectedNode:facing:vector*5, RGB(0,255,0), "", 1, true, 0.2, true).
+			set targetNode_draw to VECDRAW(targetNode:nodeposition, newposition, RGB(255,0,0), round(dist,2)+" m", 1, true, 0.2, false).
+			
 			preserve.
 		}
 		
-		until ((tgtport:nodeposition - ship:controlpart:position):mag < tgtport:acquirerange*1.25) 
+		until ((targetNode:nodeposition - ship:controlpart:position):mag < targetNode:acquirerange*1.25) 
 		OR (targetShip:elements:length > elem) {			
-			move(tgtport:ship, newposition, dock_vel@, dist * 0.1).
-			set newposition to tgtport:facing:vector * dist + tgtport:nodeposition - ship:controlpart:position - tgtport:ship:position.
+			move(targetNode:ship, newposition, dock_vel@, dist * 0.1).
+			set newposition to targetNode:facing:vector * dist + targetNode:nodeposition - ship:controlpart:position - targetNode:ship:position.
 			set dist to dist*0.9.
 		}
+		
+		print "[MET " + round(missiontime) + "s]: " + "Docking complete".
 		set ship:control:translation to V(0,0,0).
 		unlock all.
 		clearvecdraws().
 		
 		function dock_vel {
-			return min(max(v_safe((tgtport:nodeposition - ship:controlpart:position):mag) / 5, 0.1), 2).
+			return min(max(v_safe((targetNode:nodeposition - ship:controlpart:position):mag) / 5, 0.1), 2).
 		}
 	}
 }
