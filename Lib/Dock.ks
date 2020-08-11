@@ -28,20 +28,12 @@ function Dock {
 	set targetNode to targetShip:partstagged(targetNode)[0].
 	
 	//CHECKING IF THE NODES ARE VALID
-	if (ship:dockingports:length = 0) {
-		print "Error: the ship has no docking ports.".
-		return false.
-	}
-	else if (targetShip:dockingports:length = 0) {
-		print "Error: target ship has no docking ports.".
-		return false.
-	}
-	else if (NOT ship:dockingports:contains(selectedNode)) {
-		print "Error: the part selected as the ship's node is not docking port.".
+	if (NOT ship:dockingports:contains(selectedNode)) {
+		print "Error: the part selected as the ship's node is not docking port or the ship has no docking ports.".
 		return false.
 	}
 	else if (NOT targetShip:dockingports:contains(targetNode)) {
-		print "Error: part selected as target node is not docking port.".
+		print "Error: the part selected as target node is not docking port or target ship has no docking ports.".
 		return false.
 	}	
 	else if (targetNode:nodetype <> selectedNode:nodetype) {
@@ -141,14 +133,14 @@ function Dock {
 		parameter vel is default_vel@. // с какой скоростью двигаться
 		parameter tol is 0.5 * vel:call(). // в какой окрестности "засчитывается" попадание
 		
-		local lock v_wanted to vel:call() * (origin:position + pos):normalized.
+		local lock v_wanted to vel:call() * (origin:position + pos:call()):normalized.
 		local lock v_relative to ship:velocity:orbit - origin:velocity:orbit.
 		local elem is origin:elements:length.
 		// "попали" тогда, когда ship:position - origin:position = pos
 		// ship:position = pos + origin:position
 		// а ship:position всегда равно V(0,0,0)
-		until ((origin:position + pos):mag < tol) OR (origin:elements:length > elem) {	
-			local lock v_wanted to vel:call() * (origin:position + pos):normalized.
+		until ((origin:position + pos:call()):mag < tol) OR (origin:elements:length > elem) {	
+			local lock v_wanted to vel:call() * (origin:position + pos:call()):normalized.
 			local lock v_relative to ship:velocity:orbit - origin:velocity:orbit.
 			translatevec(v_wanted - v_relative).
 		}
@@ -168,23 +160,33 @@ function Dock {
 		// фаза I
 		if vxcl(vec_i, -targetNode:ship:position):mag < rsafe {
 			print "[MET " + round(missiontime) + "s]: " + "Going around the target".
-			move(targetNode:ship, vxcl(vec_j, -targetNode:ship:position) + vec_j*rsafe).
+			move(targetNode:ship, phase1@).
 			kill_relative_velocity(targetNode).
 		}
 		// фаза II
 		if vdot(-targetNode:ship:position, vec_i) < rsafe {
 			print "[MET " + round(missiontime) + "s]: " + "Getting in front of target".
-			move(targetNode:ship, (vec_i + vec_j)*rsafe).
+			move(targetNode:ship, phase2@).
 			kill_relative_velocity(targetNode).
 		}
 		// фаза III
 		// выравниваемся уже не по центру масс корабля-цели, а по оси стыковочного узла
 		print "[MET " + round(missiontime) + "s]: " + "Getting in front of target docking port".
-		move(targetNode:ship, targetNode:position - targetNode:ship:position + vec_i*rsafe).
+		move(targetNode:ship, phase3@).
 		kill_relative_velocity(targetNode).
 		print "[MET " + round(missiontime) + "s]: " + "Ready for final approach sequence".
 		unlock vec_i.
 		unlock vec_j.
+		
+		function phase1 {
+			return vxcl(vec_j, -targetNode:ship:position) + vec_j*rsafe.
+		}
+		function phase2 {
+			return (vec_i + vec_j)*rsafe.
+		}
+		function phase3 {
+			return targetNode:position - targetNode:ship:position + vec_i*rsafe.
+		}
 	}
 	
 	function dock_finalize {
@@ -194,25 +196,18 @@ function Dock {
 		print "[MET " + round(missiontime) + "s]: " + "Starting final docking approach".
 		local dist is targetNode:nodeposition:mag.
 		
-		// положение, в котором должен находиться центр 
-		// масс активного аппарата относительно цетра масс 
-		// цели, чтобы стыковочные узлы притянулись
-		local newposition is targetNode:facing:vector * dist + targetNode:nodeposition - ship:controlpart:position - targetNode:ship:position.
-		
 		when 1 then {
 			local dist is (targetNode:nodeposition - ship:controlpart:position):mag.
-			set newposition to targetNode:facing:vector * dist + targetNode:nodeposition - ship:controlpart:position - targetNode:ship:position.
 			
 			set selectedNode_draw to VECDRAW(selectedNode:nodeposition, selectedNode:facing:vector*5, RGB(0,255,0), "", 1, true, 0.2, true).
-			set targetNode_draw to VECDRAW(targetNode:nodeposition, newposition, RGB(255,0,0), round(dist,2)+" m", 1, true, 0.2, false).
+			set targetNode_draw to VECDRAW(targetNode:nodeposition, newposition(), RGB(255,0,0), round(dist,2)+" m", 1, true, 0.2, false).
 			
 			preserve.
 		}
 		
 		until ((targetNode:nodeposition - ship:controlpart:position):mag < targetNode:acquirerange*1.25) 
 		OR (targetShip:elements:length > elem) {			
-			move(targetNode:ship, newposition, dock_vel@, dist * 0.1).
-			set newposition to targetNode:facing:vector * dist + targetNode:nodeposition - ship:controlpart:position - targetNode:ship:position.
+			move(targetNode:ship, newposition@, dock_vel@, dist * 0.1).
 			set dist to dist*0.9.
 		}
 		
@@ -223,6 +218,12 @@ function Dock {
 		
 		function dock_vel {
 			return min(max(v_safe((targetNode:nodeposition - ship:controlpart:position):mag) / 5, 0.1), 2).
+		}
+		function newposition {
+			// положение, в котором должен находиться центр 
+			// масс активного аппарата относительно цетра масс 
+			// цели, чтобы стыковочные узлы притянулись
+			return targetNode:facing:vector * dist + targetNode:nodeposition - ship:controlpart:position - targetNode:ship:position.
 		}
 	}
 }
