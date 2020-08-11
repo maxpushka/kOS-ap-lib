@@ -200,7 +200,7 @@ function Dock {
 			local dist is (targetNode:nodeposition - ship:controlpart:position):mag.
 			
 			set selectedNode_draw to VECDRAW(selectedNode:nodeposition, selectedNode:facing:vector*5, RGB(0,255,0), "", 1, true, 0.2, true).
-			set targetNode_draw to VECDRAW(targetNode:nodeposition, newposition(), RGB(255,0,0), round(dist,2)+" m", 1, true, 0.2, false).
+			set targetNode_draw to VECDRAW(targetNode:nodeposition, newposition():normalized*dist, RGB(255,0,0), round(dist,2)+" m", 1, true, 0.2, false).
 			
 			preserve.
 		}
