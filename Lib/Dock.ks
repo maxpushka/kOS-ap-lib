@@ -1,5 +1,5 @@
 function Dock {
-	parameter targetShip, safeDistance is 100.
+	parameter targetShip, safeDistance is minSafeDist().
 	set targetShip to vessel(targetShip). //converting str to Vessel type object
 	
 	clearscreen.
@@ -18,17 +18,32 @@ function Dock {
 	
 	rcs on.
 	sas off.
+	ship:dockingports[0]:controlfrom.
 	set tgtport to targetShip:dockingports[0].
-	lock v_relative to ship:velocity:orbit - tgtport:ship:velocity:orbit.
-
+	set elem to targetShip:elements:length.
+	
+	//DATA PRINTOUT
+	print "Safety sphere radius: " + safeDistance + " m".
+	print " ". print " ". print " ". print " ". //leaving two lines free for data printout
+	print "Log:".
+	local placeholder is "          ".
+	when 1 then {
+		local v_relative is ship:velocity:orbit - tgtport:ship:velocity:orbit.
+		local dist is (tgtport:nodeposition - ship:controlpart:position):mag.
+		
+		print "Relative velocity  = " + round(v_relative:mag, 5) + placeholder at(0,2).
+		print "Distance to target = " + round(dist, 2) + placeholder at(0,3).
+		preserve.
+	}
+	
 	if tgtport:ship:position:mag < safedistance {
-		local facing0 to ship:facing.
+		local facing0 is ship:facing.
 		lock steering to facing0.
 		// Отходим от цели по прямой со скоростью 2 м/с
 		local lock v_relative to ship:velocity:orbit - tgtport:ship:velocity:orbit.
 		local lock tgtpos to tgtport:ship:position.
 		until tgtpos:mag > safedistance {
-			local tgtvel to -tgtpos:normalized * 2.
+			local tgtvel is -tgtpos:normalized * 2.
 			translatevec(tgtvel - v_relative).
 			wait 0.
 		}
@@ -36,39 +51,42 @@ function Dock {
 		unlock tgtpos.
 	}
 	
-	// не забудем затормозиться, когда отощли на безопасное расстояние
 	kill_relative_velocity(tgtport).
-	
-	unlock steering.
-	wait 0.
 	lock steering to lookdirup(-tgtport:facing:forevector, tgtport:facing:topvector).
 	approach(tgtport, safeDistance).
 	dock_finalize(tgtport).
+	return true.
 	
-	set ship:control:translation to V(0,0,0).
-	//wait until (ship:elements:length > 1).
-	when (ship:elements:length > 1) then {return true.}
+	function minSafeDist { //intended to use only on docking init
+		set box to vessel(targetShip):bounds.
+		set absmin to box:relmin:mag.
+		set absmax to box:relmax:mag.
+		
+		//max widespan of ship + 100 meters "keep-out sphere" radius
+		return ceiling(max(absmin, absmax)+100).
+	}
 	
 	function translatevec {
-		parameter vec.
-		local vec_copy to vec.
+		parameter vector.
+		local vec_copy is vector.
 		//нормируем вектор, чтобы от него осталось только направление смещения
-		if vec:sqrmagnitude > 1 {
-			set vec_copy to vec:normalized.
+		if vector:sqrmagnitude > 1 {
+			set vec_copy to vector:normalized.
 		}
-		local facing to ship:facing.
-		local tf to vdot(vec_copy, facing:vector).
-		local ts to vdot(vec_copy, facing:starvector).
-		local tt to vdot(vec_copy, facing:topvector).
+		local facing is ship:facing.
+		local tf is vdot(vec_copy, facing:vector).
+		local ts is vdot(vec_copy, facing:starvector).
+		local tt is vdot(vec_copy, facing:topvector).
 		set ship:control:translation to V(ts,tt,tf).
 	}
 	
 	function kill_relative_velocity {
-		parameter tgtport, thr is 0.1.
-		// thresh - относительная скорость, по достижении которой считаем цель неподвижной 
+		parameter tgtport, threshold is 0.1.
+		// threshold - относительная скорость, по достижении которой считаем цель неподвижной 
 		// (по умолчанию ставим на 0.1 м/с)
-		local v_relative to ship:velocity:orbit - tgtport:ship:velocity:orbit.
-		until v_relative:sqrmagnitude < thr*thr {
+		print "Killing relative velocity".
+		local v_relative is ship:velocity:orbit - tgtport:ship:velocity:orbit.
+		until v_relative:sqrmagnitude < threshold^2 {
 			translatevec(-v_relative).
 			wait 0.
 			set v_relative to ship:velocity:orbit - tgtport:ship:velocity:orbit.
@@ -86,23 +104,22 @@ function Dock {
 		parameter pos. // где нужно оказаться относительно положения origin
 		parameter vel is default_vel@. // с какой скоростью двигаться
 		parameter tol is 0.5 * vel:call(). // в какой окрестности "засчитывается" попадание
+		
 		local lock v_wanted to vel:call() * (origin:position + pos):normalized.
 		local lock v_relative to ship:velocity:orbit - origin:velocity:orbit.
 		// "попали" тогда, когда ship:position - origin:position = pos
 		// ship:position = pos + origin:position
 		// а ship:position всегда равно V(0,0,0)
-		until (origin:position + pos):mag < tol {
-			//set vel to v_safe(origin:position:mag).		
+		until (origin:position + pos):mag < tol {	
 			local lock v_wanted to vel:call() * (origin:position + pos):normalized.
 			local lock v_relative to ship:velocity:orbit - origin:velocity:orbit.
 			translatevec(v_wanted - v_relative).
 		}
 		unlock v_wanted.
 		unlock v_relative.
-		set ship:control:translation to V(0,0,0).
 		
 		function default_vel {
-			return v_safe(origin:position:mag+10).
+			return v_safe(origin:position:mag-safeDistance). // +10).
 		}
 	}
 	
@@ -110,21 +127,24 @@ function Dock {
 		parameter tgtport, rsafe.
 		local lock vec_i to tgtport:facing:vector.
 		local lock vec_j to vxcl(vec_i, -tgtport:ship:position):normalized.
-  
+		
 		// фаза I
 		if vxcl(vec_i, -tgtport:ship:position):mag < rsafe {
 			print "Going around the target".
 			move(tgtport:ship, vxcl(vec_j, -tgtport:ship:position) + vec_j*rsafe).
+			kill_relative_velocity(tgtport).
 		}
 		// фаза II
 		if vdot(-tgtport:ship:position, vec_i) < rsafe {
 			print "Getting in front of target".
 			move(tgtport:ship, (vec_i + vec_j)*rsafe).
+			kill_relative_velocity(tgtport).
 		}
 		// фаза III
 		// выравниваемся уже не по центру масс корабля-цели, а по оси стыковочного узла
 		print "Getting in front of target docking port".
 		move(tgtport:ship, tgtport:position - tgtport:ship:position + vec_i*rsafe).
+		kill_relative_velocity(tgtport).
 		print "Ready for final approach".
 		unlock vec_i.
 		unlock vec_j.
@@ -132,16 +152,30 @@ function Dock {
 	
 	function dock_finalize {
 		parameter tgtport.
+		
+		kill_relative_velocity(tgtport).
 		print "Starting final docking approach".
-		local dist to tgtport:nodeposition:mag. // * 0.75.
-		// положение, в котором должен находиться центр масс активного аппарата относительно цетра масс цели, чтобы стыковочные 
-		local newposition to tgtport:facing:vector * dist + tgtport:nodeposition - ship:controlpart:position - tgtport:ship:position.
-		until (tgtport:nodeposition - ship:controlpart:position):mag < tgtport:acquirerange*1.25 {
-			move(tgtport:ship, newposition, dock_vel@, dist * 0.8).
-			set dist to dist*0.75.
-			set newposition to tgtport:facing:vector * dist + tgtport:nodeposition - ship:controlpart:position - tgtport:ship:position.
+		local dist is tgtport:nodeposition:mag.
+		
+		// положение, в котором должен находиться центр 
+		// масс активного аппарата относительно цетра масс 
+		// цели, чтобы стыковочные узлы притянулись
+		local newposition is tgtport:facing:vector * dist + tgtport:nodeposition - ship:controlpart:position - tgtport:ship:position.
+		
+		when 1 then {
+			set vdraw to VECDRAW(tgtport:nodeposition, newposition, RGB(255,0,0), "newposition", 1, true, 0.2, true).
+			preserve.
 		}
+		
+		until ((tgtport:nodeposition - ship:controlpart:position):mag < tgtport:acquirerange*1.25) 
+		OR (targetShip:elements:length > elem) {			
+			move(tgtport:ship, newposition, dock_vel@, dist * 0.1).
+			set newposition to tgtport:facing:vector * dist + tgtport:nodeposition - ship:controlpart:position - tgtport:ship:position.
+			set dist to dist*0.9.
+		}
+		set ship:control:translation to V(0,0,0).
 		unlock all.
+		clearvecdraws().
 		
 		function dock_vel {
 			return min(max(v_safe((tgtport:nodeposition - ship:controlpart:position):mag) / 5, 0.1), 2).
