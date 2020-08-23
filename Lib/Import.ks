@@ -44,12 +44,33 @@ scriptDB:add("Rendezvous",
 		scriptDB["Derivator"], scriptDB["BurnTime"])
 	).
 scriptDB:add("Dock", list("Dock")).
+scriptDB:add("Land", list("Land", scriptDB["EngThrustIsp"])).
 
 function Import {
 	parameter scriptName.
 	
-	if scriptDB:haskey(scriptName) {imp(scriptDB[scriptName]).}
-	else {return false.}
+	if scriptName:istype("String") {
+		if scriptDB:haskey(scriptName) {imp(scriptDB[scriptName]).}
+		else {
+			print "Script " + scriptName + " does not exist".
+			return false.
+		}
+	}
+	else if scriptName:istype("List") {
+		for i in scriptName {
+			if scriptDB:haskey(i) {imp(scriptDB[i]).}
+			else {
+				print "Script " + i + " does not exist".
+				return false.
+			}
+		}
+	}
+	else {
+		print "Error: Import parameters must be either String or List of strings".
+		return false.
+	}
+	print "Import is successfully completed".
+	return true.
 	
 	function imp {
 		parameter scriptList.
@@ -59,6 +80,4 @@ function Import {
 		}
 		return true.
 	}
-	
-	return true.
 }
