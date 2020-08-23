@@ -1,9 +1,16 @@
 function Land {
-	parameter targetSite, touchdownSpeed is 0.5. // latlng(0,0), 1.5
+	parameter targetSite, touchdownSpeed is 0.5, hover_alt is 50.
+	
+	//============== LANDING PARAMETERS GUIDELINE ==============//
+	
+	// targetSite --> intended to be set using latlng(0,0) structure
+	// touchdownSpeed --> [m/s]
+	// hover_alt --> [m] altitude at which drone will hover before attempting final touchdown
+	
+	//======================== MAIN BODY =======================//
 	
 	clearscreen.
 	set md to 1.	
-	set hover_alt to 10. //altitude at which drone will hover before attempting final touchdown
 	set Isp_data to EngThrustIsp()[1].
 	print "Isp_data: " + Isp_data.
 	landing( targetSite, 3.0, hover_alt, Isp_data ).
@@ -17,7 +24,7 @@ function Land {
 		local stoptime is 0.
 		if md = 1 {
 			print "Mode 1".
-			waitorient(landsite).//, 5).
+			waitorient(landsite).//, 5*constant:degtorad).
 			nextmode().
 		}
 		if md = 2 {
@@ -117,7 +124,17 @@ function Land {
 		lock steering to lookdirup(dV, up:vector).
 		wait until vang(facing:vector, dV) < 1.
 		lock throttle to 1.
-		wait until GeoDist(corrtgt, vcrs(body:position, velocity:orbit)) < 50.
+		until GeoDist(corrtgt, vcrs(body:position, velocity:orbit)) < 50 {
+			set lngcorr to 90*orbit:period/body:rotationperiod.
+			set corrtgt to latlng(tgtcoord:lat, tgtcoord:lng + lngcorr).
+			lock tgtdir to corrtgt:heading. // направление на точку посадки с поправкой на вращение планеты
+			lock newvdir to heading(tgtdir, 0):vector. // направление скорости, которое должно быть, чтобы орбита прошла над заданной точкой
+			lock newsma to body:radius + (newpe + altitude)*0.5.
+			lock newvmag to sqrt( body:mu * (2/(body:radius + altitude) - 1/newsma) ).
+			set newv to newvmag*newvdir.
+			set dV to newv - velocity:orbit.
+			lock steering to lookdirup(dV, up:vector).
+		}
 		lock throttle to 0.
 		unlock steering.
 	}
