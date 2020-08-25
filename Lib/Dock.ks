@@ -45,7 +45,7 @@ function Dock {
 	print "Safety sphere radius: " + safeDistance + " m".
 	print " ". print " ". print " ". print " ". //leaving two lines free for data printout
 	print "Log:".
-	print "[MET " + round(missiontime) + "s]: " + "Sequence started".
+	print "Sequence started".
 	local placeholder is "          ".
 	when 1 then {
 		lock steering to lookdirup(-targetNode:facing:forevector, targetNode:facing:topvector).
@@ -59,7 +59,7 @@ function Dock {
 	
 	//LEAVING SAFERY SPHERE IF IN IT
 	if targetNode:ship:position:mag < safedistance {
-		print "[MET " + round(missiontime) + "s]: " + "Leaving safety sphere".
+		print "Leaving safety sphere".
 		
 		local facing0 is ship:facing.
 		lock steering to facing0.
@@ -112,7 +112,7 @@ function Dock {
 		parameter targetNode, threshold is 0.1.
 		// threshold - относительная скорость, по достижении которой считаем цель неподвижной 
 		// (по умолчанию ставим на 0.1 м/с)
-		print "[MET " + round(missiontime) + "s]: " + "Killing relative velocity".
+		print "Killing relative velocity".
 		local v_relative is ship:velocity:orbit - targetNode:ship:velocity:orbit.
 		until v_relative:sqrmagnitude < threshold^2 {
 			translatevec(-v_relative).
@@ -159,22 +159,22 @@ function Dock {
 		
 		// фаза I
 		if vxcl(vec_i, -targetNode:ship:position):mag < rsafe {
-			print "[MET " + round(missiontime) + "s]: " + "Going around the target".
+			print "Going around the target".
 			move(targetNode:ship, phase1@).
 			kill_relative_velocity(targetNode).
 		}
 		// фаза II
 		if vdot(-targetNode:ship:position, vec_i) < rsafe {
-			print "[MET " + round(missiontime) + "s]: " + "Getting in front of target".
+			print "Getting in front of target".
 			move(targetNode:ship, phase2@).
 			kill_relative_velocity(targetNode).
 		}
 		// фаза III
 		// выравниваемся уже не по центру масс корабля-цели, а по оси стыковочного узла
-		print "[MET " + round(missiontime) + "s]: " + "Getting in front of target docking port".
+		print "Getting in front of target docking port".
 		move(targetNode:ship, phase3@).
 		kill_relative_velocity(targetNode).
-		print "[MET " + round(missiontime) + "s]: " + "Ready for final approach sequence".
+		print "Ready for final approach sequence".
 		unlock vec_i.
 		unlock vec_j.
 		
@@ -193,7 +193,7 @@ function Dock {
 		parameter targetNode, selectedNode.
 		
 		kill_relative_velocity(targetNode).
-		print "[MET " + round(missiontime) + "s]: " + "Starting final docking approach".
+		print "Starting final docking approach".
 		local dist is targetNode:nodeposition:mag.
 		
 		when 1 then {
@@ -211,7 +211,7 @@ function Dock {
 			set dist to dist*0.9.
 		}
 		
-		print "[MET " + round(missiontime) + "s]: " + "Docking complete".
+		print "Docking complete".
 		set ship:control:translation to V(0,0,0).
 		unlock all.
 		clearvecdraws().

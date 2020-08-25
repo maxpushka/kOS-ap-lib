@@ -38,40 +38,40 @@ function Land {
 		local stoptime is 0.
 
 		if (md = 1) {
-			print  "[MET " + round(missiontime) + "s]: " + "Mode 1" at (0,0).
+			print "Mode 1" at (0,0).
 			waitorient(landsite, 5). //outputs on string 1
 			nextmode().
 		}
 
 		if (md = 2) {
-			print  "[MET " + round(missiontime) + "s]: " + "Mode 2" at (0,2).
+			print "Mode 2" at (0,2).
 			set tmax to min(ahmaxfrac, 3*mass*body:mu/(body:radius^2*availablethrust)).
 			rotateorbit(landsite).
 			nextmode().
 		}
 
 		if (md = 3) {
-			print  "[MET " + round(missiontime) + "s]: " + "Mode 3" at (0,3).
+			print "Mode 3" at (0,3).
 			set stoptime to waitdownrange(landsite, tmax).
 			nextmode().
 		}
 
 		if (md = 4) {
-			print  "[MET " + round(missiontime) + "s]: " + "Mode 4" at (0,4).
+			print "Mode 4" at (0,4).
 			if (not gear) { gear on. }
 			Descent(landsite, stoptime, hover_alt, Isp_data). //outputs on strings 5-11
 			nextmode().
 		}
 
 		if (md = 5) {
-			print  "[MET " + round(missiontime) + "s]: " + "Mode 5" at (0,12).
+			print "Mode 5" at (0,12).
 			VertDescent(hover_alt, touchdownSpeed). //outputs on string 13
 			nextmode().
 		}
 		set ship:control:pilotmainthrottle to 0.
 		unlock throttle.
 		unlock steering.
-		print  "[MET " + round(missiontime) + "s]: " + "Touchdown confirmed" at (0,14).
+		print "Touchdown confirmed" at (0,14).
 		wait 1.
 		return true.
 	}
