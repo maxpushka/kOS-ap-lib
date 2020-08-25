@@ -9,6 +9,18 @@ function Land {
 	
 	//======================== MAIN BODY =======================//
 	
+	//STAGING
+	set current_max to maxthrust.
+	when maxthrust < current_max OR availablethrust = 0 then {
+		set prevThrottle to throttle.
+		lock throttle to 0.
+		stage.
+		lock throttle to prevThrottle.
+		set current_max to maxthrust.
+		preserve.
+	}
+	
+	//MAIN BODY
 	clearscreen.
 	set md to 1.
 	local tmax is 0.9.
@@ -26,40 +38,40 @@ function Land {
 		local stoptime is 0.
 
 		if (md = 1) {
-			print "Mode 1".
-			waitorient(landsite, 5).
+			print  "[MET " + round(missiontime) + "s]: " + "Mode 1" at (0,0).
+			waitorient(landsite, 5). //outputs on string 1
 			nextmode().
 		}
 
 		if (md = 2) {
-			print "Mode 2".
+			print  "[MET " + round(missiontime) + "s]: " + "Mode 2" at (0,2).
 			set tmax to min(ahmaxfrac, 3*mass*body:mu/(body:radius^2*availablethrust)).
 			rotateorbit(landsite).
 			nextmode().
 		}
 
 		if (md = 3) {
-			print "Mode 3".
+			print  "[MET " + round(missiontime) + "s]: " + "Mode 3" at (0,3).
 			set stoptime to waitdownrange(landsite, tmax).
 			nextmode().
 		}
 
 		if (md = 4) {
-			print "Mode 4".
+			print  "[MET " + round(missiontime) + "s]: " + "Mode 4" at (0,4).
 			if (not gear) { gear on. }
-			Descent(landsite, stoptime, hover_alt, Isp_data).
+			Descent(landsite, stoptime, hover_alt, Isp_data). //outputs on strings 5-11
 			nextmode().
 		}
 
 		if (md = 5) {
-			print "Mode 5".
-			VertDescent(hover_alt, touchdownSpeed).
+			print  "[MET " + round(missiontime) + "s]: " + "Mode 5" at (0,12).
+			VertDescent(hover_alt, touchdownSpeed). //outputs on string 13
 			nextmode().
 		}
 		set ship:control:pilotmainthrottle to 0.
 		unlock throttle.
 		unlock steering.
-		print "Touchdown confirmed".
+		print  "[MET " + round(missiontime) + "s]: " + "Touchdown confirmed" at (0,14).
 		wait 1.
 		return true.
 	}
@@ -108,7 +120,7 @@ function Land {
 			set corrlng to tgtcoord:lng + OrbAngTo(tgtcoord:position)*orbit:period/body:rotationperiod.
 			set corrtgt to latlng(tgtcoord:lat, corrlng).
 			set nvec to vcrs( body:position, velocity:orbit ).
-			print "Angle to target projection: " + round(OrbAngTo(tgtcoord:position)) + "   " at (0,9).
+			print "Angle to target projection: " + round(OrbAngTo(tgtcoord:position)) + "   " at (0,1).
 		}
 		set warp to 0.
 	}
@@ -189,7 +201,10 @@ function Land {
 		local tau is ( ts*(a2*ts - 2*v0) - 6*dh ) / ( 2*v0 + (a0 + a2)*ts ).
 		local a1 is ( tau*(a2 - a0) - 2*v0 ) / ts - a2.
 
-		print "ts = " + round(ts) + " ; tau = " + round(tau) + " ; a0 = " + round(a0,2) + " ; a1 = " + round(a1,2) + " ; a2 = " + round(a2,2) at (0,11).
+		print "ts = " + round(ts) + " ; tau = " + round(tau) + " ;" at (0,8).
+		print "a0 = " + round(a0,2) + " ;" at(0,9).
+		print "a1 = " + round(a1,2) + " ;" at(0,10).
+		print "a2 = " + round(a2,2) at (0,11).
 		return list(a1, a2, tau).
 	}
 
@@ -265,19 +280,21 @@ function Land {
 			local ahvec is -hdir*(ah + hpid:update(time:seconds, dr - expdr)).
 			local avvec is up:vector*(av + geff + vpid:update(time:seconds, hasl - expalt)).
 
-			print "Hacc: " + round(ahvec:mag,2) + "  Vacc: " + round(avvec:mag,2) + "  Lacc: " + round(alatvec:mag,2) + "     " at (0,13).
-			print "Downrange current / predicted: " + round(dr/1000, 2) + " / " + round(expdr/1000, 2) + "      " at (0,14).
-			print "Altitude current / predicted: " + round(hasl/1000, 2) + " / " + round(expalt/1000, 2) + "      " at (0,15).
+			print "Hacc: " + round(ahvec:mag,2) + "     " at(0,5).
+			print "Vacc: " + round(avvec:mag,2) + "     " at (0,6).
+			print "Lacc: " + round(alatvec:mag,2) + "     " at (0,7).
+			print "Downrange current / predicted: " + round(dr/1000, 2) + " / " + round(expdr/1000, 2) + "      " at (0,8).
+			print "Altitude current / predicted: " + round(hasl/1000, 2) + " / " + round(expalt/1000, 2) + "      " at (0,9).
 
-			print "HPID output: " + round(hpid:output, 2) + "     " at (0,16).
+			print "HPID output: " + round(hpid:output, 2) + "     " at (0,10).
 			set avec to ahvec + avvec + alatvec.
 
 			local dup is up:vector.
 			if (dr <= 0 or vang(facing:vector, up:vector) <= 1) {set dup to uf.}
 			lock steering to lookdirup(avec,dup).
 			lock throttle to avec:mag/maxa.
-			if (avec:mag/maxa > 1.005) { print " WARNING: not enough TWR" at (25,33). }
-			else {print "                        " at (25,33).}
+			if (avec:mag/maxa > 1.005) { print " WARNING: not enough TWR" at (0,11). }
+			else {print "                        " at (0,11).}
 			if (dr > 0 and vang(facing:vector, up:vector) > 1) {set uf to facing:upvector.}
 			if (alt:radar < 2*hover_alt and verticalspeed > -2) {break.}
 			wait 0.
@@ -301,7 +318,7 @@ function Land {
 			set vh to vh / max(1, vh:mag).
 			lock steering to -velocity:surface.
 			
-			print "v_vetrical: " + round(verticalspeed,2) + "     " at(0,17).
+			print "Vy: " + round(verticalspeed,2) + "     " at(0,13).
 			if (verticalspeed < -abs(endspeed)) {
 				set av to ship:verticalspeed^2 * 0.5 / max(alt:radar - hover_alt, 0.1).
 			}
