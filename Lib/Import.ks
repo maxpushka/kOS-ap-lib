@@ -26,8 +26,8 @@ scriptDB:add("HohmannTransfer",
 	).
 scriptDB:add("Circularize", 
 	list("lib_orbit/Circularize.ks", scriptDB["EngThrustIsp"])).
-scriptDB:add("inclChange", 
-	list("lib_orbit/inclChange.ks", scriptDB["EngThrustIsp"])).
+scriptDB:add("Change_LAN_Inc", 
+	list("lib_orbit/Change_LAN_Inc.ks", scriptDB["EngThrustIsp"])).
 scriptDB:add("TransferToMoon", 
 	list("lib_orbit/TransferToMoon.ks", scriptDB["EngThrustIsp"],
 		scriptDB["HohmannTransfer"], scriptDB["VisVivaCalc"],
