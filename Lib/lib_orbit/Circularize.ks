@@ -1,15 +1,15 @@
 function Circularize {
-	parameter targetAp.
-	if (targetAp < 0) OR ((NOT (apoapsis >= targetAp)) AND (NOT (periapsis <= targetAp))) {
+	parameter targetAlt.
+	if (targetAlt < 0) OR ((NOT (apoapsis >= targetAlt)) AND (NOT (periapsis <= targetAlt))) {
   		return false.
 	}
 
 	SET SHIP:CONTROL:NEUTRALIZE TO TRUE. //block user control inputs
 	set ship:control:pilotmainthrottle to 0. //block user throttle inputs
 	
-	until (altitude < targetAp+100) AND (altitude > targetAp-100) {
+	until (altitude < targetAlt+100) AND (altitude > targetAlt-100) {
 		print "Current alt     = " + round(altitude,1) at(0,0).
-		print "Burn start alt  = " + targetAp at(0,1).
+		print "Burn start alt  = " + targetAlt at(0,1).
 		wait 1.
 	}
 	
@@ -17,9 +17,9 @@ function Circularize {
 	sas off.
 	rcs on.
 	
-	until (altitude < targetAp+1) AND (altitude > targetAp-1) {
+	until (altitude < targetAlt+1) AND (altitude > targetAlt-1) {
 		set v1 to ship:velocity:orbit.
-		set v2 to VXCL(ship:up:vector, ship:velocity:orbit):normalized*sqrt(body:Mu/(ship:body:radius+targetAp)).
+		set v2 to VXCL(ship:up:vector, ship:velocity:orbit):normalized*sqrt(body:Mu/(ship:body:radius+targetAlt)).
 		set v3 to v2-v1.
 		print "Correction dV = " + round(v3:mag,5) at(0,0).
 		lock steering to v3.
@@ -30,7 +30,7 @@ function Circularize {
 	set stopburn to false.
 	until stopburn {
 		set v1 to ship:velocity:orbit.
-		set v2 to VXCL(ship:up:vector, ship:velocity:orbit):normalized*sqrt(body:Mu/(ship:body:radius+targetAp)).
+		set v2 to VXCL(ship:up:vector, ship:velocity:orbit):normalized*sqrt(body:Mu/(ship:body:radius+targetAlt)).
 		set v3 to v2-v1.
 		
 		clearscreen.
