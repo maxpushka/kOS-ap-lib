@@ -17,29 +17,29 @@ To run them, put `.craft` file to
 ### Import scripts
 Simply add `runoncepath("0:/kOS_ap_lib/Lib/Import.ks").` to your script to add the import funtion.
 
-Now you can import the scripts listed under *[Lib structure](#Lib-structure)* section with `import("script_name").` while ommiting their extension.
+Now you can import the scripts listed under *[Lib structure](#lib-structure)* section with `import("script_name").` while ommiting their extension.
 For example, if you want to import `Ascend.ks`, run `import("Ascend").` and the *Ascend* function will be added to your script.
 
 ### *Lib* structure
 * lib_math
-	* [BisectionSolver.ks](#BisectionSolver.ks)
-	* [Derivator.ks](#Derivator.ks)
+	* [BisectionSolver.ks](#bisectionsolverks)
+	* [Derivator.ks](#derivatorks)
 * lib_orbit
-	* [Change_LAN_Inc.ks](#Change_LAN_Inc.ks)
-	* [Circularize.ks](#Circularize.ks)
-	* [HohmannTransfer.ks](#HohmannTransfer.ks)
-	* [TransferToMoon.ks](#TransferToMoon.ks)
+	* [Change_LAN_Inc.ks](#change_lan_incks)
+	* [Circularize.ks](#circularizeks)
+	* [HohmannTransfer.ks](#hohmanntransferks)
+	* [TransferToMoon.ks](#transfertomoonks)
 * lib_phys
-	* [BurnTime.ks](#BurnTime.ks)
-	* [EngThrustIsp.ks](#EngThrustIsp.ks)
-	* [MachNumber.ks](#MachNumber.ks)
-	* [VerticalAccelCalc.ks](#VerticalAccelCalc.ks)
-	* [VisVivaCalc.ks](#VisVivaCalc.ks)
-* [Ascend.ks](#Ascend.ks)
-* [Dock.ks](#Dock.ks)
-* [Import.ks](#Import.ks)
-* [Land.ks](#Land.ks)
-* [Rendezvous.ks](#Rendezvous.ks)
+	* [BurnTime.ks](#burntimeks)
+	* [EngThrustIsp.ks](#engthrustispks)
+	* [MachNumber.ks](#machnumberks)
+	* [VerticalAccelCalc.ks](#verticalaccelcalcks)
+	* [VisVivaCalc.ks](#visvivacalcks)
+* [Ascend.ks](#ascendks)
+* [Dock.ks](#dockks)
+* [Import.ks](#importks)
+* [Land.ks](#landks)
+* [Rendezvous.ks](#rendezvousks)
 
 
 ## Script guideline
