@@ -1,4 +1,5 @@
 
+  
 # kOS rocket AutoPilot Library
 kOS rocket Autopilot Library is a modular library created to simplify routine tasks execution for KSP players.
 
@@ -254,6 +255,25 @@ set dV to v2-v1.
 ```
 
 ### Ascend.ks
+> Ascend().
+>
+> **Parameters:**
+> targetOrbit --> (scalar)
+> targetIncl --> (scalar)
+> finalPitch --> (scalar)
+> gravTurnAlt --> (scalar)
+> gravTurnV --> (scalar)
+> accLimit --> (scalar)
+> pre_stage --> (scalar)
+> post_stage --> (scalar)
+> jettisonFairing --> (bool)
+> jettisonAlt --> (scalar)
+> deployAntennas --> (bool)
+> deploySolar --> (bool)
+> autowarp --> (bool)
+> **Return type:**
+
+Executes liftoff, ascend and circularization burn at specified apoapsis. Works on bodies both with atmosphere and without. Make sure that the rocket is controllable and well balanced.
 
 ### Dock.ks
 > Dock(targetShip, targetNode, selectedNode, safeDistance).
@@ -264,7 +284,7 @@ targetShip --> ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.
 > selectedNode --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) tag of the current ship's node you want to "Control from"\
 > safeDistance --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) the radius of the keep-out sphere. Set by default to max widespan of the target ship + 100 meters.
 
-Performs automatic docking. The current ship should be in close proximity of the target ship (idealy less than 2 km away from the target ship's position).
+Executes automatic docking. The current ship should be in close proximity of the target ship (idealy less than 2 km away from the target ship's position).
 The selected node and target node are identified using tag system. Make sure to tag these parts.
 Note: the script uses a lot of %whatever-RCS-fuel-name%, so you can manually switch off RCS for a few seconds and then turn it on again to save some fuel.
 
@@ -300,7 +320,7 @@ Imports scripts specified with parameters from *Lib* folder. Returns `true` if t
 > hover_alt --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) altitude at which the ship will hover, before attempting final touchdown. Set to 50 m by default.\
 > **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))
 
-Performs landing at specific coordinates. The script performs quite well with error margin up to 50 meters from the *targetSite*.
+Executes landing routine at specific coordinates. The script performs quite well with error margin up to 50 meters from the *targetSite*.
 
 **Usage example:**
 ```
