@@ -5,7 +5,7 @@ kOS rocket Autopilot Library is a modular library created to simplify routine ta
 
 ## Installation
 1. Install latest version of [kOS](https://github.com/KSP-KOS/KOS) mod
-2. Download and unzip the project folder into *Kerbal Space Program\Ships\Script* **without changing its structure**[^note]
+2. Download and unzip the project folder into *Kerbal Space Program\Ships\Script* **without changing its structure**<sup>[note](#note)</sup>
 
 
 ## Demo missions
@@ -17,29 +17,29 @@ To run them, put `.craft` file to
 ### Import scripts
 Simply add `runoncepath("0:/kOS_ap_lib/Lib/Import.ks").` to your script to add the import funtion.
 
-Now you can import the scripts listed under *[Lib structure](#lib-structure)* section with `import("script_name").` while ommiting their extension.
+Now you can import the scripts listed under *[Lib structure](#Lib-structure)* section with `import("script_name").` while ommiting their extension.
 For example, if you want to import `Ascend.ks`, run `import("Ascend").` and the *Ascend* function will be added to your script.
 
 ### *Lib* structure
 * lib_math
-	* [BisectionSolver.ks](#bisectionsolverks)
-	* [Derivator.ks](#derivatorks)
+	* [BisectionSolver.ks](#BisectionSolver.ks)
+	* [Derivator.ks](#Derivator.ks)
 * lib_orbit
-	* [Change_LAN_Inc.ks](#change_lan_incks)
-	* [Circularize.ks](#circularizeks)
-	* [HohmannTransfer.ks](#hohmanntransferks)
-	* [TransferToMoon.ks](#transfertomoonks)
+	* [Change_LAN_Inc.ks](#Change_LAN_Inc.ks)
+	* [Circularize.ks](#Circularize.ks)
+	* [HohmannTransfer.ks](#HohmannTransfer.ks)
+	* [TransferToMoon.ks](#TransferToMoon.ks)
 * lib_phys
-	* [BurnTime.ks](#burntimeks)
-	* [EngThrustIsp.ks](#engthrustispks)
-	* [MachNumber.ks](#machnumberks)
-	* [VerticalAccelCalc.ks](#verticalaccelcalcks)
-	* [VisVivaCalc.ks](#visvivacalcks)
-* [Ascend.ks](#ascendks)
-* [Dock.ks](#dockks)
-* [Import.ks](#importks)
-* [Land.ks](#landks)
-* [Rendezvous.ks](#rendezvousks)
+	* [BurnTime.ks](#BurnTime.ks)
+	* [EngThrustIsp.ks](#EngThrustIsp.ks)
+	* [MachNumber.ks](#MachNumber.ks)
+	* [VerticalAccelCalc.ks](#VerticalAccelCalc.ks)
+	* [VisVivaCalc.ks](#VisVivaCalc.ks)
+* [Ascend.ks](#Ascend.ks)
+* [Dock.ks](#Dock.ks)
+* [Import.ks](#Import.ks)
+* [Land.ks](#Land.ks)
+* [Rendezvous.ks](#Rendezvous.ks)
 
 
 ## Script guideline
@@ -146,9 +146,9 @@ Circularize(newApPe). // performs circularization at altitude of 100000 meters
 > HohmannTransfer(targetR, burnIn, autowarp).
 > 
 > **Parameters:** targetAlt ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters), burnIn ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds), autowarp ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))\
-> targetR --> radius of target orbit\
-> burnIn --> execute burn in (time:seconds+burnIn) seconds\
-> autowarp --> autowarp to burn position\
+> targetR --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) radius of target orbit\
+> burnIn --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) execute burn in (time:seconds+burnIn) seconds\
+> autowarp --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) autowarp to burn position\
 > **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))
 
 Executes one-burn [Hohmann transfer](https://en.wikipedia.org/wiki/Hohmann_transfer_orbit) in *burnIn* seconds. Returns `true` if maneuver is completed successfuly.
@@ -261,8 +261,8 @@ set dV to v2-v1.
 > **Parameters:**
 targetShip --> ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string)) the name of the target ship\
 > targetNode --> ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string)) tag of  target ship's node you want to dock to\
-> selectedNode --> tag of the current ship's node you want to "Control from"\
-> safeDistance --> (scalar) the radius of the keep-out sphere. Set by default to max widespan of the target ship + 100 meters.
+> selectedNode --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) tag of the current ship's node you want to "Control from"\
+> safeDistance --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) the radius of the keep-out sphere. Set by default to max widespan of the target ship + 100 meters.
 
 Performs automatic docking. The current ship should be in close proximity of the target ship (idealy less than 2 km away from the target ship's position).
 The selected node and target node are identified using tag system. Make sure to tag these parts.
@@ -296,8 +296,8 @@ Imports scripts specified with parameters from *Lib* folder. Returns `true` if t
 >
 > **Parameters:**\
 > targetSite --> ([latlng](https://ksp-kos.github.io/KOS/math/geocoordinates.html?highlight=latlng#LATLNG)) geocoordinates of the landsite.\
-> touchdownSpeed --> (scalar, m/s) the speed of final touchdown. Set to 1 m/s by default.\
-> hover_alt --> (scalar, meters) altitude at which the ship will hover, before attempting final touchdown. Set to 50 m by default.\
+> touchdownSpeed --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), m/s) the speed of final touchdown. Set to 1 m/s by default.\
+> hover_alt --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) altitude at which the ship will hover, before attempting final touchdown. Set to 50 m by default.\
 > **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))
 
 Performs landing at specific coordinates. The script performs quite well with error margin up to 50 meters from the *targetSite*.
@@ -312,11 +312,34 @@ Land(targetSite, touchdownSpeed, hover_alt).
 ```
 
 ### Rendezvous.ks
+> Rendezvous(targetShip, finalDistance, autowarp).
+>
+> **Parameters:**\
+> targetShip --> ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string)) target ship's name
+> finalDistance -->  ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) final distance to target ship. Set to 1000 by default.
+> autowarp --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) . Set to false by default.
 
+Performs orbital rendezvous. Note that target ship must be in the same sphere of influence as the current ship, otherwise exception will be risen. 
+It's highly recommended to leave autowarp set to true.
+
+**Usage example:**
+```
+set targetShip to "MyShipsName".
+set final distance to 125.
+Rendezvous(targetShip, finalDistance).
+```
+```
+set targetShip to "ISS".
+set final distance to 800.
+set autowarp to false.
+Rendezvous(targetShip, finalDistance, autowarp).
+```
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
 
-[^note]: Though it's not recommended, it's possible to change the structure, but **the *Lib* folder should stay immutable**!
+---
+#### Note
+Though it's not recommended, it's possible to change the structure, but **the *Lib* folder should stay immutable**!
 To do this, simply edit the first line of *Import.ks*. The `path` variable points to the place where the *Lib* folder is located:
 `global path is "0:/your/path/to/Lib/".`
