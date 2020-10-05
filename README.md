@@ -1,3 +1,4 @@
+
 # kOS rocket AutoPilot Library
 kOS rocket Autopilot Library is a modular library created to simplify routine tasks execution for KSP players.
 
@@ -45,8 +46,8 @@ For example, if you want to import `Ascend.ks`, run `import("Ascend").` and the 
 ### BisectionSolver.ks
 > BisectionSolver(scoreFunction, point1, point2).
 > 
-> **Parameters:** scoreFunction ([`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html)), point1 )[`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)), point2 ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))
-> **Return type:** [`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html)
+> **Parameters:** scoreFunction ([`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html)), point1 )[`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)), point2 ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))\
+> **Return type:** [`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html)\
 > **[Delegate](https://ksp-kos.github.io/KOS/language/delegates.html) return type**: [`list`](https://ksp-kos.github.io/KOS/structures/collections/list.html#structure:LIST "LIST structure") of [`scalars`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)
 
 This script implements [bisection solver](https://en.wikipedia.org/wiki/Bisection_method). First, you need to setup the solver, then to call it just like the regular function or using `:call` suffix. You'll get a list, that contains final search range ([0] and [1] positions) and the answear ( [2] position). The final search range can be reused in loop to get more precise results (see *Usage examples* section).
@@ -75,9 +76,9 @@ until *some_condition* {
 #### MakeDerivator_N
 > MakeDerivator_N(init_value, N_count).
 >
-> **Parameters:** init_value ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)), N_count ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar); set to 0 by default)
-> **Return type:** [`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html)
-> **[`Delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) parameters**: [`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)
+> **Parameters:** init_value ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)), N_count ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar); set to 0 by default)\
+> **Return type:** [`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html)\
+> **[`Delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) parameters**: [`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)\
 > **[`Delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) return type**: the derivative value of *init_value* ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))
 
 First, you need to setup the derivator, then to call it with parameter just like the regular function or using `:call` suffix. You'll get the `init_value` derivative of order N.
@@ -93,9 +94,9 @@ set acceleration to derivator:call(v2).
 #### MakeDerivator_dt
 > MakeDerivator_dt(init_value, time_interval).
 >
-> **Parameters:** init_value ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)), time_interval ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds; set to 0 by default)
-> **Return type:** [`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html)
-> **[`Delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) parameters**: [`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)
+> **Parameters:** init_value ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)), time_interval ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds; set to 0 by default)\
+> **Return type:** [`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html)\
+> **[`Delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) parameters**: [`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)\
 > **[`Delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) return type**: the time derivative value of *init_value* ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))
 
 First, you need to setup the derivator, then to call it with parameter just like the regular function or using `:call` suffix. You'll get the time derivative of `init_value`.
@@ -111,9 +112,9 @@ set jerk to derivator:call(acceleration2).
 ### Change_LAN_Inc.ks
 > Change_LAN_Inc(DesiredOrbit).
 >
-> **Parameters:** DesiredOrbit ([`lexicon`](https://ksp-kos.github.io/KOS/structures/collections/lexicon.html) with "LAN" and "INC" fields)
-> "LAN" --> [longitude of ascending node](https://en.wikipedia.org/wiki/Longitude_of_the_ascending_node) in degrees
-> "INC" --> [orbital inclination](https://en.wikipedia.org/wiki/Orbital_inclination) in degrees
+> **Parameters:** DesiredOrbit ([`lexicon`](https://ksp-kos.github.io/KOS/structures/collections/lexicon.html) with "LAN" and "INC" fields)\
+> "LAN" --> [longitude of ascending node](https://en.wikipedia.org/wiki/Longitude_of_the_ascending_node) in degrees\
+> "INC" --> [orbital inclination](https://en.wikipedia.org/wiki/Orbital_inclination) in degrees\
 > **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))
 
 Performs orbital maneuver to change longitude of ascending node and inclination of orbit. Returns `true` if it is successfuly complete.
@@ -129,7 +130,7 @@ Change_LAN_Inc(newOrbit). // performs maneuver to match INC and LAN with Minmus
 ### Circularize.ks
 > Circularize(targetAlt).
 > 
-> **Parameters:** targetAlt ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar) > 0)
+> **Parameters:** targetAlt ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar) > 0)\
 > **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))
 
 Performs circularization at specified altitude (*targetAlt* parameter). Returns `true` if maneuver is completed successfuly.
@@ -144,10 +145,10 @@ Circularize(newApPe). // performs circularization at altitude of 100000 meters
 ### HohmannTransfer.ks
 > HohmannTransfer(targetR, burnIn, autowarp).
 > 
-> **Parameters:** targetAlt ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters), burnIn ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds), autowarp ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))
-> targetR --> radius of target orbit
-> burnIn --> execute burn in (time:seconds+burnIn) seconds
-> autowarp --> autowarp to burn position
+> **Parameters:** targetAlt ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters), burnIn ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds), autowarp ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))\
+> targetR --> radius of target orbit\
+> burnIn --> execute burn in (time:seconds+burnIn) seconds\
+> autowarp --> autowarp to burn position\
 > **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))
 
 Executes one-burn [Hohmann transfer](https://en.wikipedia.org/wiki/Hohmann_transfer_orbit) in *burnIn* seconds. Returns `true` if maneuver is completed successfuly.
@@ -162,7 +163,7 @@ HohmannTransfer(targetR, burnIn).
 ### TransferToMoon.ks
 > TransferToMoon(targetMoon, targetPe, autowarp, insertionBurn).
 >
-> **Parameters:** targetMoon ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string)), targetPe ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar) > 0), autowarp ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean); set to `true` by default), insertionBurn ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean); set to `true` by default)
+> **Parameters:** targetMoon ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string)), targetPe ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar) > 0), autowarp ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean); set to `true` by default), insertionBurn ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean); set to `true` by default)\
 > **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))
 
 Performs a set of maneuvers to transfer the vessel to the target Moon. Using this script one can perform Moon flyby (just set *insertionBurn* to `false`).
@@ -177,9 +178,9 @@ TransferToMoon(targetMoon, targetPe).
 ### BurnTime.ks
 > BurnTime(dV, Rad).
 >
-> **Parameters:** dV ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)), Rad ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))
-> dV --> the amount of dV that you need to burn
-> altRad --> altitude above sea level
+> **Parameters:** dV ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)), Rad ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))\
+> dV --> the amount of dV that you need to burn\
+> altRad --> altitude above sea level\
 > **Return:** seconds ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))
 
 Calculates the time in seconds required to burn specified amount of dV on 100% throttle. 
@@ -194,10 +195,10 @@ BurnTime(dV, altRad).
 ### EngThrustIsp.ks
 > EngThrustIsp().
 >
-> **Parameters:** takes no parameters
-> **Return type:** [`list`](https://ksp-kos.github.io/KOS/structures/collections/list.html#structure:LIST "LIST structure") of [`scalars`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)
-> **Return list structure:**
->  [0] --> total current maximum thrust accounting for thrust limiter and fuel availability (kN)
+> **Parameters:** takes no parameters\
+> **Return type:** [`list`](https://ksp-kos.github.io/KOS/structures/collections/list.html#structure:LIST "LIST structure") of [`scalars`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)\
+> **Return list structure:**\
+>  [0] --> total current maximum thrust accounting for thrust limiter and fuel availability (kN)\
 >  [1] --> total [*I<sub>sp</sub>*](https://en.wikipedia.org/wiki/Specific_impulse) of all active engines (seconds)
 
 Calculates total [thrust](https://en.wikipedia.org/wiki/Thrust) (in kN) and [*I<sub>sp</sub>*](https://en.wikipedia.org/wiki/Specific_impulse) (in seconds) of all currently active engines.
@@ -212,7 +213,7 @@ set isp to engines_data[1].
 ### MachNumber.ks
 > MachNumber().
 >
-> **Parameters:** takes no parameters
+> **Parameters:** takes no parameters\
 > **Return:** Mach number ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))
 
 Returns current [Mach number](https://en.wikipedia.org/wiki/Mach_number). Returns zero if out of atmosphere
@@ -223,7 +224,7 @@ Returns current [Mach number](https://en.wikipedia.org/wiki/Mach_number). Return
 ### VerticalAccelCalc.ks
 > VerticalAccelCalc().
 >
-> **Parameters:** takes no parameters
+> **Parameters:** takes no parameters\
 > **Return:** vertical acceleration value ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), m/s^2)
 
 Returns current vertical acceleration.
@@ -234,7 +235,7 @@ Returns current vertical acceleration.
 ### VisVivaCalc.ks
 > VisVivaCalc(r, a).
 >
-> **Parameters:** r ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), altitude above sea level), a ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), [semi-major axis](https://en.wikipedia.org/wiki/Semi-major_and_semi-minor_axes#Energy;_calculation_of_semi-major_axis_from_state_vectors))
+> **Parameters:** r ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), altitude above sea level), a ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), [semi-major axis](https://en.wikipedia.org/wiki/Semi-major_and_semi-minor_axes#Energy;_calculation_of_semi-major_axis_from_state_vectors))\
 > **Return:** velocity ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), m/s)
 
 Implementation of [vis-viva_equation](https://en.wikipedia.org/wiki/Vis-viva_equation). Note that *r* parameter is altitude *above sea level*.
@@ -258,9 +259,9 @@ set dV to v2-v1.
 > Dock(targetShip, targetNode, selectedNode, safeDistance).
 >
 > **Parameters:**
-targetShip --> ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string)) the name of the target ship
-> targetNode --> ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string)) tag of  target ship's node you want to dock to
-> selectedNode --> tag of the current ship's node you want to "Control from"
+targetShip --> ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string)) the name of the target ship\
+> targetNode --> ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string)) tag of  target ship's node you want to dock to\
+> selectedNode --> tag of the current ship's node you want to "Control from"\
 > safeDistance --> (scalar) the radius of the keep-out sphere. Set by default to max widespan of the target ship + 100 meters.
 
 Performs automatic docking. The current ship should be in close proximity of the target ship (idealy less than 2 km away from the target ship's position).
@@ -281,7 +282,7 @@ Dock("Agena", "ab", "n2", 250). // safeDistance is set to 250 meters
 > Import("script_name").
 > Import(list("script1", "script2")).
 > 
-> **Parameters:** [`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string) *OR* [`list`](https://ksp-kos.github.io/KOS/structures/collections/list.html#structure:LIST "LIST structure") of strings
+> **Parameters:** [`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string) *OR* [`list`](https://ksp-kos.github.io/KOS/structures/collections/list.html#structure:LIST "LIST structure") of strings\
 > **Return type:** [`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)
 
 Imports scripts specified with parameters from *Lib* folder. Returns `true` if the import was successful, otherwise `false` and a warning message pops up on a terminal screen.
@@ -293,10 +294,10 @@ Imports scripts specified with parameters from *Lib* folder. Returns `true` if t
 ### Land.ks
 > Land(targetSite, touchdownSpeed, hover_alt).
 >
-> **Parameters:**
-> targetSite --> ([latlng](https://ksp-kos.github.io/KOS/math/geocoordinates.html?highlight=latlng#LATLNG)) geocoordinates of the landsite.
-> touchdownSpeed --> (scalar, m/s) the speed of final touchdown. Set to 1 m/s by default.
-> hover_alt --> (scalar, meters) altitude at which the ship will hover, before attempting final touchdown. Set to 50 m by default.
+> **Parameters:**\
+> targetSite --> ([latlng](https://ksp-kos.github.io/KOS/math/geocoordinates.html?highlight=latlng#LATLNG)) geocoordinates of the landsite.\
+> touchdownSpeed --> (scalar, m/s) the speed of final touchdown. Set to 1 m/s by default.\
+> hover_alt --> (scalar, meters) altitude at which the ship will hover, before attempting final touchdown. Set to 50 m by default.\
 > **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))
 
 Performs landing at specific coordinates. The script performs quite well with error margin up to 50 meters from the *targetSite*.
