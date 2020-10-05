@@ -295,7 +295,7 @@ Imports scripts specified with parameters from *Lib* folder. Returns `true` if t
 > Land(targetSite, touchdownSpeed, hover_alt).
 >
 > **Parameters:**\
-> targetSite --> ([latlng](https://ksp-kos.github.io/KOS/math/geocoordinates.html?highlight=latlng#LATLNG)) geocoordinates of the landsite.\
+> targetSite --> ([`latlng`](https://ksp-kos.github.io/KOS/math/geocoordinates.html?highlight=latlng#LATLNG)) geocoordinates of the landsite.\
 > touchdownSpeed --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), m/s) the speed of final touchdown. Set to 1 m/s by default.\
 > hover_alt --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) altitude at which the ship will hover, before attempting final touchdown. Set to 50 m by default.\
 > **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))
@@ -315,9 +315,9 @@ Land(targetSite, touchdownSpeed, hover_alt).
 > Rendezvous(targetShip, finalDistance, autowarp).
 >
 > **Parameters:**\
-> targetShip --> ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string)) target ship's name
-> finalDistance -->  ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) final distance to target ship. Set to 1000 by default.
-> autowarp --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) . Set to false by default.
+> targetShip --> ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string)) target ship's name\
+> finalDistance -->  ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) final distance to target ship. Set to 1000 by default.\
+> autowarp --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) . Set to false by default.\
 
 Performs orbital rendezvous. Note that target ship must be in the same sphere of influence as the current ship, otherwise exception will be risen. 
 It's highly recommended to leave autowarp set to true.
