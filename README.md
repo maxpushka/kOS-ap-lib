@@ -1,7 +1,5 @@
-
-  
 # kOS rocket AutoPilot Library
-kOS rocket Autopilot Library is a modular library created to simplify routine tasks execution for KSP players.
+kOS rocket Autopilot Library is a modular library created to simplify routine tasks execution for KSP players. Compatible with [RemoteTech 2](https://remotetechnologiesgroup.github.io/RemoteTech/) mod
 
 
 ## Installation
@@ -48,7 +46,7 @@ For example, if you want to import `Ascend.ks`, run `import("Ascend").` and the 
 > BisectionSolver(scoreFunction, point1, point2).
 > 
 > **Parameters:** scoreFunction ([`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html)), point1 )[`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)), point2 ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))\
-> **Return type:** [`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html)\
+> **Return type:** [`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) function\
 > **[Delegate](https://ksp-kos.github.io/KOS/language/delegates.html) return type**: [`list`](https://ksp-kos.github.io/KOS/structures/collections/list.html#structure:LIST "LIST structure") of [`scalars`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)
 
 This script implements [bisection solver](https://en.wikipedia.org/wiki/Bisection_method). First, you need to setup the solver, then to call it just like the regular function or using `:call` suffix. You'll get a list, that contains final search range ([0] and [1] positions) and the answear ( [2] position). The final search range can be reused in loop to get more precise results (see *Usage examples* section).
@@ -78,7 +76,7 @@ until *some_condition* {
 > MakeDerivator_N(init_value, N_count).
 >
 > **Parameters:** init_value ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)), N_count ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar); set to 0 by default)\
-> **Return type:** [`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html)\
+> **Return:** [`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) function\
 > **[`Delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) parameters**: [`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)\
 > **[`Delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) return type**: the derivative value of *init_value* ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))
 
@@ -96,7 +94,7 @@ set acceleration to derivator:call(v2).
 > MakeDerivator_dt(init_value, time_interval).
 >
 > **Parameters:** init_value ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)), time_interval ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds; set to 0 by default)\
-> **Return type:** [`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html)\
+> **Return type:** [`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) function\
 > **[`Delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) parameters**: [`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)\
 > **[`Delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) return type**: the time derivative value of *init_value* ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))
 
@@ -116,7 +114,7 @@ set jerk to derivator:call(acceleration2).
 > **Parameters:** DesiredOrbit ([`lexicon`](https://ksp-kos.github.io/KOS/structures/collections/lexicon.html) with "LAN" and "INC" fields)\
 > "LAN" --> [longitude of ascending node](https://en.wikipedia.org/wiki/Longitude_of_the_ascending_node) in degrees\
 > "INC" --> [orbital inclination](https://en.wikipedia.org/wiki/Orbital_inclination) in degrees\
-> **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))
+> **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)); `true` if successfuly completed, otherwise `false`
 
 Performs orbital maneuver to change longitude of ascending node and inclination of orbit. Returns `true` if it is successfuly complete.
 
@@ -132,7 +130,7 @@ Change_LAN_Inc(newOrbit). // performs maneuver to match INC and LAN with Minmus
 > Circularize(targetAlt).
 > 
 > **Parameters:** targetAlt ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar) > 0)\
-> **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))
+> **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)); `true` if successfuly completed, otherwise `false`
 
 Performs circularization at specified altitude (*targetAlt* parameter). Returns `true` if maneuver is completed successfuly.
 *targetAlt* value should be between periapsis and apoapsis value. If it's not, script will return `false`.
@@ -150,7 +148,7 @@ Circularize(newApPe). // performs circularization at altitude of 100000 meters
 > targetR --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) radius of target orbit\
 > burnIn --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) execute burn in (time:seconds+burnIn) seconds\
 > autowarp --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) autowarp to burn position\
-> **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))
+> **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)); `true` if successfuly completed, otherwise `false`
 
 Executes one-burn [Hohmann transfer](https://en.wikipedia.org/wiki/Hohmann_transfer_orbit) in *burnIn* seconds. Returns `true` if maneuver is completed successfuly.
 
@@ -165,7 +163,7 @@ HohmannTransfer(targetR, burnIn).
 > TransferToMoon(targetMoon, targetPe, autowarp, insertionBurn).
 >
 > **Parameters:** targetMoon ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string)), targetPe ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar) > 0), autowarp ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean); set to `true` by default), insertionBurn ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean); set to `true` by default)\
-> **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))
+> **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)); `true` if successfuly completed, otherwise `false`
 
 Performs a set of maneuvers to transfer the vessel to the target Moon. Using this script one can perform Moon flyby (just set *insertionBurn* to `false`).
 
@@ -197,7 +195,7 @@ BurnTime(dV, altRad).
 > EngThrustIsp().
 >
 > **Parameters:** takes no parameters\
-> **Return type:** [`list`](https://ksp-kos.github.io/KOS/structures/collections/list.html#structure:LIST "LIST structure") of [`scalars`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)\
+> **Return:** [`list`](https://ksp-kos.github.io/KOS/structures/collections/list.html#structure:LIST "LIST structure") of [`scalars`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)\
 > **Return list structure:**\
 >  [0] --> total current maximum thrust accounting for thrust limiter and fuel availability (kN)\
 >  [1] --> total [*I<sub>sp</sub>*](https://en.wikipedia.org/wiki/Specific_impulse) of all active engines (seconds)
@@ -258,22 +256,24 @@ set dV to v2-v1.
 > Ascend().
 >
 > **Parameters:**
-> targetOrbit --> (scalar)
-> targetIncl --> (scalar)
-> finalPitch --> (scalar)
-> gravTurnAlt --> (scalar)
-> gravTurnV --> (scalar)
-> accLimit --> (scalar)
-> pre_stage --> (scalar)
-> post_stage --> (scalar)
-> jettisonFairing --> (bool)
-> jettisonAlt --> (scalar)
-> deployAntennas --> (bool)
-> deploySolar --> (bool)
-> autowarp --> (bool)
-> **Return type:**
+> targetOrbit --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) height of the target orbit (= apoapsis = periapsis)
+> targetIncl --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), degrees) inclination of the target orbit
+> finalPitch --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), degrees) angle to the horizon when leaving the atmosphere
+> gravTurnAlt --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) altitude value at which the gravity turn begins
+> gravTurnV --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), m/s) velocity value at which the gravity turn begins
+> accLimit --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), g-force) limits the amount of g-force that the rocket is expose to
+> pre_stage --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds) wait before staging
+> post_stage --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds) wait after staging
+> jettisonFairing --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean), meters) automatic fairing jettison
+> jettisonAlt --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) altitude at which fairing will be jettisoned
+> deployAntennas --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) automatic antenna deployment
+> deploySolar --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) automatic deployment of solar panels
+> autowarp --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) autowarp to burn position
+> **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)); `true` if successfuly completed, otherwise `false`
 
-Executes liftoff, ascend and circularization burn at specified apoapsis. Works on bodies both with atmosphere and without. Make sure that the rocket is controllable and well balanced.
+Executes liftoff, ascend and circularization burn at specified apoapsis. The script works both on bodies with atmosphere and without. Make sure that the rocket is controllable and well balanced.
+* Gravity turn begins when gravTurnAlt > current altitude OR gravTurnV  > current velocity
+* Fairing jettison, deployment of antennas and solar pannels is executed AFTER the rocket reached both [maximum dynamic pressure](https://en.wikipedia.org/wiki/Dynamic_pressure "Dynamic pressure") (max Q) and altitude of 50000 meters
 
 ### Dock.ks
 > Dock(targetShip, targetNode, selectedNode, safeDistance).
@@ -283,6 +283,7 @@ targetShip --> ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.
 > targetNode --> ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string)) tag of  target ship's node you want to dock to\
 > selectedNode --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) tag of the current ship's node you want to "Control from"\
 > safeDistance --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) the radius of the keep-out sphere. Set by default to max widespan of the target ship + 100 meters.
+> **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)); `true` if successfuly completed, otherwise `false`
 
 Executes automatic docking. The current ship should be in close proximity of the target ship (idealy less than 2 km away from the target ship's position).
 The selected node and target node are identified using tag system. Make sure to tag these parts.
@@ -303,7 +304,7 @@ Dock("Agena", "ab", "n2", 250). // safeDistance is set to 250 meters
 > Import(list("script1", "script2")).
 > 
 > **Parameters:** [`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string) *OR* [`list`](https://ksp-kos.github.io/KOS/structures/collections/list.html#structure:LIST "LIST structure") of strings\
-> **Return type:** [`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)
+> **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)); `true` if all scripts were successfuly loaded, otherwise `false`
 
 Imports scripts specified with parameters from *Lib* folder. Returns `true` if the import was successful, otherwise `false` and a warning message pops up on a terminal screen.
 
@@ -318,7 +319,7 @@ Imports scripts specified with parameters from *Lib* folder. Returns `true` if t
 > targetSite --> ([`latlng`](https://ksp-kos.github.io/KOS/math/geocoordinates.html?highlight=latlng#LATLNG)) geocoordinates of the landsite.\
 > touchdownSpeed --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), m/s) the speed of final touchdown. Set to 1 m/s by default.\
 > hover_alt --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) altitude at which the ship will hover, before attempting final touchdown. Set to 50 m by default.\
-> **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))
+> **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)); `true` if successfuly completed, otherwise `false`
 
 Executes landing routine at specific coordinates. The script performs quite well with error margin up to 50 meters from the *targetSite*.
 
@@ -337,7 +338,8 @@ Land(targetSite, touchdownSpeed, hover_alt).
 > **Parameters:**\
 > targetShip --> ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string)) target ship's name\
 > finalDistance -->  ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) final distance to target ship. Set to 1000 by default.\
-> autowarp --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) . Set to false by default.\
+> autowarp --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) autowarp to burn position . Set to false by default.\
+> **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)); `true` if successfuly completed, otherwise `false`
 
 Performs orbital rendezvous. Note that target ship must be in the same sphere of influence as the current ship, otherwise exception will be risen. 
 It's highly recommended to leave autowarp set to true.
