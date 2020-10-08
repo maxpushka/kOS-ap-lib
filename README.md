@@ -247,8 +247,8 @@ Returns current vertical acceleration.
 ### VisVivaCalc.ks
 > VisVivaCalc(r, a).
 >
-> **Parameters:**
-> r --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) altitude above sea level
+> **Parameters:**\
+> r --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) altitude above sea level\
 > a --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) [semi-major axis](https://en.wikipedia.org/wiki/Semi-major_and_semi-minor_axes#Energy;_calculation_of_semi-major_axis_from_state_vectors)\
 > **Return:** velocity ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), m/s)
 
