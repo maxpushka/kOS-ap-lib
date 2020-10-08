@@ -270,7 +270,7 @@ set dV to v2-v1.
 ```
 
 ### Ascend.ks
-> Ascend().
+> Ascend(targetOrbit, targetIncl, finalPitch, gravTurnAlt, gravTurnV, accLimit, pre_stage, post_stage, jettisonFairing, jettisonAlt, deployAntennas, deploySolar, autowarp).
 >
 > **Parameters:**\
 > targetOrbit --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) height of the circular target orbit (apoapsis = periapsis)\
