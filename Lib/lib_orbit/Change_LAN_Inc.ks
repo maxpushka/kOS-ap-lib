@@ -68,6 +68,7 @@ function Change_LAN_Inc {
 	clearscreen.
 	remove LAN_node.
 	wait 0.
+	return true.
 	
 	function SetNode_BurnVector {
 		parameter timeat,V_New.

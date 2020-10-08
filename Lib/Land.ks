@@ -27,6 +27,7 @@ function Land {
 	local Isp_data is EngThrustIsp()[1].
 	
 	landing( targetSite, tmax, hover_alt, touchdownSpeed, Isp_data ).
+	return true.
 
 	//======================= FUNCTIONS ========================//
 
