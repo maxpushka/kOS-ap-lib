@@ -256,19 +256,19 @@ set dV to v2-v1.
 > Ascend().
 >
 > **Parameters:**
-> targetOrbit --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) height of the target orbit (= apoapsis = periapsis)
-> targetIncl --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), degrees) inclination of the target orbit
-> finalPitch --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), degrees) angle to the horizon when leaving the atmosphere
-> gravTurnAlt --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) altitude value at which the gravity turn begins
-> gravTurnV --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), m/s) velocity value at which the gravity turn begins
-> accLimit --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), g-force) limits the amount of g-force that the rocket is expose to
-> pre_stage --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds) wait before staging
-> post_stage --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds) wait after staging
-> jettisonFairing --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean), meters) automatic fairing jettison
-> jettisonAlt --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) altitude at which fairing will be jettisoned
-> deployAntennas --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) automatic antenna deployment
-> deploySolar --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) automatic deployment of solar panels
-> autowarp --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) autowarp to burn position
+> targetOrbit --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) height of the target orbit (= apoapsis = periapsis)\
+> targetIncl --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), degrees) inclination of the target orbit\
+> finalPitch --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), degrees) angle to the horizon when leaving the atmosphere\
+> gravTurnAlt --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) altitude value at which the gravity turn begins\
+> gravTurnV --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), m/s) velocity value at which the gravity turn begins\
+> accLimit --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), g-force) limits the amount of g-force that the rocket is expose to\
+> pre_stage --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds) wait before staging\
+> post_stage --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds) wait after staging\
+> jettisonFairing --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean), meters) automatic fairing jettison\
+> jettisonAlt --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) altitude at which fairing will be jettisoned\
+> deployAntennas --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) automatic antenna deployment\
+> deploySolar --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) automatic deployment of solar panels\
+> autowarp --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) autowarp to burn position\
 > **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)); `true` if successfuly completed, otherwise `false`
 
 Executes liftoff, ascend and circularization burn at specified apoapsis. The script works both on bodies with atmosphere and without. Make sure that the rocket is controllable and well balanced.
