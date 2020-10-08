@@ -292,6 +292,11 @@ Executes liftoff, ascend and circularization burn at specified apoapsis. The scr
 * Gravity turn begins when gravTurnAlt > current altitude OR gravTurnV  > current velocity
 * Fairing jettison, deployment of antennas and solar pannels is executed AFTER the rocket reached both [maximum dynamic pressure](https://en.wikipedia.org/wiki/Dynamic_pressure "Dynamic pressure") (max Q) and altitude of 50000 meters
 
+**Usage example:**
+```
+Ascend(100000, 7.5). // 100km orbit with an inclination of 7.5 degrees
+```
+
 ### Dock.ks
 > Dock(targetShip, targetNode, selectedNode, safeDistance).
 >
