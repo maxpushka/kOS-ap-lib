@@ -26,7 +26,6 @@ Ascend(targetOrbit, targetIncl, finalPitch,
 //Preparing to deploy satellite
 lock steering to prograde.
 wait 5.
-
 PRINT "Deploying satellite in ".
 FROM {local countdown is 3.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
     print "..." + countdown.
@@ -34,17 +33,3 @@ FROM {local countdown is 3.} UNTIL countdown = 0 STEP {SET countdown to countdow
 }
 stage. //staging satellite
 print "Staging complete.".
-wait 3.
-
-//Deorbiting
-print "Preparing to deorbit...".
-
-lock steering to retrograde.
-wait 2.
-until periapsis < body:atm:height {lock throttle to 0.2.}
-lock throttle to 0.
-print "We're on the way back home!".
-kuniverse:timewarp:warpto(time:seconds+60).
-until periapsis < body:atm:height/5 {lock throttle to 1.}
-
-when alt:radar < 1500 then {stage.} //deploying parachutes
