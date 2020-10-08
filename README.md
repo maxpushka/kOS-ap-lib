@@ -45,7 +45,7 @@ For example, if you want to import `Ascend.ks`, run `import("Ascend").` and the 
 ### BisectionSolver.ks
 > BisectionSolver(scoreFunction, point1, point2).
 > 
-> **Parameters:**\ 
+> **Parameters:** \
 > scoreFunction --> ([`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html))\
 > point1 --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))\
 > point2 --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))\
