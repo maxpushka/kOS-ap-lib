@@ -275,22 +275,22 @@ set dV to v2-v1.
 > **Parameters:**\
 > targetOrbit --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) height of the circular target orbit (apoapsis = periapsis)\
 > targetIncl --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), degrees) inclination of the target orbit\
-> finalPitch --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), degrees) angle to the horizon when leaving the atmosphere\
-> gravTurnAlt --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) altitude value at which the gravity turn begins\
-> gravTurnV --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), m/s) velocity value at which the gravity turn begins\
-> accLimit --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), g-force) limits the amount of g-force that the rocket is expose to\
-> pre_stage --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds) wait before staging\
-> post_stage --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds) wait after staging\
-> jettisonFairing --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean), meters) automatic fairing jettison\
-> jettisonAlt --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) altitude at which fairing will be jettisoned\
-> deployAntennas --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) automatic antenna deployment\
-> deploySolar --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) automatic deployment of solar panels\
-> autowarp --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) autowarp to burn position\
+> finalPitch --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), degrees) angle to the horizon when leaving the atmosphere; set to 85° by default\
+> gravTurnAlt --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) altitude value at which the gravity turn begins; set to 250m by default\
+> gravTurnV --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), m/s) velocity value at which the gravity turn begins; set to 150 m/s by default\
+> accLimit --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), g-force) limits the amount of g-force that the rocket is expose to; set to 3.5 by default\
+> pre_stage --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds) wait before staging; set to 0.5 sec by default\
+> post_stage --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds) wait after staging; set to 1 sec by default\
+> jettisonFairing --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean), meters) automatic fairing jettison; set to `true` by default\
+> jettisonAlt --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) altitude at which fairing will be jettisoned; set to 50000m by default\
+> deployAntennas --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) automatic antenna deployment; set to `true` by default\
+> deploySolar --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) automatic deployment of solar panels; set to `true` by default\
+> autowarp --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) autowarp to burn position; set to `true` by default\
 > **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)); `true` if successfuly completed, otherwise `false`
 
 Executes liftoff, ascend and circularization burn at specified apoapsis. The script works both on bodies with atmosphere and without. Make sure that the rocket is controllable and well balanced.
 * Gravity turn begins when gravTurnAlt > current altitude OR gravTurnV  > current velocity
-* Fairing jettison, deployment of antennas and solar pannels is executed AFTER the rocket reached both [maximum dynamic pressure](https://en.wikipedia.org/wiki/Dynamic_pressure "Dynamic pressure") (max Q) and altitude of 50000 meters
+* Fairing jettison, deployment of antennas and solar pannels is executed AFTER the rocket reached both [maximum dynamic pressure](https://en.wikipedia.org/wiki/Dynamic_pressure "Dynamic pressure") (max Q) and an altitude of `jettisonAlt` value
 
 **Usage example:**
 ```
