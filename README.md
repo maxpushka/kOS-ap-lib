@@ -45,7 +45,10 @@ For example, if you want to import `Ascend.ks`, run `import("Ascend").` and the 
 ### BisectionSolver.ks
 > BisectionSolver(scoreFunction, point1, point2).
 > 
-> **Parameters:** scoreFunction ([`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html)), point1 )[`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)), point2 ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))\
+> **Parameters:** 
+> scoreFunction --> ([`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html))
+> point1 --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))\
+> point2 --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))\
 > **Return type:** [`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) function\
 > **[Delegate](https://ksp-kos.github.io/KOS/language/delegates.html) return type**: [`list`](https://ksp-kos.github.io/KOS/structures/collections/list.html#structure:LIST "LIST structure") of [`scalars`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)
 
@@ -75,7 +78,9 @@ until *some_condition* {
 #### MakeDerivator_N
 > MakeDerivator_N(init_value, N_count).
 >
-> **Parameters:** init_value ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)), N_count ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar); set to 0 by default)\
+> **Parameters:**
+> init_value --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))
+> N_count --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) set to 0 by default
 > **Return:** [`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) function\
 > **[`Delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) parameters**: [`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)\
 > **[`Delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) return type**: the derivative value of *init_value* ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))
@@ -93,7 +98,9 @@ set acceleration to derivator:call(v2).
 #### MakeDerivator_dt
 > MakeDerivator_dt(init_value, time_interval).
 >
-> **Parameters:** init_value ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)), time_interval ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds; set to 0 by default)\
+> **Parameters:**
+> init_value --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))
+> time_interval --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds) set to 0 by default\
 > **Return type:** [`delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) function\
 > **[`Delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) parameters**: [`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)\
 > **[`Delegate`](https://ksp-kos.github.io/KOS/language/delegates.html) return type**: the time derivative value of *init_value* ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))
@@ -144,7 +151,9 @@ Circularize(newApPe). // performs circularization at altitude of 100000 meters
 ### HohmannTransfer.ks
 > HohmannTransfer(targetR, burnIn, autowarp).
 > 
-> **Parameters:** targetAlt ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters), burnIn ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds), autowarp ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean))\
+> **Parameters:** 
+> targetAlt --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters)
+> burnIn --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), seconds)
 > targetR --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) radius of target orbit\
 > burnIn --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) execute burn in (time:seconds+burnIn) seconds\
 > autowarp --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) autowarp to burn position\
@@ -162,7 +171,11 @@ HohmannTransfer(targetR, burnIn).
 ### TransferToMoon.ks
 > TransferToMoon(targetMoon, targetPe, autowarp, insertionBurn).
 >
-> **Parameters:** targetMoon ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string)), targetPe ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar) > 0), autowarp ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean); set to `true` by default), insertionBurn ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean); set to `true` by default)\
+> **Parameters:**
+> targetMoon --> ([`string`](https://ksp-kos.github.io/KOS/structures/misc/string.html#string))
+> targetPe --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar) > 0)
+> autowarp --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) autowarp to burn position; set to `true` by default\
+> insertionBurn --> ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)) set to `true` by default\
 > **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)); `true` if successfuly completed, otherwise `false`
 
 Performs a set of maneuvers to transfer the vessel to the target Moon. Using this script one can perform Moon flyby (just set *insertionBurn* to `false`).
@@ -177,9 +190,9 @@ TransferToMoon(targetMoon, targetPe).
 ### BurnTime.ks
 > BurnTime(dV, Rad).
 >
-> **Parameters:** dV ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)), Rad ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))\
-> dV --> the amount of dV that you need to burn\
-> altRad --> altitude above sea level\
+> **Parameters:**
+> dV -->  ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) the amount of dV that you need to burn\
+> altRad -->  ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) altitude above sea level\
 > **Return:** seconds ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar))
 
 Calculates the time in seconds required to burn specified amount of dV on 100% throttle. 
@@ -234,7 +247,9 @@ Returns current vertical acceleration.
 ### VisVivaCalc.ks
 > VisVivaCalc(r, a).
 >
-> **Parameters:** r ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), altitude above sea level), a ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), [semi-major axis](https://en.wikipedia.org/wiki/Semi-major_and_semi-minor_axes#Energy;_calculation_of_semi-major_axis_from_state_vectors))\
+> **Parameters:**
+> r --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) altitude above sea level
+> a --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar)) [semi-major axis](https://en.wikipedia.org/wiki/Semi-major_and_semi-minor_axes#Energy;_calculation_of_semi-major_axis_from_state_vectors)\
 > **Return:** velocity ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), m/s)
 
 Implementation of [vis-viva_equation](https://en.wikipedia.org/wiki/Vis-viva_equation). Note that *r* parameter is altitude *above sea level*.
@@ -256,7 +271,7 @@ set dV to v2-v1.
 > Ascend().
 >
 > **Parameters:**
-> targetOrbit --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) height of the target orbit (= apoapsis = periapsis)\
+> targetOrbit --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) height of the circular target orbit (apoapsis = periapsis)\
 > targetIncl --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), degrees) inclination of the target orbit\
 > finalPitch --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), degrees) angle to the horizon when leaving the atmosphere\
 > gravTurnAlt --> ([`scalar`](https://ksp-kos.github.io/KOS/math/scalar.html#scalar), meters) altitude value at which the gravity turn begins\
