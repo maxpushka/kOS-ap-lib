@@ -289,6 +289,7 @@ set dV to v2-v1.
 > **Return:** function exit status ([`bool`](https://ksp-kos.github.io/KOS/structures/misc/boolean.html#boolean)); `true` if successfuly completed, otherwise `false`
 
 Executes liftoff, ascend and circularization burn at specified apoapsis. The script works both on bodies with atmosphere and without. Make sure that the rocket is controllable and well balanced.
+* **REQUIRES ACCELEROMETER ONBOARD!**
 * Gravity turn begins when gravTurnAlt > current altitude OR gravTurnV  > current velocity
 * Fairing jettison, deployment of antennas and solar pannels is executed AFTER the rocket reached both [maximum dynamic pressure](https://en.wikipedia.org/wiki/Dynamic_pressure "Dynamic pressure") (max Q) and an altitude of `jettisonAlt`
 
