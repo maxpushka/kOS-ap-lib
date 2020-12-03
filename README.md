@@ -1,5 +1,5 @@
 # kOS rocket AutoPilot Library
-kOS rocket Autopilot Library is a modular library created to simplify routine tasks execution for KSP players. Compatible with [RemoteTech 2](https://remotetechnologiesgroup.github.io/RemoteTech/) mod
+kOS rocket Autopilot Library is a modular library created to automate the execution of routine tasks for KSP players. Compatible with [RemoteTech 2](https://remotetechnologiesgroup.github.io/RemoteTech/) mod
 
 
 ## Installation
